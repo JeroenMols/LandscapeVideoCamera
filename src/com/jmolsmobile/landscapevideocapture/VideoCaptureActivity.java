@@ -35,11 +35,12 @@ public class VideoCaptureActivity extends Activity {
 
 	public static final int		RESULT_ERROR			= 753245;
 
-	public static final String	LOG_CAPTURE_TAG			= "VideoCapture";
 	public static final String	EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
 	public static final String	EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
-	public static final String	SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
-	public static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
+
+	private static final String	LOG_CAPTURE_TAG			= "VideoCapture";
+	private static final String	SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
+	private static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
 	private String				mOutputFile				= null;
 
@@ -57,15 +58,16 @@ public class VideoCaptureActivity extends Activity {
 	private ImageView			mAcceptBtnIv;
 	private ImageView			mDeclineBtnIv;
 
-	public static final String	DEFAULT_EXTENSION		= ".avi";
-	public static final int		PREVIEW_VIDEO_WIDTH		= 640;
-	public static final int		PREVIEW_VIDEO_HEIGHT	= 480;
-	public static final int		CAPTURE_VIDEO_WIDTH		= 640;
-	public static final int		CAPTURE_VIDEO_HEIGHT	= 480;
-	public static final int		FRAMES_PER_SECOND		= 25;
-	public static final int		BITRATE_PER_SECOND		= 750000;									// bit per sec
-	public static final int		MAX_CAPTURE_DURATION	= 30000;									// in ms
-	public static final int		MAX_CAPTURE_FILESIZE	= 20;										// in mb
+	// ADJUST THESE TO YOUR NEEDS
+	private static final String	DEFAULT_EXTENSION		= ".avi";
+	private static final int	PREVIEW_VIDEO_WIDTH		= 640;
+	private static final int	PREVIEW_VIDEO_HEIGHT	= 480;
+	private static final int	CAPTURE_VIDEO_WIDTH		= 640;
+	private static final int	CAPTURE_VIDEO_HEIGHT	= 480;
+	private static final int	FRAMES_PER_SECOND		= 25;
+	private static final int	BITRATE_PER_SECOND		= 750000;									// bit per sec
+	private static final int	MAX_CAPTURE_DURATION	= 30000;									// in ms
+	private static final int	MAX_CAPTURE_FILESIZE	= 20;										// in mb
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
