@@ -59,7 +59,7 @@ public class VideoCaptureActivity extends Activity {
 	private ImageView			mDeclineBtnIv;
 
 	// ADJUST THESE TO YOUR NEEDS
-	private static final String	DEFAULT_EXTENSION		= ".avi";
+	private static final String	DEFAULT_EXTENSION		= ".mp4";
 	private static final int	PREVIEW_VIDEO_WIDTH		= 640;
 	private static final int	PREVIEW_VIDEO_HEIGHT	= 480;
 	private static final int	CAPTURE_VIDEO_WIDTH		= 640;

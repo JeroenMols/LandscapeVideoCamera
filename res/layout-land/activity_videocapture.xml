@@ -20,7 +20,7 @@
 	    android:layout_marginRight="-20dp"
 	    android:layout_alignParentRight="true"
 	    android:layout_centerVertical="true"
-	    android:background="@drawable/states_btn_capturevideo" 
+	    android:background="@drawable/states_btn_capture" 
 	    android:clickable="true"/>
 	<ImageView
 	    android:id="@+id/videocapture_acceptbtn_iv"
