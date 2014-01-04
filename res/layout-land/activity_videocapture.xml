@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
+
+	<SurfaceView
+	    android:id="@+id/videocapture_preview_sv"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent" />
+	<ImageView
+	    android:id="@+id/videocapture_preview_iv"
+	    android:layout_width="match_parent"
+	    android:layout_height="match_parent"
+	    android:visibility="gone" />
+	
+	<ImageView
+	    android:id="@+id/videocapture_recordbtn_iv"
+	    android:layout_width="100dp"
+	    android:layout_height="100dp"
+	    android:layout_marginRight="-20dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:background="@drawable/states_btn_capturevideo" 
+	    android:clickable="true"/>
+	<ImageView
+	    android:id="@+id/videocapture_acceptbtn_iv"
+	    android:layout_width="48dp"
+	    android:layout_height="48dp"
+	    android:padding="8dp"
+	    android:layout_margin="10dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_above="@id/videocapture_recordbtn_iv"
+	    android:src="@drawable/btn_accept" 
+	    android:background="@drawable/states_btn_acceptdecline"
+	    android:clickable="true"
+	    android:visibility="gone"/>
+	<ImageView
+	    android:id="@+id/videocapture_declinebtn_iv"
+	    android:layout_width="48dp"
+	    android:layout_height="48dp"
+	    android:padding="8dp"
+	    android:layout_margin="10dp"
+	    android:layout_alignParentRight="true"
+	    android:layout_centerVertical="true"
+	    android:layout_below="@id/videocapture_recordbtn_iv"
+	    android:src="@drawable/btn_decline" 
+	    android:background="@drawable/states_btn_acceptdecline"
+	    android:clickable="true"
+	    android:visibility="gone"/>
+
+</RelativeLayout>
