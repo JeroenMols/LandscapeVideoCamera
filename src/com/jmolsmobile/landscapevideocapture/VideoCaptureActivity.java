@@ -13,6 +13,7 @@ import android.graphics.ImageFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
+import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Environment;
@@ -67,7 +68,7 @@ public class VideoCaptureActivity extends Activity {
 	private static final int	FRAMES_PER_SECOND		= 25;
 	private static final int	BITRATE_PER_SECOND		= 750000;									// bit per sec
 	private static final int	MAX_CAPTURE_DURATION	= 30000;									// in ms
-	private static final int	MAX_CAPTURE_FILESIZE	= 20;										// in mb
+	private static final int	MAX_CAPTURE_FILESIZE	= 10;										// in mb
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -99,6 +100,7 @@ public class VideoCaptureActivity extends Activity {
 
 		mSurfaceHolder = mSurfaceView.getHolder();
 		mSurfaceHolder.addCallback(new SurfaceCallbackHandler());
+		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
 
 		updateUINotRecording();
 	}
@@ -139,7 +141,7 @@ public class VideoCaptureActivity extends Activity {
 
 		// Update UI
 		updateUIRecordingOngoing();
-		Log.d(LOG_CAPTURE_TAG, "Successfully started recording");
+		Log.d(LOG_CAPTURE_TAG, "Successfully started recording - outputfile: " + mOutputFile);
 		return true;
 	}
 
@@ -311,16 +313,46 @@ public class VideoCaptureActivity extends Activity {
 		mRecorder.setMaxDuration(MAX_CAPTURE_DURATION);
 		mRecorder.setOutputFile(mOutputFile);
 
-		mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
+//		mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
 		mRecorder.setVideoSize(CAPTURE_VIDEO_WIDTH, CAPTURE_VIDEO_HEIGHT);
 		mRecorder.setVideoEncodingBitRate(BITRATE_PER_SECOND);
 
-		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.DEFAULT);
+		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 		mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
 		mRecorder.setMaxFileSize(MAX_CAPTURE_FILESIZE * 1024 * 1024);
+		
+		mRecorder.setOnInfoListener(new OnInfoListener() {
+			
+			@Override
+			public void onInfo(MediaRecorder mr, int what, int extra) {
+				switch (what) {
+				case MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN:
+					// NOP
+					break;
+				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
+					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max duration reached");
+					if (mRecording) {	
+						Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached",
+								Toast.LENGTH_LONG).show();
+						stopRecording(); 
+						}
+					break;
+				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
+					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max filesize reached");
+					if (mRecording) {	
+						Toast.makeText(getApplicationContext(), "Capture stopped - Max file size reached",
+								Toast.LENGTH_LONG).show();
+						stopRecording(); 
+						}
+					break;
+				default:
+					break;
+				}
+			}
+		});
 
 		Log.d(LOG_CAPTURE_TAG, "MediaRecorder successfully initialized");
 		return true;
@@ -432,6 +464,11 @@ public class VideoCaptureActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
 						Toast.LENGTH_LONG).show();
 				finishError("Invalid parameters set to camera preview");
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to start camera preview");
+				Toast.makeText(getApplicationContext(), "Unable to show camera preview", Toast.LENGTH_LONG).show();
+				// finishError("Invalid parameters set to camera preview");
 			}
 		}
 
