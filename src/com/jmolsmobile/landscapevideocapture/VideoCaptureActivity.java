@@ -313,7 +313,8 @@ public class VideoCaptureActivity extends Activity {
 		mRecorder.setMaxDuration(MAX_CAPTURE_DURATION);
 		mRecorder.setOutputFile(mOutputFile);
 
-//		mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
+		// Setting framerate explicitely is not supported on every Android device - use with caution
+		// mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
 		mRecorder.setVideoSize(CAPTURE_VIDEO_WIDTH, CAPTURE_VIDEO_HEIGHT);
 		mRecorder.setVideoEncodingBitRate(BITRATE_PER_SECOND);
 
