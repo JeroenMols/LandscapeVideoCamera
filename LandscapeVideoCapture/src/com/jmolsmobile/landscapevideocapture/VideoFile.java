@@ -7,7 +7,7 @@ public class VideoFile {
 	}
 
 	public String getFilename() {
-		return "video.mp4";
+		return "video" + System.nanoTime() + ".mp4";
 	}
 
 }
