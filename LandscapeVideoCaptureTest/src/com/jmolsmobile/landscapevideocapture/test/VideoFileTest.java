@@ -30,4 +30,5 @@ public class VideoFileTest extends TestCase {
 		final VideoFile videoFile2 = new VideoFile("");
 		assertFalse(videoFile1.getFilename().equals(videoFile2.getFilename()));
 	}
+
 }
