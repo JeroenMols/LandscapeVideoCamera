@@ -8,11 +8,19 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jmolsmobile.landscapevideocapture_sample.CaptureDemoFragment" >
 
+    <TextView
+        android:id="@+id/tv_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/fragment_interline_margin"
+        android:text="@string/status_nocapture"/>
+    
     <Button
         android:id="@+id/btn_capturevideo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_below="@id/tv_status"
         android:text="@string/capture_video" />
 
 </RelativeLayout>
