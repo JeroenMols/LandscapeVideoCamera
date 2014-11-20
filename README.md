@@ -50,8 +50,8 @@ This library provides a full and reusable code sample of a custom camera recordi
   3. Request the following permissions in your manifest: 
 
          <uses-permission android:name="android.permission.RECORD_AUDIO" />
-      	 <uses-permission android:name="android.permission.CAMERA" />
-	       <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+         <uses-permission android:name="android.permission.CAMERA" />
+         <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
   4. Create an intent to launch the `VideoCaptureActivity`, optionally add a String extra `EXTRA_OUTPUT_FILENAME` and launch the activity for result.
   5. Check the resultcode (`RESULT_OK`, `RESULT_CANCELLED` or `VideoCaptureActivity.RESULT_ERROR`) and in case of success get the output filename in the intent extra `EXTRA_OUTPUT_FILENAME`
