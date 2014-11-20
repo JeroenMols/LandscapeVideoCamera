@@ -1,5 +1,9 @@
 package com.jmolsmobile.landscapevideocapture.test;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 import junit.framework.TestCase;
 
 import com.jmolsmobile.landscapevideocapture.VideoFile;
@@ -29,6 +33,12 @@ public class VideoFileTest extends TestCase {
 		final VideoFile videoFile1 = new VideoFile("");
 		final VideoFile videoFile2 = new VideoFile("");
 		assertFalse(videoFile1.getFilename().equals(videoFile2.getFilename()));
+	}
+
+	public void test_filenameShouldContainDate() {
+		final VideoFile videoFile = new VideoFile("");
+		final String dateString = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
+		assertTrue(videoFile.getFilename().contains("_" + dateString));
 	}
 
 }
