@@ -6,4 +6,8 @@ public class VideoFile {
 
 	}
 
+	public String getFilename() {
+		return "";
+	}
+
 }

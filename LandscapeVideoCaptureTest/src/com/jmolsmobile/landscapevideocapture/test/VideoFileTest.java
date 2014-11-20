@@ -10,4 +10,9 @@ public class VideoFileTest extends TestCase {
 		new VideoFile("");
 	}
 
+	public void test_filenameShouldNotBeNull() {
+		final VideoFile videoFile = new VideoFile("");
+		assertNotNull(videoFile.getFilename());
+	}
+
 }
