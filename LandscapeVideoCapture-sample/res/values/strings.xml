@@ -2,7 +2,7 @@
 <resources>
 
     <string name="app_name">LandscapeVideoCapture-sample</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+
+    <string name="capture_video">Capture video</string>
 
 </resources>
