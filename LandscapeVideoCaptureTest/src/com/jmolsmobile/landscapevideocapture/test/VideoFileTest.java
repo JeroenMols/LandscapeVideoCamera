@@ -15,4 +15,8 @@ public class VideoFileTest extends TestCase {
 		assertNotNull(videoFile.getFilename());
 	}
 
+	public void test_filenameShouldEndWithExtension() {
+		final VideoFile videoFile = new VideoFile("");
+		assertTrue(videoFile.getFilename().endsWith(".mp4"));
+	}
 }

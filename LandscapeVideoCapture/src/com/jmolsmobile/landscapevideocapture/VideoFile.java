@@ -7,7 +7,7 @@ public class VideoFile {
 	}
 
 	public String getFilename() {
-		return "";
+		return ".mp4";
 	}
 
 }
