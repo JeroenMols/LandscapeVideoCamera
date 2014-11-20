@@ -19,4 +19,9 @@ public class VideoFileTest extends TestCase {
 		final VideoFile videoFile = new VideoFile("");
 		assertTrue(videoFile.getFilename().endsWith(".mp4"));
 	}
+
+	public void test_filenameShouldStartWithVideo() {
+		final VideoFile videoFile = new VideoFile("");
+		assertTrue(videoFile.getFilename().startsWith("video"));
+	}
 }
