@@ -54,4 +54,9 @@ public class VideoFileTest extends TestCase {
 		final VideoFile videoFile = new VideoFile(filename);
 		assertTrue(videoFile.getFilename().equals(filename));
 	}
+
+	public void test_fileNameIsDefaultWhenSpecifiedNull() {
+		final VideoFile videoFile = new VideoFile(null);
+		assertTrue(videoFile.getFilename().matches("video_[0-9]{8}_[0-9]{6}\\.mp4"));
+	}
 }

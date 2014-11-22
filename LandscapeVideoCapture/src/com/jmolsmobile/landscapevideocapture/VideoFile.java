@@ -23,11 +23,17 @@ public class VideoFile {
 	}
 
 	public String getFilename() {
-		if (!filename.isEmpty()) {
-			return filename;
-		}
+		if (isValidFilename()) return filename;
+
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
 		return DEFAULT_PREFIX + dateStamp + DEFAULT_EXTENSION;
+	}
+
+	private boolean isValidFilename() {
+		if (filename == null) return false;
+		if (filename.isEmpty()) return false;
+
+		return true;
 	}
 
 	private Date getDate() {
