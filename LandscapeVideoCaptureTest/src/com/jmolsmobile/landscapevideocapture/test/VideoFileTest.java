@@ -35,16 +35,11 @@ public class VideoFileTest extends TestCase {
 		assertFalse(videoFile1.getFilename().equals(videoFile2.getFilename()));
 	}
 
-	public void test_filenameShouldContainDate() {
-		final VideoFile videoFile = new VideoFile("");
-		final String dateString = new SimpleDateFormat("yyyyMMdd", Locale.getDefault()).format(new Date());
-		assertTrue(videoFile.getFilename().contains("_" + dateString));
-	}
-
-	public void test_filenameShouldContainTime() {
+	public void test_filenameShouldContainDateAndTime() {
 		final Date date = new Date();
 		final VideoFile videoFile = new VideoFile("", date);
-		final String timeString = new SimpleDateFormat("HHmmss", Locale.getDefault()).format(date);
-		assertTrue(videoFile.getFilename().contains("_" + timeString));
+		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+		assertTrue(videoFile.getFilename().contains("_" + dateAndTimeString));
 	}
+
 }
