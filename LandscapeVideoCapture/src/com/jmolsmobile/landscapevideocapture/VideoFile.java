@@ -10,17 +10,22 @@ public class VideoFile {
 	private static final String	DEFAULT_PREFIX		= "video_";
 	private static final String	DEFAULT_EXTENSION	= ".mp4";
 
+	private final String		filename;
 	private Date				date;
 
 	public VideoFile(String filename) {
-
+		this.filename = filename;
 	}
 
 	public VideoFile(String filename, Date date) {
+		this(filename);
 		this.date = date;
 	}
 
 	public String getFilename() {
+		if (!filename.isEmpty()) {
+			return filename;
+		}
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
 		return DEFAULT_PREFIX + dateStamp + DEFAULT_EXTENSION;
 	}

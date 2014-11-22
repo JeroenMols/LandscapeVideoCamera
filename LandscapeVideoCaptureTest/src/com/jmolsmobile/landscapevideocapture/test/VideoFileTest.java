@@ -48,4 +48,10 @@ public class VideoFileTest extends TestCase {
 		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
 		assertTrue(videoFile.getFilename().contains(dateAndTimeString));
 	}
+
+	public void test_filenameCanBeSpecified() {
+		final String filename = "test.mp4";
+		final VideoFile videoFile = new VideoFile(filename);
+		assertTrue(videoFile.getFilename().equals(filename));
+	}
 }
