@@ -1,10 +1,6 @@
 package com.jmolsmobile.landscapevideocapture;
 
-import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,7 +12,6 @@ import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -149,7 +144,7 @@ public class VideoCaptureActivity extends Activity {
 		try {
 			mRecorder.stop();
 			mVideoRecorded = true;
-		} catch (RuntimeException e) {
+		} catch (final RuntimeException e) {
 			Log.d(LOG_CAPTURE_TAG, "Failed to stop recording");
 		}
 		mRecording = false;
@@ -163,35 +158,12 @@ public class VideoCaptureActivity extends Activity {
 	private boolean generateOutputFile() {
 		if (mOutputFile != null) return true;
 
-		String outputFile = this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME);
-		if (outputFile == null) {
-			outputFile = generateDefaultOutputFile();
-		}
+		final VideoFile videoFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
+		mOutputFile = videoFile.getFile().getAbsolutePath();
 
-		if (outputFile == null) {
-			return false;
-		}
-		// TODO add checks to see if outputfile is valid?
+		// TODO: add checks to see if outputfile is writeable
 
-		mOutputFile = outputFile;
 		return true;
-	}
-
-	private String generateDefaultOutputFile() {
-		final String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
-		final String filename = "Video_" + timeStamp + DEFAULT_EXTENSION;
-
-		try {
-			final File dcimDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
-			final File outputFile = new File(dcimDir, filename);
-
-			Log.d(LOG_CAPTURE_TAG, "Generated new filename: " + outputFile.getAbsolutePath());
-			return outputFile.getAbsolutePath();
-		} catch (final Exception e) {
-			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "Failed to generated new filename - " + e.toString());
-			return null;
-		}
 	}
 
 	private void finishCompleted(final String filename) {
@@ -324,9 +296,9 @@ public class VideoCaptureActivity extends Activity {
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
 		mRecorder.setMaxFileSize(MAX_CAPTURE_FILESIZE * 1024 * 1024);
-		
+
 		mRecorder.setOnInfoListener(new OnInfoListener() {
-			
+
 			@Override
 			public void onInfo(MediaRecorder mr, int what, int extra) {
 				switch (what) {
@@ -335,19 +307,19 @@ public class VideoCaptureActivity extends Activity {
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
 					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max duration reached");
-					if (mRecording) {	
+					if (mRecording) {
 						Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached",
 								Toast.LENGTH_LONG).show();
-						stopRecording(); 
-						}
+						stopRecording();
+					}
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
 					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max filesize reached");
-					if (mRecording) {	
+					if (mRecording) {
 						Toast.makeText(getApplicationContext(), "Capture stopped - Max file size reached",
 								Toast.LENGTH_LONG).show();
-						stopRecording(); 
-						}
+						stopRecording();
+					}
 					break;
 				default:
 					break;
@@ -393,7 +365,7 @@ public class VideoCaptureActivity extends Activity {
 				mCamera.stopPreview();
 				mCamera.setPreviewCallback(null);
 				mPreviewRunning = false;
-			} catch (Exception e) {
+			} catch (final Exception e) {
 			}
 		}
 
@@ -418,7 +390,7 @@ public class VideoCaptureActivity extends Activity {
 		public void surfaceCreated(final SurfaceHolder holder) {
 			try {
 				mCamera = Camera.open();
-			} catch (Exception e) {
+			} catch (final Exception e) {
 				e.printStackTrace();
 				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to connect camera to preview");
 				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
@@ -465,7 +437,7 @@ public class VideoCaptureActivity extends Activity {
 				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
 						Toast.LENGTH_LONG).show();
 				finishError("Invalid parameters set to camera preview");
-			} catch (RuntimeException e) {
+			} catch (final RuntimeException e) {
 				e.printStackTrace();
 				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to start camera preview");
 				Toast.makeText(getApplicationContext(), "Unable to show camera preview", Toast.LENGTH_LONG).show();
