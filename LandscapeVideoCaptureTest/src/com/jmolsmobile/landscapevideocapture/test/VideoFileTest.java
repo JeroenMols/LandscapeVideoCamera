@@ -30,8 +30,8 @@ public class VideoFileTest extends TestCase {
 	}
 
 	public void test_filenameShouldBeUnique() {
-		final VideoFile videoFile1 = new VideoFile("");
-		final VideoFile videoFile2 = new VideoFile("");
+		final VideoFile videoFile1 = new VideoFile("", new Date());
+		final VideoFile videoFile2 = new VideoFile("", new Date(System.currentTimeMillis() + 1000));
 		assertFalse(videoFile1.getFilename().equals(videoFile2.getFilename()));
 	}
 
