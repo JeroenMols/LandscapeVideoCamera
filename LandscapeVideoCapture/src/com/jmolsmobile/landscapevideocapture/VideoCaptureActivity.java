@@ -38,7 +38,7 @@ public class VideoCaptureActivity extends Activity {
 	private static final String	SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
 	private static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
-	private String				mOutputFile				= null;
+	private VideoFile			mVideoFile				= null;
 
 	private MediaRecorder		mRecorder;
 	private SurfaceHolder		mSurfaceHolder;
@@ -55,7 +55,6 @@ public class VideoCaptureActivity extends Activity {
 	private ImageView			mDeclineBtnIv;
 
 	// ADJUST THESE TO YOUR NEEDS
-	private static final String	DEFAULT_EXTENSION		= ".mp4";
 	private static final int	PREVIEW_VIDEO_WIDTH		= 640;
 	private static final int	PREVIEW_VIDEO_HEIGHT	= 480;
 	private static final int	CAPTURE_VIDEO_WIDTH		= 640;
@@ -74,13 +73,9 @@ public class VideoCaptureActivity extends Activity {
 
 		if (savedInstanceState != null) {
 			mVideoRecorded = savedInstanceState.getBoolean(SAVED_RECORDED_BOOLEAN, false);
-			mOutputFile = savedInstanceState.getString(SAVED_OUTPUT_FILENAME);
 		}
 
-		if (!generateOutputFile()) {
-			finishError("Failed to generate outputfile");
-			return;
-		}
+		generateOutputFile(savedInstanceState);
 
 		mSurfaceView = (SurfaceView) findViewById(R.id.videocapture_preview_sv);
 		if (mSurfaceView == null) return; // Wrong orientation
@@ -118,9 +113,7 @@ public class VideoCaptureActivity extends Activity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
-		if (mOutputFile != null) {
-			savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mOutputFile);
-		}
+		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, getOutputFilename());
 	}
 
 	@Override
@@ -136,7 +129,7 @@ public class VideoCaptureActivity extends Activity {
 
 		// Update UI
 		updateUIRecordingOngoing();
-		Log.d(LOG_CAPTURE_TAG, "Successfully started recording - outputfile: " + mOutputFile);
+		Log.d(LOG_CAPTURE_TAG, "Successfully started recording - outputfile: " + getOutputFilename());
 		return true;
 	}
 
@@ -155,15 +148,18 @@ public class VideoCaptureActivity extends Activity {
 	}
 
 	// UTILITY METHODS
-	private boolean generateOutputFile() {
-		if (mOutputFile != null) return true;
-
-		final VideoFile videoFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
-		mOutputFile = videoFile.getFile().getAbsolutePath();
+	private void generateOutputFile(Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			mVideoFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
+		} else {
+			mVideoFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
+		}
 
 		// TODO: add checks to see if outputfile is writeable
+	}
 
-		return true;
+	private String getOutputFilename() {
+		return mVideoFile.getFile().getAbsolutePath();
 	}
 
 	private void finishCompleted(final String filename) {
@@ -232,7 +228,7 @@ public class VideoCaptureActivity extends Activity {
 		mAcceptBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				finishCompleted(mOutputFile);
+				finishCompleted(getOutputFilename());
 			}
 		});
 		mDeclineBtnIv.setOnClickListener(new OnClickListener() {
@@ -245,7 +241,7 @@ public class VideoCaptureActivity extends Activity {
 
 	@SuppressWarnings("deprecation")
 	private void generateThumbnail() {
-		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mOutputFile,
+		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(getOutputFilename(),
 				MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
 		if (thumbnail == null) {
 			Log.d(LOG_CAPTURE_TAG, "Failed to generate video preview");
@@ -283,7 +279,7 @@ public class VideoCaptureActivity extends Activity {
 		// Order is important
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 		mRecorder.setMaxDuration(MAX_CAPTURE_DURATION);
-		mRecorder.setOutputFile(mOutputFile);
+		mRecorder.setOutputFile(getOutputFilename());
 
 		// Setting framerate explicitely is not supported on every Android device - use with caution
 		// mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
