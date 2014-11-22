@@ -29,40 +29,40 @@ import android.widget.Toast;
  */
 public class VideoCaptureActivity extends Activity {
 
-	public static final int		RESULT_ERROR			= 753245;
+	public static final int			RESULT_ERROR			= 753245;
 
-	public static final String	EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
-	public static final String	EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
+	public static final String		EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
+	public static final String		EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
 
-	private static final String	LOG_CAPTURE_TAG			= "VideoCapture";
-	private static final String	SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
-	private static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
+	private static final String		LOG_CAPTURE_TAG			= "VideoCapture";
+	private static final String		SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
+	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
-	private VideoFile			mVideoFile				= null;
+	private VideoFile				mVideoFile				= null;
 
-	private MediaRecorder		mRecorder;
-	private SurfaceHolder		mSurfaceHolder;
+	private MediaRecorder			mRecorder;
+	private SurfaceHolder			mSurfaceHolder;
 
-	private boolean				mRecording				= false;
-	private boolean				mVideoRecorded			= false;
-	private boolean				mPreviewRunning			= false;
+	private boolean					mRecording				= false;
+	private boolean					mVideoRecorded			= false;
+	private boolean					mPreviewRunning			= false;
 
-	private Camera				mCamera;
-	private SurfaceView			mSurfaceView;
-	private ImageView			mThumbnailIv;
-	private ImageView			mRecordBtnIv;
-	private ImageView			mAcceptBtnIv;
-	private ImageView			mDeclineBtnIv;
+	private Camera					mCamera;
+	private SurfaceView				mSurfaceView;
+	private ImageView				mThumbnailIv;
+	private ImageView				mRecordBtnIv;
+	private ImageView				mAcceptBtnIv;
+	private ImageView				mDeclineBtnIv;
 
 	// ADJUST THESE TO YOUR NEEDS
-	private static final int	PREVIEW_VIDEO_WIDTH		= 640;
-	private static final int	PREVIEW_VIDEO_HEIGHT	= 480;
-	private static final int	CAPTURE_VIDEO_WIDTH		= 640;
-	private static final int	CAPTURE_VIDEO_HEIGHT	= 480;
-	private static final int	FRAMES_PER_SECOND		= 25;
-	private static final int	BITRATE_PER_SECOND		= 750000;									// bit per sec
-	private static final int	MAX_CAPTURE_DURATION	= 30000;									// in ms
-	private static final int	MAX_CAPTURE_FILESIZE	= 10;										// in mb
+	private static final int		PREVIEW_VIDEO_WIDTH		= 640;
+	private static final int		PREVIEW_VIDEO_HEIGHT	= 480;
+	private static final int		CAPTURE_VIDEO_WIDTH		= 640;
+	private static final int		CAPTURE_VIDEO_HEIGHT	= 480;
+	private static final int		FRAMES_PER_SECOND		= 25;
+	private static final int		BITRATE_PER_SECOND		= 750000;									// bit per sec
+	private static final int		MAX_CAPTURE_DURATION	= 30000;									// in ms
+	private static final int		MAX_CAPTURE_FILESIZE	= 10;										// in mb
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -75,7 +75,7 @@ public class VideoCaptureActivity extends Activity {
 			mVideoRecorded = savedInstanceState.getBoolean(SAVED_RECORDED_BOOLEAN, false);
 		}
 
-		generateOutputFile(savedInstanceState);
+		mVideoFile = generateOutputFile(savedInstanceState);
 
 		mSurfaceView = (SurfaceView) findViewById(R.id.videocapture_preview_sv);
 		if (mSurfaceView == null) return; // Wrong orientation
@@ -148,14 +148,16 @@ public class VideoCaptureActivity extends Activity {
 	}
 
 	// UTILITY METHODS
-	private void generateOutputFile(Bundle savedInstanceState) {
+	protected VideoFile generateOutputFile(Bundle savedInstanceState) {
+		VideoFile returnFile = null;
 		if (savedInstanceState != null) {
-			mVideoFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
+			returnFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
 		} else {
-			mVideoFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
+			returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
 		}
 
 		// TODO: add checks to see if outputfile is writeable
+		return returnFile;
 	}
 
 	private String getOutputFilename() {

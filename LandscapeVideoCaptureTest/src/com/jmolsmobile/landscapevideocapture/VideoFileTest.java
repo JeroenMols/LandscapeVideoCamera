@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture.test;
+package com.jmolsmobile.landscapevideocapture;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
