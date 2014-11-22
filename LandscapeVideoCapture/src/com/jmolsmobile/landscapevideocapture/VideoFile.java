@@ -21,7 +21,7 @@ public class VideoFile {
 	}
 
 	public String getFilename() {
-		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(new Date());
+		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
 		return DEFAULT_PREFIX + dateStamp + System.nanoTime() + DEFAULT_EXTENSION;
 	}
 

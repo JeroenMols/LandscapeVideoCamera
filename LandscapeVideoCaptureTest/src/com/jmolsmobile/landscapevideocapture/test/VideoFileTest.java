@@ -38,8 +38,14 @@ public class VideoFileTest extends TestCase {
 	public void test_filenameShouldContainDateAndTime() {
 		final Date date = new Date();
 		final VideoFile videoFile = new VideoFile("", date);
-		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
+		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
 		assertTrue(videoFile.getFilename().contains("_" + dateAndTimeString));
 	}
 
+	public void test_filenameShouldContainSpecifiedDateAndTime() {
+		final Date date = new Date(0);
+		final VideoFile videoFile = new VideoFile("", date);
+		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
+		assertTrue(videoFile.getFilename().contains(dateAndTimeString));
+	}
 }
