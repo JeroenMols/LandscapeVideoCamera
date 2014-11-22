@@ -22,7 +22,7 @@ public class VideoFile {
 
 	public String getFilename() {
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
-		return DEFAULT_PREFIX + dateStamp + System.nanoTime() + DEFAULT_EXTENSION;
+		return DEFAULT_PREFIX + dateStamp + DEFAULT_EXTENSION;
 	}
 
 	private Date getDate() {
