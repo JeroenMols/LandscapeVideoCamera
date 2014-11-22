@@ -17,16 +17,16 @@ public class VideoFile {
 	private static final String	DEFAULT_PREFIX		= "video_";
 	private static final String	DEFAULT_EXTENSION	= ".mp4";
 
-	private final String		filename;
-	private Date				date;
+	private final String		mFilename;
+	private Date				mDate;
 
 	public VideoFile(String filename) {
-		this.filename = filename;
+		this.mFilename = filename;
 	}
 
 	public VideoFile(String filename, Date date) {
 		this(filename);
-		this.date = date;
+		this.mDate = date;
 	}
 
 	public File getFile() {
@@ -36,23 +36,23 @@ public class VideoFile {
 	}
 
 	private String getFilename() {
-		if (isValidFilename()) return filename;
+		if (isValidFilename()) return mFilename;
 
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
 		return DEFAULT_PREFIX + dateStamp + DEFAULT_EXTENSION;
 	}
 
 	private boolean isValidFilename() {
-		if (filename == null) return false;
-		if (filename.isEmpty()) return false;
+		if (mFilename == null) return false;
+		if (mFilename.isEmpty()) return false;
 
 		return true;
 	}
 
 	private Date getDate() {
-		if (date == null) {
-			date = new Date();
+		if (mDate == null) {
+			mDate = new Date();
 		}
-		return date;
+		return mDate;
 	}
 }
