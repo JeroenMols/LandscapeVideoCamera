@@ -7,6 +7,10 @@ import java.util.Locale;
 
 import android.os.Environment;
 
+/**
+ * @author Jeroen Mols
+ * @date 22 November 2014
+ */
 public class VideoFile {
 
 	private static final String	DATE_FORMAT			= "yyyyMMdd_HHmmss";
@@ -26,7 +30,9 @@ public class VideoFile {
 	}
 
 	public File getFile() {
-		return new File(Environment.DIRECTORY_MOVIES, getFilename());
+		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+		path.mkdirs();
+		return new File(path, getFilename());
 	}
 
 	private String getFilename() {
