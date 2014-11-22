@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import junit.framework.TestCase;
+import android.os.Environment;
 
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 
@@ -55,8 +56,14 @@ public class VideoFileTest extends TestCase {
 		assertTrue(videoFile.getFilename().equals(filename));
 	}
 
-	public void test_fileNameIsDefaultWhenSpecifiedNull() {
+	public void test_filenameIsDefaultWhenSpecifiedNull() {
 		final VideoFile videoFile = new VideoFile(null);
 		assertTrue(videoFile.getFilename().matches("video_[0-9]{8}_[0-9]{6}\\.mp4"));
+	}
+
+	public void test_fileShouldContainPathToVideoFolder() {
+		final VideoFile videoFile = new VideoFile("");
+		final String expectedPath = Environment.DIRECTORY_MOVIES;
+		assertTrue(videoFile.getFile().getAbsolutePath().contains(expectedPath));
 	}
 }

@@ -1,8 +1,11 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import android.os.Environment;
 
 public class VideoFile {
 
@@ -20,6 +23,10 @@ public class VideoFile {
 	public VideoFile(String filename, Date date) {
 		this(filename);
 		this.date = date;
+	}
+
+	public File getFile() {
+		return new File(Environment.DIRECTORY_MOVIES, getFilename());
 	}
 
 	public String getFilename() {
