@@ -29,7 +29,7 @@ public class VideoFile {
 		return new File(Environment.DIRECTORY_MOVIES, getFilename());
 	}
 
-	public String getFilename() {
+	private String getFilename() {
 		if (isValidFilename()) return filename;
 
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
