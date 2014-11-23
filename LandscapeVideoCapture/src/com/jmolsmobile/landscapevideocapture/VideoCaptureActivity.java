@@ -14,7 +14,6 @@ import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
@@ -23,6 +22,8 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
 
 /**
  * @author Jeroen Mols
@@ -35,7 +36,6 @@ public class VideoCaptureActivity extends Activity {
 	public static final String		EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
 	public static final String		EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
 
-	private static final String		LOG_CAPTURE_TAG			= "VideoCapture";
 	private static final String		SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
 	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
@@ -130,7 +130,7 @@ public class VideoCaptureActivity extends Activity {
 
 		// Update UI
 		updateUIRecordingOngoing();
-		Log.d(LOG_CAPTURE_TAG, "Successfully started recording - outputfile: " + getOutputFilename());
+		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + getOutputFilename());
 		return true;
 	}
 
@@ -139,7 +139,7 @@ public class VideoCaptureActivity extends Activity {
 			mRecorder.stop();
 			mVideoRecorded = true;
 		} catch (final RuntimeException e) {
-			Log.d(LOG_CAPTURE_TAG, "Failed to stop recording");
+			CLog.d(CLog.ACTIVITY, "Failed to stop recording");
 		}
 		mRecording = false;
 
@@ -178,6 +178,8 @@ public class VideoCaptureActivity extends Activity {
 	}
 
 	private void finishError(final String message) {
+		Toast.makeText(getApplicationContext(), "Can't capture video" + message, Toast.LENGTH_LONG).show();
+
 		final Intent result = new Intent();
 		result.putExtra(EXTRA_ERROR_MESSAGE, message);
 		this.setResult(RESULT_ERROR, result);
@@ -247,7 +249,7 @@ public class VideoCaptureActivity extends Activity {
 		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(getOutputFilename(),
 				MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
 		if (thumbnail == null) {
-			Log.d(LOG_CAPTURE_TAG, "Failed to generate video preview");
+			CLog.d(CLog.ACTIVITY, "Failed to generate video preview");
 			return;
 		}
 
@@ -257,7 +259,13 @@ public class VideoCaptureActivity extends Activity {
 	// METHODS TO CONTROL THE MEDIARECORDER
 	private boolean initRecorder() {
 		if (mCamera == null) {
-			mCamera = openCamera();
+			try {
+				mCamera = openCamera();
+			} catch (final OpenCameraException e) {
+				e.printStackTrace();
+				finishError(e.getMessage());
+				return false;
+			}
 		}
 
 		try {
@@ -265,12 +273,12 @@ public class VideoCaptureActivity extends Activity {
 		} catch (final NullPointerException e) {
 			Toast.makeText(this, "Can't start capture - device doesn't have a camera", Toast.LENGTH_LONG).show();
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder initialization failed - Device does not have a camera");
+			CLog.d(CLog.ACTIVITY, "MediaRecorder initialization failed - Device does not have a camera");
 			return false;
 		} catch (final RuntimeException e) {
 			Toast.makeText(this, "Can't start capture - camera is used by another process", Toast.LENGTH_LONG).show();
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder initialization failed - Camera in use by another process");
+			CLog.d(CLog.ACTIVITY, "MediaRecorder initialization failed - Camera in use by another process");
 			return false;
 		}
 
@@ -305,7 +313,7 @@ public class VideoCaptureActivity extends Activity {
 					// NOP
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
-					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max duration reached");
+					CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
 					if (mRecording) {
 						Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached",
 								Toast.LENGTH_LONG).show();
@@ -313,7 +321,7 @@ public class VideoCaptureActivity extends Activity {
 					}
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
-					Log.d(LOG_CAPTURE_TAG, "MediaRecorder max filesize reached");
+					CLog.d(CLog.ACTIVITY, "MediaRecorder max filesize reached");
 					if (mRecording) {
 						Toast.makeText(getApplicationContext(), "Capture stopped - Max file size reached",
 								Toast.LENGTH_LONG).show();
@@ -326,22 +334,22 @@ public class VideoCaptureActivity extends Activity {
 			}
 		});
 
-		Log.d(LOG_CAPTURE_TAG, "MediaRecorder successfully initialized");
+		CLog.d(CLog.ACTIVITY, "MediaRecorder successfully initialized");
 		return true;
 	}
 
 	private boolean prepareRecorder() {
 		try {
 			mRecorder.prepare();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder successfully prepared");
+			CLog.d(CLog.ACTIVITY, "MediaRecorder successfully prepared");
 			return true;
 		} catch (final IllegalStateException e) {
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder preparation failed - " + e.toString());
+			CLog.d(CLog.ACTIVITY, "MediaRecorder preparation failed - " + e.toString());
 			return false;
 		} catch (final IOException e) {
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder preparation failed - " + e.toString());
+			CLog.d(CLog.ACTIVITY, "MediaRecorder preparation failed - " + e.toString());
 			return false;
 		}
 	}
@@ -349,11 +357,11 @@ public class VideoCaptureActivity extends Activity {
 	private boolean startRecorder() {
 		try {
 			mRecorder.start();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder successfully started");
+			CLog.d(CLog.ACTIVITY, "MediaRecorder successfully started");
 			return true;
 		} catch (final IllegalStateException e) {
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "MediaRecorder start failed - " + e.toString());
+			CLog.d(CLog.ACTIVITY, "MediaRecorder start failed - " + e.toString());
 			return false;
 		}
 	}
@@ -375,20 +383,20 @@ public class VideoCaptureActivity extends Activity {
 		if (mRecorder != null) {
 			mRecorder.release();
 		}
-		Log.d(LOG_CAPTURE_TAG, "Released all resources");
+		CLog.d(CLog.ACTIVITY, "Released all resources");
 	}
 
-	private Camera openCamera() {
+	private static Camera openCamera() throws OpenCameraException {
+		Camera camera = null;
 		try {
-			return Camera.open(CameraInfo.CAMERA_FACING_BACK);
-		} catch (final Exception e) {
+			camera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
+		} catch (final RuntimeException e) {
 			e.printStackTrace();
-			Log.d(LOG_CAPTURE_TAG, "Unable to open camera - Disabled or in use by other process");
-			Toast.makeText(getApplicationContext(), "Can't capture video - Unable to connect to camera",
-					Toast.LENGTH_LONG).show();
-			finishError("Camera in use by other process");
+			throw new OpenCameraException(OpenType.INUSE);
 		}
-		return null;
+
+		if (camera == null) throw new OpenCameraException(OpenType.NOCAMERA);
+		return camera;
 	}
 
 	/**
@@ -400,18 +408,12 @@ public class VideoCaptureActivity extends Activity {
 	private class SurfaceCallbackHandler implements SurfaceHolder.Callback {
 		@Override
 		public void surfaceCreated(final SurfaceHolder holder) {
-
-			final Camera camera = openCamera();
-
-			if (camera == null) {
-				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - device doesn't have a camera");
-				Toast.makeText(VideoCaptureActivity.this, "Can't capture video - device doesn't have a camera",
-						Toast.LENGTH_LONG).show();
-				finishError("Device does not have a camera");
-				return;
+			try {
+				mCamera = openCamera();
+			} catch (final OpenCameraException e) {
+				e.printStackTrace();
+				finishError(e.getMessage());
 			}
-
-			mCamera = camera;
 		}
 
 		@Override
@@ -428,7 +430,7 @@ public class VideoCaptureActivity extends Activity {
 				mCamera.setParameters(params);
 			} catch (final RuntimeException e) {
 				e.printStackTrace();
-				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - invalid parameters set to camera preview");
+				CLog.d(CLog.ACTIVITY, "Failed to show preview - invalid parameters set to camera preview");
 				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
 						Toast.LENGTH_LONG).show();
 				finishError("Invalid parameters set to camera preview");
@@ -440,13 +442,13 @@ public class VideoCaptureActivity extends Activity {
 				mPreviewRunning = true;
 			} catch (final IOException e) {
 				e.printStackTrace();
-				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to connect camera to preview");
+				CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to connect camera to preview");
 				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
 						Toast.LENGTH_LONG).show();
 				finishError("Invalid parameters set to camera preview");
 			} catch (final RuntimeException e) {
 				e.printStackTrace();
-				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to start camera preview");
+				CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to start camera preview");
 				Toast.makeText(getApplicationContext(), "Unable to show camera preview", Toast.LENGTH_LONG).show();
 				// finishError("Invalid parameters set to camera preview");
 			}
@@ -457,15 +459,15 @@ public class VideoCaptureActivity extends Activity {
 			if (mRecording) {
 				try {
 					mRecorder.stop();
-					Log.d(LOG_CAPTURE_TAG, "Successfully stopped ongoing recording");
+					CLog.d(CLog.ACTIVITY, "Successfully stopped ongoing recording");
 				} catch (final IllegalStateException e) {
 					e.printStackTrace();
-					Log.d(LOG_CAPTURE_TAG, "Failed to stop ongoing recording - " + e.toString());
+					CLog.d(CLog.ACTIVITY, "Failed to stop ongoing recording - " + e.toString());
 				}
 				mRecording = false;
 			}
 			releaseAllResources();
-			Log.d(LOG_CAPTURE_TAG, "Surface Destroyed - Released recoder");
+			CLog.d(CLog.ACTIVITY, "Surface Destroyed - Released recoder");
 		}
 	}
 
