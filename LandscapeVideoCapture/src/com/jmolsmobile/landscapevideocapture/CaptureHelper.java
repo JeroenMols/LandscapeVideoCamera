@@ -13,7 +13,7 @@ public class CaptureHelper {
 	public Camera openCamera() throws OpenCameraException {
 		Camera camera = null;
 		try {
-			camera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
+			camera = openCameraFromSystem();
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			throw new OpenCameraException(OpenType.INUSE);
@@ -21,6 +21,10 @@ public class CaptureHelper {
 
 		if (camera == null) throw new OpenCameraException(OpenType.NOCAMERA);
 		return camera;
+	}
+
+	public Camera openCameraFromSystem() {
+		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
 	}
 
 }
