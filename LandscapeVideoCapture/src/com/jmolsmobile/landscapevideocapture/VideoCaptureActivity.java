@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
@@ -22,8 +21,6 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
 
 /**
  * @author Jeroen Mols
@@ -40,6 +37,7 @@ public class VideoCaptureActivity extends Activity {
 	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
 	private VideoFile				mVideoFile				= null;
+	private final CaptureHelper		mHelper					= new CaptureHelper();
 
 	private MediaRecorder			mRecorder;
 	private SurfaceHolder			mSurfaceHolder;
@@ -260,7 +258,7 @@ public class VideoCaptureActivity extends Activity {
 	private boolean initRecorder() {
 		if (mCamera == null) {
 			try {
-				mCamera = openCamera();
+				mCamera = mHelper.openCamera();
 			} catch (final OpenCameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
@@ -386,19 +384,6 @@ public class VideoCaptureActivity extends Activity {
 		CLog.d(CLog.ACTIVITY, "Released all resources");
 	}
 
-	private static Camera openCamera() throws OpenCameraException {
-		Camera camera = null;
-		try {
-			camera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
-		} catch (final RuntimeException e) {
-			e.printStackTrace();
-			throw new OpenCameraException(OpenType.INUSE);
-		}
-
-		if (camera == null) throw new OpenCameraException(OpenType.NOCAMERA);
-		return camera;
-	}
-
 	/**
 	 * Nested class to control the video preview
 	 * 
@@ -409,7 +394,7 @@ public class VideoCaptureActivity extends Activity {
 		@Override
 		public void surfaceCreated(final SurfaceHolder holder) {
 			try {
-				mCamera = openCamera();
+				mCamera = mHelper.openCamera();
 			} catch (final OpenCameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
