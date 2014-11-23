@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
+import android.hardware.Camera.CameraInfo;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
@@ -256,7 +257,7 @@ public class VideoCaptureActivity extends Activity {
 	// METHODS TO CONTROL THE MEDIARECORDER
 	private boolean initRecorder() {
 		if (mCamera == null) {
-			mCamera = Camera.open();
+			mCamera = openCamera();
 		}
 
 		try {
@@ -377,6 +378,19 @@ public class VideoCaptureActivity extends Activity {
 		Log.d(LOG_CAPTURE_TAG, "Released all resources");
 	}
 
+	private Camera openCamera() {
+		try {
+			return Camera.open(CameraInfo.CAMERA_FACING_BACK);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			Log.d(LOG_CAPTURE_TAG, "Unable to open camera - Disabled or in use by other process");
+			Toast.makeText(getApplicationContext(), "Can't capture video - Unable to connect to camera",
+					Toast.LENGTH_LONG).show();
+			finishError("Camera in use by other process");
+		}
+		return null;
+	}
+
 	/**
 	 * Nested class to control the video preview
 	 * 
@@ -386,23 +400,18 @@ public class VideoCaptureActivity extends Activity {
 	private class SurfaceCallbackHandler implements SurfaceHolder.Callback {
 		@Override
 		public void surfaceCreated(final SurfaceHolder holder) {
-			try {
-				mCamera = Camera.open();
-			} catch (final Exception e) {
-				e.printStackTrace();
-				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - unable to connect camera to preview");
-				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
-						Toast.LENGTH_LONG).show();
-				finishError("Invalid parameters set to camera preview");
-			}
 
-			if (mCamera == null) {
+			final Camera camera = openCamera();
+
+			if (camera == null) {
 				Log.d(LOG_CAPTURE_TAG, "Failed to show preview - device doesn't have a camera");
 				Toast.makeText(VideoCaptureActivity.this, "Can't capture video - device doesn't have a camera",
 						Toast.LENGTH_LONG).show();
 				finishError("Device does not have a camera");
 				return;
 			}
+
+			mCamera = camera;
 		}
 
 		@Override
