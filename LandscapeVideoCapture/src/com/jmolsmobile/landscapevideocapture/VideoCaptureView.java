@@ -14,24 +14,34 @@ import com.jmolsmobile.landscapevideocapture.R.id;
  */
 public class VideoCaptureView {
 
-	private ImageView	mDeclineBtnIv;
-	private ImageView	mAcceptBtnIv;
-	private ImageView	mRecordBtnIv;
-	SurfaceView			mSurfaceView;
-	ImageView			mThumbnailIv;
+	private ImageView			mDeclineBtnIv;
+	private ImageView			mAcceptBtnIv;
+	private ImageView			mRecordBtnIv;
+	SurfaceView					mSurfaceView;
+	ImageView					mThumbnailIv;
 
-	void initializeAllViews(final VideoCaptureActivity videoCaptureActivity, View container2) {
-		mRecordBtnIv = (ImageView) container2.findViewById(id.videocapture_recordbtn_iv);
-		mAcceptBtnIv = (ImageView) container2.findViewById(id.videocapture_acceptbtn_iv);
-		mDeclineBtnIv = (ImageView) container2.findViewById(id.videocapture_declinebtn_iv);
+	private RecordingInterface	mRecordingInterface;
+
+	public void setRecordingInterface(RecordingInterface mRecordingInterface) {
+		this.mRecordingInterface = mRecordingInterface;
+	}
+
+	public SurfaceView getSurfaceView() {
+		return mSurfaceView;
+	}
+
+	public void initializeAllViews(View container) {
+		mRecordBtnIv = (ImageView) container.findViewById(id.videocapture_recordbtn_iv);
+		mAcceptBtnIv = (ImageView) container.findViewById(id.videocapture_acceptbtn_iv);
+		mDeclineBtnIv = (ImageView) container.findViewById(id.videocapture_declinebtn_iv);
 
 		mRecordBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				if (videoCaptureActivity.isRecording()) {
-					videoCaptureActivity.stopRecording();
+				if (mRecordingInterface.isRecording()) {
+					mRecordingInterface.stopRecording();
 				} else {
-					videoCaptureActivity.setRecording(videoCaptureActivity.startRecording());
+					mRecordingInterface.setRecording(mRecordingInterface.startRecording());
 				}
 			}
 		});
@@ -39,22 +49,18 @@ public class VideoCaptureView {
 		mAcceptBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				videoCaptureActivity.finishCompleted();
+				mRecordingInterface.finishCompleted();
 			}
 		});
 		mDeclineBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				videoCaptureActivity.finishCancelled();
+				mRecordingInterface.finishCancelled();
 			}
 		});
 
-		mThumbnailIv = (ImageView) container2.findViewById(R.id.videocapture_preview_iv);
-		mSurfaceView = (SurfaceView) container2.findViewById(R.id.videocapture_preview_sv);
-	}
-
-	public SurfaceView getSurfaceView() {
-		return mSurfaceView;
+		mThumbnailIv = (ImageView) container.findViewById(R.id.videocapture_preview_iv);
+		mSurfaceView = (SurfaceView) container.findViewById(R.id.videocapture_preview_sv);
 	}
 
 	public void updateUINotRecording() {
