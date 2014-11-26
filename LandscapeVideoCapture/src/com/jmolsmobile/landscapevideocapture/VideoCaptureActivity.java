@@ -6,7 +6,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
@@ -14,12 +13,8 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 /**
@@ -38,21 +33,16 @@ public class VideoCaptureActivity extends Activity {
 
 	private VideoFile				mVideoFile				= null;
 	private final CaptureHelper		mHelper					= new CaptureHelper();
+	private VideoCaptureView		mVideoCaptureView;
 
 	private MediaRecorder			mRecorder;
 	private SurfaceHolder			mSurfaceHolder;
 
-	private boolean					mRecording				= false;
+	boolean							mRecording				= false;
 	private boolean					mVideoRecorded			= false;
 	private boolean					mPreviewRunning			= false;
 
 	private Camera					mCamera;
-	private SurfaceView				mSurfaceView;
-	private ImageView				mThumbnailIv;
-	private ImageView				mRecordBtnIv;
-	private ImageView				mAcceptBtnIv;
-	private ImageView				mDeclineBtnIv;
-
 	// ADJUST THESE TO YOUR NEEDS
 	private static final int		PREVIEW_VIDEO_WIDTH		= 640;
 	private static final int		PREVIEW_VIDEO_HEIGHT	= 480;
@@ -76,22 +66,21 @@ public class VideoCaptureActivity extends Activity {
 
 		mVideoFile = generateOutputFile(savedInstanceState);
 
-		mSurfaceView = (SurfaceView) findViewById(R.id.videocapture_preview_sv);
-		if (mSurfaceView == null) return; // Wrong orientation
+		mVideoCaptureView = new VideoCaptureView();
+		if (mVideoCaptureView.getSurfaceView() == null) return; // Wrong orientation
 
-		mThumbnailIv = (ImageView) findViewById(R.id.videocapture_preview_iv);
-		initializeAllButtons();
+		mVideoCaptureView.initializeAllViews(this, findViewById(R.id.videocapture_container_rl));
 
 		if (mVideoRecorded) {
-			updateUIRecordingFinished();
+			mVideoCaptureView.updateUIRecordingFinished(generateThumbnail());
 			return;
 		}
 
-		mSurfaceHolder = mSurfaceView.getHolder();
+		mSurfaceHolder = mVideoCaptureView.getSurfaceView().getHolder();
 		mSurfaceHolder.addCallback(new SurfaceCallbackHandler());
 		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
 
-		updateUINotRecording();
+		mVideoCaptureView.updateUINotRecording();
 	}
 
 	@Override
@@ -121,18 +110,18 @@ public class VideoCaptureActivity extends Activity {
 	}
 
 	// METHODS TO CONTROL THE RECORDING
-	private boolean startRecording() {
+	public boolean startRecording() {
 		if (!initRecorder()) return false;
 		if (!prepareRecorder()) return false;
 		if (!startRecorder()) return false;
 
 		// Update UI
-		updateUIRecordingOngoing();
+		mVideoCaptureView.updateUIRecordingOngoing();
 		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + getOutputFilename());
 		return true;
 	}
 
-	private boolean stopRecording() {
+	public boolean stopRecording() {
 		try {
 			mRecorder.stop();
 			mVideoRecorded = true;
@@ -141,7 +130,7 @@ public class VideoCaptureActivity extends Activity {
 		}
 		mRecording = false;
 
-		updateUIRecordingFinished();
+		mVideoCaptureView.updateUIRecordingFinished(generateThumbnail());
 		releaseAllResources();
 		return true;
 	}
@@ -159,18 +148,18 @@ public class VideoCaptureActivity extends Activity {
 		return returnFile;
 	}
 
-	private String getOutputFilename() {
+	String getOutputFilename() {
 		return mVideoFile.getFile().getAbsolutePath();
 	}
 
-	private void finishCompleted(final String filename) {
+	public void finishCompleted(final String filename) {
 		final Intent result = new Intent();
 		result.putExtra(EXTRA_OUTPUT_FILENAME, filename);
 		this.setResult(RESULT_OK, result);
 		finish();
 	}
 
-	private void finishCancelled() {
+	public void finishCancelled() {
 		this.setResult(RESULT_CANCELED);
 		finish();
 	}
@@ -184,74 +173,14 @@ public class VideoCaptureActivity extends Activity {
 		finish();
 	}
 
-	// METHODS TO UPDATE UI
-	private void updateUINotRecording() {
-		mRecordBtnIv.setSelected(false);
-		mRecordBtnIv.setVisibility(View.VISIBLE);
-		mAcceptBtnIv.setVisibility(View.GONE);
-		mDeclineBtnIv.setVisibility(View.GONE);
-		mThumbnailIv.setVisibility(View.GONE);
-		mSurfaceView.setVisibility(View.VISIBLE);
-	}
-
-	private void updateUIRecordingOngoing() {
-		mRecordBtnIv.setSelected(true);
-		mRecordBtnIv.setVisibility(View.VISIBLE);
-		mAcceptBtnIv.setVisibility(View.GONE);
-		mDeclineBtnIv.setVisibility(View.GONE);
-		mThumbnailIv.setVisibility(View.GONE);
-		mSurfaceView.setVisibility(View.VISIBLE);
-	}
-
-	private void updateUIRecordingFinished() {
-		mRecordBtnIv.setVisibility(View.INVISIBLE);
-		mAcceptBtnIv.setVisibility(View.VISIBLE);
-		mDeclineBtnIv.setVisibility(View.VISIBLE);
-		mThumbnailIv.setVisibility(View.VISIBLE);
-		mSurfaceView.setVisibility(View.GONE);
-		generateThumbnail();
-	}
-
-	private void initializeAllButtons() {
-		mRecordBtnIv = (ImageView) findViewById(R.id.videocapture_recordbtn_iv);
-		mAcceptBtnIv = (ImageView) findViewById(R.id.videocapture_acceptbtn_iv);
-		mDeclineBtnIv = (ImageView) findViewById(R.id.videocapture_declinebtn_iv);
-
-		mRecordBtnIv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-				if (mRecording) {
-					stopRecording();
-				} else {
-					mRecording = startRecording();
-				}
-			}
-		});
-
-		mAcceptBtnIv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-				finishCompleted(getOutputFilename());
-			}
-		});
-		mDeclineBtnIv.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(final View v) {
-				finishCancelled();
-			}
-		});
-	}
-
 	@SuppressWarnings("deprecation")
-	private void generateThumbnail() {
+	private Bitmap generateThumbnail() {
 		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(getOutputFilename(),
 				MediaStore.Video.Thumbnails.FULL_SCREEN_KIND);
 		if (thumbnail == null) {
 			CLog.d(CLog.ACTIVITY, "Failed to generate video preview");
-			return;
 		}
-
-		mThumbnailIv.setBackgroundDrawable(new BitmapDrawable(thumbnail));
+		return thumbnail;
 	}
 
 	// METHODS TO CONTROL THE MEDIARECORDER
