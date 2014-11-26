@@ -7,8 +7,6 @@ import java.util.Locale;
 import junit.framework.TestCase;
 import android.os.Environment;
 
-import com.jmolsmobile.landscapevideocapture.VideoFile;
-
 public class VideoFileTest extends TestCase {
 
 	public void test_canCreateObject() {
@@ -64,6 +62,12 @@ public class VideoFileTest extends TestCase {
 	public void test_fileShouldContainPathToVideoFolder() {
 		final VideoFile videoFile = new VideoFile("");
 		final String expectedPath = Environment.DIRECTORY_MOVIES;
+		assertTrue(videoFile.getFile().getAbsolutePath().contains(expectedPath));
+	}
+
+	public void test_fileShouldNotStartWithDoublePath() {
+		final String expectedPath = "sdcard/videofile.mp4";
+		final VideoFile videoFile = new VideoFile(expectedPath);
 		assertTrue(videoFile.getFile().getAbsolutePath().contains(expectedPath));
 	}
 

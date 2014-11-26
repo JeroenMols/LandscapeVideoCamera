@@ -13,6 +13,7 @@ import android.os.Environment;
  */
 public class VideoFile {
 
+	private static final String	DIRECTORY_SEPARATOR	= "/";
 	private static final String	DATE_FORMAT			= "yyyyMMdd_HHmmss";
 	private static final String	DEFAULT_PREFIX		= "video_";
 	private static final String	DEFAULT_EXTENSION	= ".mp4";
@@ -30,6 +31,9 @@ public class VideoFile {
 	}
 
 	public File getFile() {
+		final String filename = getFilename();
+		if (filename.contains(DIRECTORY_SEPARATOR)) return new File(filename);
+
 		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
 		path.mkdirs();
 		return new File(path, getFilename());
