@@ -28,10 +28,10 @@ public class VideoCaptureView {
 		mRecordBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				if (videoCaptureActivity.mRecording) {
+				if (videoCaptureActivity.isRecording()) {
 					videoCaptureActivity.stopRecording();
 				} else {
-					videoCaptureActivity.mRecording = videoCaptureActivity.startRecording();
+					videoCaptureActivity.setRecording(videoCaptureActivity.startRecording());
 				}
 			}
 		});
@@ -39,7 +39,7 @@ public class VideoCaptureView {
 		mAcceptBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(final View v) {
-				videoCaptureActivity.finishCompleted(videoCaptureActivity.getOutputFilename());
+				videoCaptureActivity.finishCompleted();
 			}
 		});
 		mDeclineBtnIv.setOnClickListener(new OnClickListener() {

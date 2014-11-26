@@ -39,6 +39,7 @@ public class VideoCaptureActivity extends Activity {
 	private SurfaceHolder			mSurfaceHolder;
 
 	boolean							mRecording				= false;
+
 	private boolean					mVideoRecorded			= false;
 	private boolean					mPreviewRunning			= false;
 
@@ -171,6 +172,14 @@ public class VideoCaptureActivity extends Activity {
 		result.putExtra(EXTRA_ERROR_MESSAGE, message);
 		this.setResult(RESULT_ERROR, result);
 		finish();
+	}
+
+	public boolean isRecording() {
+		return mRecording;
+	}
+
+	public void setRecording(boolean mRecording) {
+		this.mRecording = mRecording;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -311,6 +320,13 @@ public class VideoCaptureActivity extends Activity {
 			mRecorder.release();
 		}
 		CLog.d(CLog.ACTIVITY, "Released all resources");
+	}
+
+	public void finishCompleted() {
+		final Intent result = new Intent();
+		result.putExtra(EXTRA_OUTPUT_FILENAME, getOutputFilename());
+		this.setResult(RESULT_OK, result);
+		finish();
 	}
 
 	/**
