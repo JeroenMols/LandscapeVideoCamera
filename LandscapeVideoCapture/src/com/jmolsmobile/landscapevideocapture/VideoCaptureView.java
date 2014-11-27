@@ -17,11 +17,11 @@ import com.jmolsmobile.landscapevideocapture.R.id;
  */
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
-	private ImageView			mDeclineBtnIv;
-	private ImageView			mAcceptBtnIv;
-	private ImageView			mRecordBtnIv;
-	private SurfaceView			mSurfaceView;
-	private ImageView			mThumbnailIv;
+	private ImageView					mDeclineBtnIv;
+	private ImageView					mAcceptBtnIv;
+	private ImageView					mRecordBtnIv;
+	private SurfaceView					mSurfaceView;
+	private ImageView					mThumbnailIv;
 
 	private RecordingButtonInterface	mRecordingInterface;
 
@@ -95,6 +95,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
+		if (mRecordingInterface == null) return;
+
 		if (v.getId() == mRecordBtnIv.getId()) {
 			mRecordingInterface.onRecordButtonClicked();
 		} else if (v.getId() == mAcceptBtnIv.getId()) {
