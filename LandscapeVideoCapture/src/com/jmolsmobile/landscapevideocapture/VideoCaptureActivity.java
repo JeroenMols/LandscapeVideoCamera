@@ -13,7 +13,6 @@ import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.SurfaceHolder;
-import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -68,13 +67,10 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 
 		mVideoFile = generateOutputFile(savedInstanceState);
 
-		final View container = findViewById(R.id.videocapture_container_rl);
-		if (container == null) return; // Wrong orientation
+		mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
+		if (mVideoCaptureView == null) return; // Wrong orientation
 
-		mVideoCaptureView = new VideoCaptureView();
 		mVideoCaptureView.setRecordingInterface(this);
-
-		mVideoCaptureView.initializeAllViews(container);
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(generateThumbnail());

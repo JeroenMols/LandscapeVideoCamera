@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.jmolsmobile.landscapevideocapture.VideoCaptureView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/videocapture_videocaptureview_vcv"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
-
-    <include layout="@layout/view_videocapture" />
-
-</FrameLayout>
+    android:layout_height="match_parent" />

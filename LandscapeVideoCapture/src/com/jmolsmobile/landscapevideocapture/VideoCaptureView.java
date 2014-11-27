@@ -1,10 +1,12 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.util.AttributeSet;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.jmolsmobile.landscapevideocapture.R.id;
@@ -12,7 +14,7 @@ import com.jmolsmobile.landscapevideocapture.R.id;
 /**
  * @author Jeroen Mols
  */
-public class VideoCaptureView {
+public class VideoCaptureView extends FrameLayout {
 
 	private ImageView			mDeclineBtnIv;
 	private ImageView			mAcceptBtnIv;
@@ -22,6 +24,21 @@ public class VideoCaptureView {
 
 	private RecordingInterface	mRecordingInterface;
 
+	public VideoCaptureView(Context context) {
+		super(context);
+		initialize(context);
+	}
+
+	public VideoCaptureView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		initialize(context);
+	}
+
+	public VideoCaptureView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		initialize(context);
+	}
+
 	public void setRecordingInterface(RecordingInterface mRecordingInterface) {
 		this.mRecordingInterface = mRecordingInterface;
 	}
@@ -30,10 +47,12 @@ public class VideoCaptureView {
 		return mSurfaceView;
 	}
 
-	public void initializeAllViews(View container) {
-		mRecordBtnIv = (ImageView) container.findViewById(id.videocapture_recordbtn_iv);
-		mAcceptBtnIv = (ImageView) container.findViewById(id.videocapture_acceptbtn_iv);
-		mDeclineBtnIv = (ImageView) container.findViewById(id.videocapture_declinebtn_iv);
+	private void initialize(Context context) {
+		final View videoCapture = View.inflate(context, R.layout.view_videocapture, this);
+
+		mRecordBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_recordbtn_iv);
+		mAcceptBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_acceptbtn_iv);
+		mDeclineBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_declinebtn_iv);
 
 		mRecordBtnIv.setOnClickListener(new OnClickListener() {
 			@Override
@@ -59,8 +78,8 @@ public class VideoCaptureView {
 			}
 		});
 
-		mThumbnailIv = (ImageView) container.findViewById(R.id.videocapture_preview_iv);
-		mSurfaceView = (SurfaceView) container.findViewById(R.id.videocapture_preview_sv);
+		mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
+		mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
 	}
 
 	public void updateUINotRecording() {
