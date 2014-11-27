@@ -82,14 +82,14 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 	public void test_uiAfterUpdateFinishedBitmapNotNull() {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
 		final ImageView imageView = (ImageView) videoCaptureView.findViewById(R.id.videocapture_preview_iv);
-		final Drawable background = imageView.getBackground();
+		final Drawable background = imageView.getDrawable();
 		videoCaptureView.updateUIRecordingFinished(Bitmap.createBitmap(10, 10, Config.ARGB_4444));
 		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.GONE);
 		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.GONE);
-		assertNotSame(background, imageView.getBackground());
+		assertNotSame(background, imageView.getDrawable());
 	}
 
 	public void test_surfaceViewShouldNotBeNull() {

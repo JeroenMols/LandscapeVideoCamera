@@ -2,13 +2,13 @@ package com.jmolsmobile.landscapevideocapture;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import com.jmolsmobile.landscapevideocapture.R.id;
 
@@ -89,7 +89,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mSurfaceView.setVisibility(View.GONE);
 		final Bitmap thumbnail = videoThumbnail;
 		if (thumbnail != null) {
-			mThumbnailIv.setBackgroundDrawable(new BitmapDrawable(thumbnail));
+			mThumbnailIv.setScaleType(ScaleType.CENTER_CROP);
+			mThumbnailIv.setImageBitmap(videoThumbnail);
 		}
 	}
 
