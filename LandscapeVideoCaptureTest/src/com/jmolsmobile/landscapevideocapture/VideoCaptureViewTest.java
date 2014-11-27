@@ -2,7 +2,11 @@ package com.jmolsmobile.landscapevideocapture;
 
 import org.mockito.Mockito;
 
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
+import android.graphics.drawable.Drawable;
 import android.view.View;
+import android.widget.ImageView;
 
 public class VideoCaptureViewTest extends MockitoTestCase {
 
@@ -60,6 +64,29 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.GONE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.GONE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.VISIBLE);
+	}
+
+	public void test_uiAfterUpdateFinishedBitmapNull() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		videoCaptureView.updateUIRecordingFinished(null);
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.GONE);
+	}
+
+	public void test_uiAfterUpdateFinishedBitmapNotNull() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		final ImageView imageView = (ImageView) videoCaptureView.findViewById(R.id.videocapture_preview_iv);
+		final Drawable background = imageView.getBackground();
+		videoCaptureView.updateUIRecordingFinished(Bitmap.createBitmap(10, 10, Config.ARGB_4444));
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.GONE);
+		assertNotSame(background, imageView.getBackground());
 	}
 
 	private void checkUINotRecording(final VideoCaptureView videoCaptureView) {
