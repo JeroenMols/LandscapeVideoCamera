@@ -28,6 +28,18 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		Mockito.verify(mockBtnInterface, Mockito.times(1)).onRecordButtonClicked();
 	}
 
+	public void test_acceptBtnShouldNotifyListener() {
+		final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+		performClickOnButton(R.id.videocapture_acceptbtn_iv, mockBtnInterface);
+		Mockito.verify(mockBtnInterface, Mockito.times(1)).onAcceptButtonClicked();
+	}
+
+	public void test_declineBtnShouldNotifyListener() {
+		final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+		performClickOnButton(R.id.videocapture_declinebtn_iv, mockBtnInterface);
+		Mockito.verify(mockBtnInterface, Mockito.times(1)).onDeclineButtonClicked();
+	}
+
 	private void performClickOnButton(int btnResourceId, final RecordingButtonInterface mockBtnInterface) {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
 		videoCaptureView.setRecordingButtonInterface(mockBtnInterface);
