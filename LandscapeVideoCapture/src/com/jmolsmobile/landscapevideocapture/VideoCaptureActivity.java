@@ -21,7 +21,7 @@ import android.widget.Toast;
  * @author Jeroen Mols
  * @date 03 Jan 2014
  */
-public class VideoCaptureActivity extends Activity implements RecordingInterface {
+public class VideoCaptureActivity extends Activity implements RecordingButtonInterface {
 
 	public static final int			RESULT_ERROR			= 753245;
 
@@ -85,11 +85,6 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 	}
 
 	@Override
-	protected void onResume() {
-		super.onResume();
-	}
-
-	@Override
 	protected void onPause() {
 		if (mRecording) {
 			stopRecording();
@@ -111,12 +106,6 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 	}
 
 	// METHODS TO CONTROL THE RECORDING
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#startRecording()
-	 */
-	@Override
 	public boolean startRecording() {
 		if (!initRecorder()) return false;
 		if (!prepareRecorder()) return false;
@@ -128,12 +117,6 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#stopRecording()
-	 */
-	@Override
 	public boolean stopRecording() {
 		try {
 			mRecorder.stop();
@@ -165,13 +148,33 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 		return mVideoFile.getFile().getAbsolutePath();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#finishCancelled()
-	 */
 	@Override
-	public void finishCancelled() {
+	public void onRecordButtonClicked() {
+		if (mRecording) {
+			stopRecording();
+		} else {
+			this.mRecording = startRecording();
+		}
+	}
+
+	@Override
+	public void onAcceptButtonClicked() {
+		finishCompleted();
+	}
+
+	@Override
+	public void onDeclineButtonClicked() {
+		finishCancelled();
+	}
+
+	private void finishCompleted() {
+		final Intent result = new Intent();
+		result.putExtra(EXTRA_OUTPUT_FILENAME, getOutputFilename());
+		this.setResult(RESULT_OK, result);
+		finish();
+	}
+
+	private void finishCancelled() {
 		this.setResult(RESULT_CANCELED);
 		finish();
 	}
@@ -183,26 +186,6 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 		result.putExtra(EXTRA_ERROR_MESSAGE, message);
 		this.setResult(RESULT_ERROR, result);
 		finish();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#isRecording()
-	 */
-	@Override
-	public boolean isRecording() {
-		return mRecording;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#setRecording(boolean)
-	 */
-	@Override
-	public void setRecording(boolean mRecording) {
-		this.mRecording = mRecording;
 	}
 
 	@SuppressWarnings("deprecation")
@@ -343,19 +326,6 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 			mRecorder.release();
 		}
 		CLog.d(CLog.ACTIVITY, "Released all resources");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.jmolsmobile.landscapevideocapture.RecordingInterface#finishCompleted()
-	 */
-	@Override
-	public void finishCompleted() {
-		final Intent result = new Intent();
-		result.putExtra(EXTRA_OUTPUT_FILENAME, getOutputFilename());
-		this.setResult(RESULT_OK, result);
-		finish();
 	}
 
 	/**
