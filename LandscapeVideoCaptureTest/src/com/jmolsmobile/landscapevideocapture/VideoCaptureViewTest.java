@@ -40,10 +40,25 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		Mockito.verify(mockBtnInterface, Mockito.times(1)).onDeclineButtonClicked();
 	}
 
+	public void test_uiShouldBeNotRecordingByDefault() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		assertFalse(videoCaptureView.findViewById(R.id.videocapture_recordbtn_iv).isSelected());
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.VISIBLE);
+	}
+
+	private void checkVisibility(final VideoCaptureView videoCaptureView, int videocaptureRecordbtnIv, int visible) {
+		assertTrue(videoCaptureView.findViewById(videocaptureRecordbtnIv).getVisibility() == visible);
+	}
+
 	private void performClickOnButton(int btnResourceId, final RecordingButtonInterface mockBtnInterface) {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
 		videoCaptureView.setRecordingButtonInterface(mockBtnInterface);
 		final View btn = videoCaptureView.findViewById(btnResourceId);
 		btn.performClick();
 	}
+
 }
