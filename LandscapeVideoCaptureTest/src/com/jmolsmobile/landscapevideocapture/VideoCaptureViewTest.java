@@ -8,6 +8,9 @@ import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
+/**
+ * @author Jeroen Mols
+ */
 public class VideoCaptureViewTest extends MockitoTestCase {
 
 	public void test_initializeClass() {
