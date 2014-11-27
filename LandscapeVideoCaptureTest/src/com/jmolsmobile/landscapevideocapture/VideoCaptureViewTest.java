@@ -89,6 +89,11 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		assertNotSame(background, imageView.getBackground());
 	}
 
+	public void test_surfaceViewShouldNotBeNull() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		assertNotNull(videoCaptureView.getSurfaceView());
+	}
+
 	private void checkUINotRecording(final VideoCaptureView videoCaptureView) {
 		assertFalse(videoCaptureView.findViewById(R.id.videocapture_recordbtn_iv).isSelected());
 		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.VISIBLE);
