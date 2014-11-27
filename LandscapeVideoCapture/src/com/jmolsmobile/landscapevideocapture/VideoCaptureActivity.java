@@ -68,12 +68,12 @@ public class VideoCaptureActivity extends Activity implements RecordingInterface
 
 		mVideoFile = generateOutputFile(savedInstanceState);
 
-		mVideoCaptureView = new VideoCaptureView();
-		if (mVideoCaptureView.getSurfaceView() == null) return; // Wrong orientation
+		final View container = findViewById(R.id.videocapture_container_rl);
+		if (container == null) return; // Wrong orientation
 
+		mVideoCaptureView = new VideoCaptureView();
 		mVideoCaptureView.setRecordingInterface(this);
 
-		View container = findViewById(R.id.videocapture_container_rl);
 		mVideoCaptureView.initializeAllViews(container);
 
 		if (mVideoRecorded) {
