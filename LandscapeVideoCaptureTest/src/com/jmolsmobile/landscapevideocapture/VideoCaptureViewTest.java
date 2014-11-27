@@ -42,6 +42,27 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 
 	public void test_uiShouldBeNotRecordingByDefault() {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		checkUINotRecording(videoCaptureView);
+	}
+
+	public void test_uiAfterUpdateNotRecording() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		videoCaptureView.updateUINotRecording();
+		checkUINotRecording(videoCaptureView);
+	}
+
+	public void test_uiAfterUpdateOngoing() {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		videoCaptureView.updateUIRecordingOngoing();
+		assertTrue(videoCaptureView.findViewById(R.id.videocapture_recordbtn_iv).isSelected());
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.VISIBLE);
+		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_preview_sv, View.VISIBLE);
+	}
+
+	private void checkUINotRecording(final VideoCaptureView videoCaptureView) {
 		assertFalse(videoCaptureView.findViewById(R.id.videocapture_recordbtn_iv).isSelected());
 		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.GONE);
