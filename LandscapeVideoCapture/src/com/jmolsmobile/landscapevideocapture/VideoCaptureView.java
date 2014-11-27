@@ -20,8 +20,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 	private ImageView			mDeclineBtnIv;
 	private ImageView			mAcceptBtnIv;
 	private ImageView			mRecordBtnIv;
-	SurfaceView					mSurfaceView;
-	ImageView					mThumbnailIv;
+	private SurfaceView			mSurfaceView;
+	private ImageView			mThumbnailIv;
 
 	private RecordingInterface	mRecordingInterface;
 
