@@ -55,8 +55,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
 	}
 
-	public void setRecordingInterface(RecordingButtonInterface mRecordingInterface) {
-		this.mRecordingInterface = mRecordingInterface;
+	public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
+		this.mRecordingInterface = mBtnInterface;
 	}
 
 	public SurfaceView getSurfaceView() {

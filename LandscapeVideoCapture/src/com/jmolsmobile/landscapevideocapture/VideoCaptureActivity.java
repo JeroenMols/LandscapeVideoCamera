@@ -70,7 +70,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
 		if (mVideoCaptureView == null) return; // Wrong orientation
 
-		mVideoCaptureView.setRecordingInterface(this);
+		mVideoCaptureView.setRecordingButtonInterface(this);
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(generateThumbnail());

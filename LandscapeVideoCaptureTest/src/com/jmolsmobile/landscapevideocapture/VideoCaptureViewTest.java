@@ -1,5 +1,7 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import org.mockito.Mockito;
+
 import android.view.View;
 
 public class VideoCaptureViewTest extends MockitoTestCase {
@@ -18,5 +20,18 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
 		final View recordBtn = videoCaptureView.findViewById(R.id.videocapture_recordbtn_iv);
 		recordBtn.performClick();
+	}
+
+	public void test_recordBtnShouldNotifyListener() {
+		final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+		performClickOnButton(R.id.videocapture_recordbtn_iv, mockBtnInterface);
+		Mockito.verify(mockBtnInterface, Mockito.times(1)).onRecordButtonClicked();
+	}
+
+	private void performClickOnButton(int btnResourceId, final RecordingButtonInterface mockBtnInterface) {
+		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
+		videoCaptureView.setRecordingButtonInterface(mockBtnInterface);
+		final View btn = videoCaptureView.findViewById(btnResourceId);
+		btn.performClick();
 	}
 }
