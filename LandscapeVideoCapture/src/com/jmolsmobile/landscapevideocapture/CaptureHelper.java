@@ -27,7 +27,12 @@ public class CaptureHelper {
 		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
 	}
 
+	public void unlockCameraFromSystem(Camera camera) {
+		camera.unlock();
+	}
+
 	public void prepareCameraForRecording(Camera camera) {
+		unlockCameraFromSystem(camera);
 	}
 
 }

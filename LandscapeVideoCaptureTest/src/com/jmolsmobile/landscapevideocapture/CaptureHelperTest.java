@@ -45,4 +45,13 @@ public class CaptureHelperTest extends MockitoTestCase {
 		}
 	}
 
+	public void test_prepareCameraShouldCallUnlock() {
+		final CaptureHelper spyHelper = Mockito.spy(new CaptureHelper());
+		final Camera mockCamera = Mockito.mock(Camera.class);
+		Mockito.doNothing().when(spyHelper).unlockCameraFromSystem(mockCamera);
+
+		spyHelper.prepareCameraForRecording(mockCamera);
+
+		Mockito.verify(spyHelper, Mockito.times(1)).unlockCameraFromSystem(mockCamera);
+	}
 }
