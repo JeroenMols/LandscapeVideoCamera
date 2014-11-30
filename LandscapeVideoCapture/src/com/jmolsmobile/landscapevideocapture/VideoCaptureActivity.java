@@ -206,19 +206,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
 					CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
-					if (mRecording) {
-						Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached",
-								Toast.LENGTH_LONG).show();
-						stopRecording();
-					}
+					Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached", Toast.LENGTH_LONG)
+					.show();
+					stopRecording();
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
 					CLog.d(CLog.ACTIVITY, "MediaRecorder max filesize reached");
-					if (mRecording) {
-						Toast.makeText(getApplicationContext(), "Capture stopped - Max file size reached",
-								Toast.LENGTH_LONG).show();
-						stopRecording();
-					}
+					Toast.makeText(getApplicationContext(), "Capture stopped - Max file size reached",
+							Toast.LENGTH_LONG).show();
+					stopRecording();
 					break;
 				default:
 					break;
@@ -237,8 +233,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			return false;
 		}
 
-		mRecorder = mHelper.createMediaRecorder(camera, previewSurface, captureConfiguration,
-				outputFilename, recordingListener);
+		mRecorder = mHelper.createMediaRecorder(camera, previewSurface, captureConfiguration, outputFilename,
+				recordingListener);
+
 		CLog.d(CLog.ACTIVITY, "MediaRecorder successfully initialized");
 		return true;
 	}
