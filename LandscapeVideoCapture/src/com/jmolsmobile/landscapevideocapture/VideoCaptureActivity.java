@@ -12,6 +12,7 @@ import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.Window;
 import android.view.WindowManager;
@@ -136,7 +137,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		return returnFile;
 	}
 
-	String getOutputFilename() {
+	private String getOutputFilename() {
 		return mVideoFile.getFile().getAbsolutePath();
 	}
 
@@ -192,38 +193,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	// METHODS TO CONTROL THE MEDIARECORDER
 	private boolean initRecorder(CaptureConfiguration captureConfiguration) {
-		try {
-			if (mCamera == null) {
-				mCamera = mHelper.openCamera();
-			}
-			mHelper.prepareCameraForRecording(mCamera);
-		} catch (final Exception e) {
-			e.printStackTrace();
-			finishError(e.getMessage());
-			return false;
-		}
-
-		mRecorder = new MediaRecorder();
-		mRecorder.setCamera(mCamera);
-		mRecorder.setAudioSource(captureConfiguration.getAudioSource());
-		mRecorder.setVideoSource(captureConfiguration.getVideoSource());
-
-		// Order is important
-		mRecorder.setOutputFormat(captureConfiguration.getOutputFormat());
-		mRecorder.setMaxDuration(captureConfiguration.getMaxCaptureDuration());
-		mRecorder.setOutputFile(getOutputFilename());
-
-		mRecorder.setVideoSize(captureConfiguration.getVideoWidth(), captureConfiguration.getVideoHeight());
-		mRecorder.setVideoEncodingBitRate(captureConfiguration.getBitratePerSecond());
-
-		mRecorder.setAudioEncoder(captureConfiguration.getAudioEncoder());
-		mRecorder.setVideoEncoder(captureConfiguration.getVideoEncoder());
-
-		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
-
-		mRecorder.setMaxFileSize(captureConfiguration.getMaxCaptureFileSize());
-
-		mRecorder.setOnInfoListener(new OnInfoListener() {
+		final Camera camera = mCamera;
+		final Surface previewSurface = mSurfaceHolder.getSurface();
+		final String outputFilename = getOutputFilename();
+		final OnInfoListener recordingListener = new OnInfoListener() {
 
 			@Override
 			public void onInfo(MediaRecorder mr, int what, int extra) {
@@ -251,8 +224,21 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 					break;
 				}
 			}
-		});
+		};
 
+		try {
+			if (camera == null) {
+				mCamera = mHelper.openCamera();
+			}
+			mHelper.prepareCameraForRecording(camera);
+		} catch (final Exception e) {
+			e.printStackTrace();
+			finishError(e.getMessage());
+			return false;
+		}
+
+		mRecorder = mHelper.createMediaRecorder(camera, previewSurface, captureConfiguration,
+				outputFilename, recordingListener);
 		CLog.d(CLog.ACTIVITY, "MediaRecorder successfully initialized");
 		return true;
 	}

@@ -57,7 +57,7 @@ public class CaptureConfiguration {
 	/**
 	 * @return Bitrate of the captured video in bits per second
 	 */
-	public int getBitratePerSecond() {
+	public int getVideoBitrate() {
 		return BITRATE_PER_SECOND;
 	}
 
