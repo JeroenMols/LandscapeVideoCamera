@@ -345,18 +345,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 		@Override
 		public void surfaceDestroyed(final SurfaceHolder holder) {
-			if (mRecording) {
-				try {
-					mRecorder.stop();
-					CLog.d(CLog.ACTIVITY, "Successfully stopped ongoing recording");
-				} catch (final IllegalStateException e) {
-					e.printStackTrace();
-					CLog.d(CLog.ACTIVITY, "Failed to stop ongoing recording - " + e.toString());
-				}
-				mRecording = false;
-			}
-			releaseAllResources();
-			CLog.d(CLog.ACTIVITY, "Surface Destroyed - Released recoder");
+			// NOP
 		}
 	}
 
