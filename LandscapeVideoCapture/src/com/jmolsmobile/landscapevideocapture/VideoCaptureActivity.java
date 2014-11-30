@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 /**
  * @author Jeroen Mols
- * @date 03 Jan 2014
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface {
 
@@ -63,6 +62,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
 		if (mVideoCaptureView == null) return; // Wrong orientation
 
+		initializeCamera();
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
 		if (mVideoRecorded) {
@@ -207,7 +207,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
 					CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
 					Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached", Toast.LENGTH_LONG)
-					.show();
+							.show();
 					stopRecording();
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
@@ -223,11 +223,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		};
 
 		try {
-			if (camera == null) {
-				mCamera = mHelper.openCamera();
-			}
 			mHelper.prepareCameraForRecording(camera);
-		} catch (final Exception e) {
+		} catch (final PrepareCameraException e) {
 			e.printStackTrace();
 			finishError(e.getMessage());
 			return false;
@@ -288,21 +285,24 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		CLog.d(CLog.ACTIVITY, "Released all resources");
 	}
 
+	private void initializeCamera() {
+		try {
+			mCamera = mHelper.openCamera();
+		} catch (final OpenCameraException e) {
+			e.printStackTrace();
+			finishError(e.getMessage());
+		}
+	}
+
 	/**
 	 * Nested class to control the video preview
 	 * 
 	 * @author Jeroen Mols
-	 * @date 04/02/2014
 	 */
 	private class SurfaceCallbackHandler implements SurfaceHolder.Callback {
 		@Override
 		public void surfaceCreated(final SurfaceHolder holder) {
-			try {
-				mCamera = mHelper.openCamera();
-			} catch (final OpenCameraException e) {
-				e.printStackTrace();
-				finishError(e.getMessage());
-			}
+			// NOP
 		}
 
 		@Override
