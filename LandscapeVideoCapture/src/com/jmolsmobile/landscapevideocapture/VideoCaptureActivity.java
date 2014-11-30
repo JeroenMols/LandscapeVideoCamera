@@ -41,10 +41,11 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	boolean								mRecording				= false;
 
 	private boolean						mVideoRecorded			= false;
-	private boolean						mPreviewRunning			= false;
 
 	private Camera						mCamera;
 	private final CaptureConfiguration	mCaptureConfiguration	= new CaptureConfiguration();
+
+	private VideoCapturePreview			mVideoCapturePreview;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -70,8 +71,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			return;
 		}
 
+		mVideoCapturePreview = new VideoCapturePreview(mCamera, mVideoCaptureView);
 		mSurfaceHolder = mVideoCaptureView.getSurfaceView().getHolder();
-		mSurfaceHolder.addCallback(new SurfaceCallbackHandler());
+		mSurfaceHolder.addCallback(mVideoCapturePreview);
 		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
 
 		mVideoCaptureView.updateUINotRecording();
@@ -266,13 +268,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	private void releaseAllResources() {
-		if (mPreviewRunning) {
-			try {
-				mCamera.stopPreview();
-				mCamera.setPreviewCallback(null);
-				mPreviewRunning = false;
-			} catch (final Exception e) {
-			}
+		if (mVideoCapturePreview != null) {
+			mVideoCapturePreview.releasePreviewResources();
 		}
 
 		if (mCamera != null) {
@@ -295,11 +292,17 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	/**
-	 * Nested class to control the video preview
-	 * 
 	 * @author Jeroen Mols
 	 */
-	private class SurfaceCallbackHandler implements SurfaceHolder.Callback {
+	class VideoCapturePreview implements SurfaceHolder.Callback {
+
+		private boolean			mPreviewRunning	= false;
+		private final Camera	mPreviewCamera;
+
+		public VideoCapturePreview(Camera camera, VideoCaptureView videoCaptureView) {
+			mPreviewCamera = camera;
+		}
+
 		@Override
 		public void surfaceCreated(final SurfaceHolder holder) {
 			// NOP
@@ -308,15 +311,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		@Override
 		public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
 			if (mPreviewRunning) {
-				mCamera.stopPreview();
+				mPreviewCamera.stopPreview();
 			}
 
-			final Camera.Parameters params = mCamera.getParameters();
+			final Camera.Parameters params = mPreviewCamera.getParameters();
 			params.setPreviewSize(mCaptureConfiguration.getPreviewWidth(), mCaptureConfiguration.getPreviewHeight());
 			params.setPreviewFormat(ImageFormat.NV21);
 
 			try {
-				mCamera.setParameters(params);
+				mPreviewCamera.setParameters(params);
 			} catch (final RuntimeException e) {
 				e.printStackTrace();
 				CLog.d(CLog.ACTIVITY, "Failed to show preview - invalid parameters set to camera preview");
@@ -326,8 +329,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			}
 
 			try {
-				mCamera.setPreviewDisplay(holder);
-				mCamera.startPreview();
+				mPreviewCamera.setPreviewDisplay(holder);
+				mPreviewCamera.startPreview();
 				mPreviewRunning = true;
 			} catch (final IOException e) {
 				e.printStackTrace();
@@ -346,6 +349,18 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		@Override
 		public void surfaceDestroyed(final SurfaceHolder holder) {
 			// NOP
+		}
+
+		public void releasePreviewResources() {
+			if (mPreviewRunning) {
+				try {
+					mPreviewCamera.stopPreview();
+					mPreviewCamera.setPreviewCallback(null);
+					this.mPreviewRunning = false;
+				} catch (final Exception e) {
+					// TODO implement
+				}
+			}
 		}
 	}
 
