@@ -72,7 +72,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 	public void test_uiAfterUpdateFinishedBitmapNull() {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
 		videoCaptureView.updateUIRecordingFinished(null);
-		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.INVISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.VISIBLE);
@@ -84,7 +84,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 		final ImageView imageView = (ImageView) videoCaptureView.findViewById(R.id.videocapture_preview_iv);
 		final Drawable background = imageView.getDrawable();
 		videoCaptureView.updateUIRecordingFinished(Bitmap.createBitmap(10, 10, Config.ARGB_4444));
-		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.GONE);
+		checkVisibility(videoCaptureView, R.id.videocapture_recordbtn_iv, View.INVISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_acceptbtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_declinebtn_iv, View.VISIBLE);
 		checkVisibility(videoCaptureView, R.id.videocapture_preview_iv, View.VISIBLE);
