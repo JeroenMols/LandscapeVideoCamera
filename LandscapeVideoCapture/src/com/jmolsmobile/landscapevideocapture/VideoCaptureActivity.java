@@ -218,19 +218,19 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 		mRecorder = new MediaRecorder();
 		mRecorder.setCamera(mCamera);
-		mRecorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-		mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
+		mRecorder.setAudioSource(mCaptureConfiguration.getAudioSource());
+		mRecorder.setVideoSource(mCaptureConfiguration.getVideoSource());
 
 		// Order is important
-		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
+		mRecorder.setOutputFormat(mCaptureConfiguration.getOutputFormat());
 		mRecorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
 		mRecorder.setOutputFile(getOutputFilename());
 
 		mRecorder.setVideoSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
 		mRecorder.setVideoEncodingBitRate(mCaptureConfiguration.getBitratePerSecond());
 
-		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
-		mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
+		mRecorder.setAudioEncoder(mCaptureConfiguration.getAudioEncoder());
+		mRecorder.setVideoEncoder(mCaptureConfiguration.getVideoEncoder());
 
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 

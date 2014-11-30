@@ -1,5 +1,7 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import android.media.MediaRecorder;
+
 /**
  * @author Jeroen Mols
  */
@@ -7,13 +9,19 @@ public class CaptureConfiguration {
 
 	// TODO determine default values
 
-	private final int	PREVIEW_VIDEO_WIDTH		= 640;
-	private final int	PREVIEW_VIDEO_HEIGHT	= 480;
-	private final int	CAPTURE_VIDEO_WIDTH		= 640;
-	private final int	CAPTURE_VIDEO_HEIGHT	= 480;
-	private final int	BITRATE_PER_SECOND		= 750000;
-	private final int	MAX_CAPTURE_DURATION	= 30 * 1000;
-	private final int	MAX_CAPTURE_FILESIZE	= 10 * 1024 * 1024;
+	private final int			PREVIEW_VIDEO_WIDTH		= 640;
+	private final int			PREVIEW_VIDEO_HEIGHT	= 480;
+	private final int			CAPTURE_VIDEO_WIDTH		= 640;
+	private final int			CAPTURE_VIDEO_HEIGHT	= 480;
+	private final int			BITRATE_PER_SECOND		= 750000;
+	private final int			MAX_CAPTURE_DURATION	= 30 * 1000;
+	private final int			MAX_CAPTURE_FILESIZE	= 10 * 1024 * 1024;
+
+	private static final int	OUTPUT_FORMAT			= MediaRecorder.OutputFormat.MPEG_4;
+	private static final int	AUDIO_SOURCE			= MediaRecorder.AudioSource.DEFAULT;
+	private static final int	AUDIO_ENCODER			= MediaRecorder.AudioEncoder.AAC;
+	private static final int	VIDEO_SOURCE			= MediaRecorder.VideoSource.CAMERA;
+	private static final int	VIDEO_ENCODER			= MediaRecorder.VideoEncoder.H264;
 
 	public CaptureConfiguration() {
 	}
@@ -65,6 +73,26 @@ public class CaptureConfiguration {
 	 */
 	public int getMaxCaptureFileSize() {
 		return MAX_CAPTURE_FILESIZE;
+	}
+
+	public int getOutputFormat() {
+		return OUTPUT_FORMAT;
+	}
+
+	public int getAudioSource() {
+		return AUDIO_SOURCE;
+	}
+
+	public int getAudioEncoder() {
+		return AUDIO_ENCODER;
+	}
+
+	public int getVideoSource() {
+		return VIDEO_SOURCE;
+	}
+
+	public int getVideoEncoder() {
+		return VIDEO_ENCODER;
 	}
 
 }
