@@ -9,7 +9,7 @@ import android.view.SurfaceHolder;
 /**
  * @author Jeroen Mols
  */
-class CapturePreview implements SurfaceHolder.Callback {
+public class CapturePreview implements SurfaceHolder.Callback {
 
 	private boolean							mPreviewRunning	= false;
 	private final Camera					mCamera;
@@ -48,7 +48,7 @@ class CapturePreview implements SurfaceHolder.Callback {
 		params.setPreviewFormat(ImageFormat.NV21);
 
 		try {
-			mCamera.setParameters(params);
+			setCameraParameters(params);
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - invalid parameters set to camera preview");
@@ -59,7 +59,7 @@ class CapturePreview implements SurfaceHolder.Callback {
 		try {
 			mCamera.setPreviewDisplay(holder);
 			mCamera.startPreview();
-			mPreviewRunning = true;
+			setPreviewRunning(true);
 		} catch (final IOException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - unable to connect camera to preview (IOException)");
@@ -71,6 +71,14 @@ class CapturePreview implements SurfaceHolder.Callback {
 		}
 	}
 
+	protected void setCameraParameters(final Camera.Parameters params) {
+		mCamera.setParameters(params);
+	}
+
+	protected void setPreviewRunning(boolean running) {
+		mPreviewRunning = running;
+	}
+
 	@Override
 	public void surfaceDestroyed(final SurfaceHolder holder) {
 		// NOP
@@ -79,14 +87,18 @@ class CapturePreview implements SurfaceHolder.Callback {
 	public void releasePreviewResources() {
 		if (mPreviewRunning) {
 			try {
-				mCamera.stopPreview();
-				mCamera.setPreviewCallback(null);
-				this.mPreviewRunning = false;
+				stopPreview();
+				setPreviewRunning(false);
 			} catch (final Exception e) {
 				e.printStackTrace();
 				CLog.e(CLog.PREVIEW, "Failed to clean up preview resources");
 			}
 		}
+	}
+
+	protected void stopPreview() throws Exception {
+		mCamera.stopPreview();
+		mCamera.setPreviewCallback(null);
 	}
 
 }
