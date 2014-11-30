@@ -99,7 +99,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	// METHODS TO CONTROL THE RECORDING
 	public boolean startRecording() {
-		if (!initRecorder()) return false;
+		if (!initRecorder(mCaptureConfiguration)) return false;
 		if (!prepareRecorder()) return false;
 		if (!startRecorder()) return false;
 
@@ -191,7 +191,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	// METHODS TO CONTROL THE MEDIARECORDER
-	private boolean initRecorder() {
+	private boolean initRecorder(CaptureConfiguration captureConfiguration) {
 		if (mCamera == null) {
 			try {
 				mCamera = mHelper.openCamera();
@@ -218,23 +218,23 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 		mRecorder = new MediaRecorder();
 		mRecorder.setCamera(mCamera);
-		mRecorder.setAudioSource(mCaptureConfiguration.getAudioSource());
-		mRecorder.setVideoSource(mCaptureConfiguration.getVideoSource());
+		mRecorder.setAudioSource(captureConfiguration.getAudioSource());
+		mRecorder.setVideoSource(captureConfiguration.getVideoSource());
 
 		// Order is important
-		mRecorder.setOutputFormat(mCaptureConfiguration.getOutputFormat());
-		mRecorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
+		mRecorder.setOutputFormat(captureConfiguration.getOutputFormat());
+		mRecorder.setMaxDuration(captureConfiguration.getMaxCaptureDuration());
 		mRecorder.setOutputFile(getOutputFilename());
 
-		mRecorder.setVideoSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
-		mRecorder.setVideoEncodingBitRate(mCaptureConfiguration.getBitratePerSecond());
+		mRecorder.setVideoSize(captureConfiguration.getVideoWidth(), captureConfiguration.getVideoHeight());
+		mRecorder.setVideoEncodingBitRate(captureConfiguration.getBitratePerSecond());
 
-		mRecorder.setAudioEncoder(mCaptureConfiguration.getAudioEncoder());
-		mRecorder.setVideoEncoder(mCaptureConfiguration.getVideoEncoder());
+		mRecorder.setAudioEncoder(captureConfiguration.getAudioEncoder());
+		mRecorder.setVideoEncoder(captureConfiguration.getVideoEncoder());
 
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
-		mRecorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
+		mRecorder.setMaxFileSize(captureConfiguration.getMaxCaptureFileSize());
 
 		mRecorder.setOnInfoListener(new OnInfoListener() {
 
