@@ -4,7 +4,7 @@ import org.mockito.Mockito;
 
 import android.hardware.Camera;
 
-import com.jmolsmobile.landscapevideocapture.CameraException.OpenType;
+import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
 
 public class CaptureHelperTest extends MockitoTestCase {
 
@@ -16,7 +16,7 @@ public class CaptureHelperTest extends MockitoTestCase {
 		try {
 			final Camera camera = spyHelper.openCamera();
 			assertEquals(mockCamera, camera);
-		} catch (final CameraException e) {
+		} catch (final OpenCameraException e) {
 			fail("Should not throw exception");
 		}
 	}
@@ -28,7 +28,7 @@ public class CaptureHelperTest extends MockitoTestCase {
 		try {
 			spyHelper.openCamera();
 			fail("Missing exception");
-		} catch (final CameraException e) {
+		} catch (final OpenCameraException e) {
 			assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
 		}
 	}
@@ -40,19 +40,9 @@ public class CaptureHelperTest extends MockitoTestCase {
 		try {
 			spyHelper.openCamera();
 			fail("Missing exception");
-		} catch (final CameraException e) {
+		} catch (final OpenCameraException e) {
 			assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
 		}
 	}
 
-	public void test_unlockCameraNull() {
-		final CaptureHelper helper = new CaptureHelper();
-
-		try {
-			helper.prepareCameraForRecording(null);
-			fail("Missing exception");
-		} catch (final CameraException e) {
-			assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
-		}
-	}
 }

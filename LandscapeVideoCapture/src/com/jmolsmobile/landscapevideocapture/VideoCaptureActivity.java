@@ -195,7 +195,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		if (mCamera == null) {
 			try {
 				mCamera = mHelper.openCamera();
-			} catch (final CameraException e) {
+			} catch (final OpenCameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
 				return false;
@@ -330,7 +330,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		public void surfaceCreated(final SurfaceHolder holder) {
 			try {
 				mCamera = mHelper.openCamera();
-			} catch (final CameraException e) {
+			} catch (final OpenCameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
 			}
