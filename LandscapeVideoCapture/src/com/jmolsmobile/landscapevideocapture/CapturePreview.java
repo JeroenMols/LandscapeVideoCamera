@@ -12,7 +12,7 @@ import android.view.SurfaceHolder;
 class CapturePreview implements SurfaceHolder.Callback {
 
 	private boolean							mPreviewRunning	= false;
-	private final Camera					mPreviewCamera;
+	private final Camera					mCamera;
 	private final CapturePreviewInterface	mInterface;
 	private final int						mPreviewWidth;
 	private final int						mPreviewHeight;
@@ -20,7 +20,7 @@ class CapturePreview implements SurfaceHolder.Callback {
 	public CapturePreview(CapturePreviewInterface capturePreviewInterface, Camera camera, SurfaceHolder holder,
 			int width, int height) {
 		mInterface = capturePreviewInterface;
-		mPreviewCamera = camera;
+		mCamera = camera;
 		mPreviewWidth = width;
 		mPreviewHeight = height;
 
@@ -40,15 +40,15 @@ class CapturePreview implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
 		if (mPreviewRunning) {
-			mPreviewCamera.stopPreview();
+			mCamera.stopPreview();
 		}
 
-		final Camera.Parameters params = mPreviewCamera.getParameters();
+		final Camera.Parameters params = mCamera.getParameters();
 		params.setPreviewSize(mPreviewWidth, mPreviewHeight);
 		params.setPreviewFormat(ImageFormat.NV21);
 
 		try {
-			mPreviewCamera.setParameters(params);
+			mCamera.setParameters(params);
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - invalid parameters set to camera preview");
@@ -57,8 +57,8 @@ class CapturePreview implements SurfaceHolder.Callback {
 		}
 
 		try {
-			mPreviewCamera.setPreviewDisplay(holder);
-			mPreviewCamera.startPreview();
+			mCamera.setPreviewDisplay(holder);
+			mCamera.startPreview();
 			mPreviewRunning = true;
 		} catch (final IOException e) {
 			e.printStackTrace();
@@ -79,8 +79,8 @@ class CapturePreview implements SurfaceHolder.Callback {
 	public void releasePreviewResources() {
 		if (mPreviewRunning) {
 			try {
-				mPreviewCamera.stopPreview();
-				mPreviewCamera.setPreviewCallback(null);
+				mCamera.stopPreview();
+				mCamera.setPreviewCallback(null);
 				this.mPreviewRunning = false;
 			} catch (final Exception e) {
 				e.printStackTrace();
