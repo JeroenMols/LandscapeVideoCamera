@@ -50,8 +50,24 @@ public class CaptureHelperTest extends MockitoTestCase {
 		final Camera mockCamera = Mockito.mock(Camera.class);
 		Mockito.doNothing().when(spyHelper).unlockCameraFromSystem(mockCamera);
 
-		spyHelper.prepareCameraForRecording(mockCamera);
+		try {
+			spyHelper.prepareCameraForRecording(mockCamera);
+			Mockito.verify(spyHelper, Mockito.times(1)).unlockCameraFromSystem(mockCamera);
+		} catch (final PrepareCameraException e) {
+			fail("Should not throw exception");
+		}
+	}
 
-		Mockito.verify(spyHelper, Mockito.times(1)).unlockCameraFromSystem(mockCamera);
+	public void test_prepareCameraWhenRuntimeException() {
+		final CaptureHelper spyHelper = Mockito.spy(new CaptureHelper());
+		final Camera mockCamera = Mockito.mock(Camera.class);
+		Mockito.doThrow(new RuntimeException()).when(spyHelper).unlockCameraFromSystem(mockCamera);
+
+		try {
+			spyHelper.prepareCameraForRecording(mockCamera);
+			fail("Missing exception");
+		} catch (final PrepareCameraException e) {
+			assertEquals("Unable to use camera for recording", e.getMessage());
+		}
 	}
 }

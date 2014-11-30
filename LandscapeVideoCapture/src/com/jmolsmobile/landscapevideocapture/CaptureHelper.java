@@ -23,16 +23,20 @@ public class CaptureHelper {
 		return camera;
 	}
 
+	public void prepareCameraForRecording(Camera camera) throws PrepareCameraException {
+		try {
+			unlockCameraFromSystem(camera);
+		} catch (final RuntimeException e) {
+			throw new PrepareCameraException();
+		}
+	}
+
 	public Camera openCameraFromSystem() {
 		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
 	}
 
 	public void unlockCameraFromSystem(Camera camera) {
 		camera.unlock();
-	}
-
-	public void prepareCameraForRecording(Camera camera) {
-		unlockCameraFromSystem(camera);
 	}
 
 }
