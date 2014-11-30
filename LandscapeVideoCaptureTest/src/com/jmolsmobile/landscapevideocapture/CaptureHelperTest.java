@@ -108,12 +108,11 @@ public class CaptureHelperTest extends MockitoTestCase {
 		final MediaRecorder mockRecorder = Mockito.mock(MediaRecorder.class);
 		Mockito.doReturn(mockRecorder).when(spyHelper).createMediaRecorder();
 
-		final CaptureConfiguration config = new CaptureConfiguration();
 		final Camera mockCamera = Mockito.mock(Camera.class);
 		final Surface mockSurface = Mockito.mock(Surface.class);
 		final String filename = "outputfilename";
 		final OnInfoListener mockListener = Mockito.mock(OnInfoListener.class);
-		spyHelper.createMediaRecorder(mockCamera, mockSurface, null, filename, mockListener);
+		spyHelper.createMediaRecorder(mockCamera, mockSurface, new CaptureConfiguration(), filename, mockListener);
 
 		Mockito.verify(mockRecorder, Mockito.times(1)).setCamera(mockCamera);
 		Mockito.verify(mockRecorder, Mockito.times(1)).setPreviewDisplay(mockSurface);
