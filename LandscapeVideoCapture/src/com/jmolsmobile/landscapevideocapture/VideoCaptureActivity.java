@@ -23,36 +23,28 @@ import android.widget.Toast;
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface {
 
-	public static final int			RESULT_ERROR			= 753245;
+	public static final int				RESULT_ERROR			= 753245;
 
-	public static final String		EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
-	public static final String		EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
+	public static final String			EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
+	public static final String			EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
 
-	private static final String		SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
-	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
+	private static final String			SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
+	protected static final String		SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
-	private VideoFile				mVideoFile				= null;
-	private final CaptureHelper		mHelper					= new CaptureHelper();
-	private VideoCaptureView		mVideoCaptureView;
+	private VideoFile					mVideoFile				= null;
+	private final CaptureHelper			mHelper					= new CaptureHelper();
+	private VideoCaptureView			mVideoCaptureView;
 
-	private MediaRecorder			mRecorder;
-	private SurfaceHolder			mSurfaceHolder;
+	private MediaRecorder				mRecorder;
+	private SurfaceHolder				mSurfaceHolder;
 
-	boolean							mRecording				= false;
+	boolean								mRecording				= false;
 
-	private boolean					mVideoRecorded			= false;
-	private boolean					mPreviewRunning			= false;
+	private boolean						mVideoRecorded			= false;
+	private boolean						mPreviewRunning			= false;
 
-	private Camera					mCamera;
-	// ADJUST THESE TO YOUR NEEDS
-	private static final int		PREVIEW_VIDEO_WIDTH		= 640;
-	private static final int		PREVIEW_VIDEO_HEIGHT	= 480;
-	private static final int		CAPTURE_VIDEO_WIDTH		= 640;
-	private static final int		CAPTURE_VIDEO_HEIGHT	= 480;
-	private static final int		FRAMES_PER_SECOND		= 25;
-	private static final int		BITRATE_PER_SECOND		= 750000;									// bit per sec
-	private static final int		MAX_CAPTURE_DURATION	= 30000;									// in ms
-	private static final int		MAX_CAPTURE_FILESIZE	= 10;										// in mb
+	private Camera						mCamera;
+	private final CaptureConfiguration	mCaptureConfiguration	= new CaptureConfiguration();
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -231,20 +223,18 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 		// Order is important
 		mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-		mRecorder.setMaxDuration(MAX_CAPTURE_DURATION);
+		mRecorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
 		mRecorder.setOutputFile(getOutputFilename());
 
-		// Setting framerate explicitely is not supported on every Android device - use with caution
-		// mRecorder.setVideoFrameRate(FRAMES_PER_SECOND);
-		mRecorder.setVideoSize(CAPTURE_VIDEO_WIDTH, CAPTURE_VIDEO_HEIGHT);
-		mRecorder.setVideoEncodingBitRate(BITRATE_PER_SECOND);
+		mRecorder.setVideoSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
+		mRecorder.setVideoEncodingBitRate(mCaptureConfiguration.getBitratePerSecond());
 
 		mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
 		mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.H264);
 
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
-		mRecorder.setMaxFileSize(MAX_CAPTURE_FILESIZE * 1024 * 1024);
+		mRecorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
 
 		mRecorder.setOnInfoListener(new OnInfoListener() {
 
@@ -352,7 +342,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			}
 
 			final Camera.Parameters params = mCamera.getParameters();
-			params.setPreviewSize(PREVIEW_VIDEO_WIDTH, PREVIEW_VIDEO_HEIGHT);
+			params.setPreviewSize(mCaptureConfiguration.getPreviewWidth(), mCaptureConfiguration.getPreviewHeight());
 			params.setPreviewFormat(ImageFormat.NV21);
 
 			try {
