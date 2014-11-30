@@ -3,9 +3,9 @@ package com.jmolsmobile.landscapevideocapture;
 /**
  * @author Jeroen Mols
  */
-public class OpenCameraException extends Exception {
+public class CameraException extends Exception {
 
-	private static final String	LOG_PREFIX	= "Unable to open camera - ";
+	private static final String	LOG_PREFIX			= "Unable to open/prepare camera - ";
 	private static final long	serialVersionUID	= -7340415176385044242L;
 
 	enum OpenType {
@@ -25,7 +25,7 @@ public class OpenCameraException extends Exception {
 
 	private final OpenType	mType;
 
-	public OpenCameraException(OpenType type) {
+	public CameraException(OpenType type) {
 		super(type.getMessage());
 		mType = type;
 	}

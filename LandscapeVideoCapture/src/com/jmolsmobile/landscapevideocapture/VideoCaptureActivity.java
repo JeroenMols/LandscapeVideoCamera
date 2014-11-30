@@ -195,7 +195,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		if (mCamera == null) {
 			try {
 				mCamera = mHelper.openCamera();
-			} catch (final OpenCameraException e) {
+			} catch (final CameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
 				return false;
@@ -218,23 +218,24 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 		mRecorder = new MediaRecorder();
 		mRecorder.setCamera(mCamera);
-		mRecorder.setAudioSource(captureConfiguration.getAudioSource());
-		mRecorder.setVideoSource(captureConfiguration.getVideoSource());
+		CaptureConfiguration mCaptureConfiguration2 = captureConfiguration;
+		mRecorder.setAudioSource(mCaptureConfiguration2.getAudioSource());
+		mRecorder.setVideoSource(mCaptureConfiguration2.getVideoSource());
 
 		// Order is important
-		mRecorder.setOutputFormat(captureConfiguration.getOutputFormat());
-		mRecorder.setMaxDuration(captureConfiguration.getMaxCaptureDuration());
+		mRecorder.setOutputFormat(mCaptureConfiguration2.getOutputFormat());
+		mRecorder.setMaxDuration(mCaptureConfiguration2.getMaxCaptureDuration());
 		mRecorder.setOutputFile(getOutputFilename());
 
-		mRecorder.setVideoSize(captureConfiguration.getVideoWidth(), captureConfiguration.getVideoHeight());
-		mRecorder.setVideoEncodingBitRate(captureConfiguration.getBitratePerSecond());
+		mRecorder.setVideoSize(mCaptureConfiguration2.getVideoWidth(), mCaptureConfiguration2.getVideoHeight());
+		mRecorder.setVideoEncodingBitRate(mCaptureConfiguration2.getBitratePerSecond());
 
-		mRecorder.setAudioEncoder(captureConfiguration.getAudioEncoder());
-		mRecorder.setVideoEncoder(captureConfiguration.getVideoEncoder());
+		mRecorder.setAudioEncoder(mCaptureConfiguration2.getAudioEncoder());
+		mRecorder.setVideoEncoder(mCaptureConfiguration2.getVideoEncoder());
 
 		mRecorder.setPreviewDisplay(mSurfaceHolder.getSurface());
 
-		mRecorder.setMaxFileSize(captureConfiguration.getMaxCaptureFileSize());
+		mRecorder.setMaxFileSize(mCaptureConfiguration2.getMaxCaptureFileSize());
 
 		mRecorder.setOnInfoListener(new OnInfoListener() {
 
@@ -329,7 +330,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		public void surfaceCreated(final SurfaceHolder holder) {
 			try {
 				mCamera = mHelper.openCamera();
-			} catch (final OpenCameraException e) {
+			} catch (final CameraException e) {
 				e.printStackTrace();
 				finishError(e.getMessage());
 			}
