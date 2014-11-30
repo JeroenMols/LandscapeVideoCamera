@@ -51,7 +51,7 @@ class CapturePreview implements SurfaceHolder.Callback {
 			mPreviewCamera.setParameters(params);
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "Failed to show preview - invalid parameters set to camera preview");
+			CLog.d(CLog.PREVIEW, "Failed to show preview - invalid parameters set to camera preview");
 			mInterface.onCapturePreviewFailed();
 			return;
 		}
@@ -62,11 +62,11 @@ class CapturePreview implements SurfaceHolder.Callback {
 			mPreviewRunning = true;
 		} catch (final IOException e) {
 			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to connect camera to preview (IOException)");
+			CLog.d(CLog.PREVIEW, "Failed to show preview - unable to connect camera to preview (IOException)");
 			mInterface.onCapturePreviewFailed();
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to start camera preview (RuntimeException)");
+			CLog.d(CLog.PREVIEW, "Failed to show preview - unable to start camera preview (RuntimeException)");
 			mInterface.onCapturePreviewFailed();
 		}
 	}
@@ -83,7 +83,8 @@ class CapturePreview implements SurfaceHolder.Callback {
 				mPreviewCamera.setPreviewCallback(null);
 				this.mPreviewRunning = false;
 			} catch (final Exception e) {
-				// TODO implement
+				e.printStackTrace();
+				CLog.e(CLog.PREVIEW, "Failed to clean up preview resources");
 			}
 		}
 	}
