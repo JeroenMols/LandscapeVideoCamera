@@ -8,6 +8,7 @@ import android.media.MediaRecorder;
 public class CaptureConfiguration {
 
 	// TODO determine default values
+	// TODO remove default filesize and duration limitation
 
 	private final int			PREVIEW_VIDEO_WIDTH		= 640;
 	private final int			PREVIEW_VIDEO_HEIGHT	= 480;

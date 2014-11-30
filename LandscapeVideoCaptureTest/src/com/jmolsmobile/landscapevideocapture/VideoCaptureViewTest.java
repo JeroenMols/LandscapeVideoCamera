@@ -94,7 +94,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
 
 	public void test_surfaceViewShouldNotBeNull() {
 		final VideoCaptureView videoCaptureView = new VideoCaptureView(getInstrumentation().getTargetContext());
-		assertNotNull(videoCaptureView.getSurfaceView());
+		assertNotNull(videoCaptureView.getPreviewSurfaceHolder());
 	}
 
 	private void checkUINotRecording(final VideoCaptureView videoCaptureView) {

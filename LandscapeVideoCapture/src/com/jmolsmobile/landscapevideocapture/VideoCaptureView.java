@@ -3,6 +3,7 @@ package com.jmolsmobile.landscapevideocapture;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
+import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -59,8 +60,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		this.mRecordingInterface = mBtnInterface;
 	}
 
-	public SurfaceView getSurfaceView() {
-		return mSurfaceView;
+	public SurfaceHolder getPreviewSurfaceHolder() {
+		return mSurfaceView.getHolder();
 	}
 
 	public void updateUINotRecording() {

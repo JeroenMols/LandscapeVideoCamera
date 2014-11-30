@@ -5,7 +5,6 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
@@ -21,7 +20,7 @@ import android.widget.Toast;
 /**
  * @author Jeroen Mols
  */
-public class VideoCaptureActivity extends Activity implements RecordingButtonInterface {
+public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, CapturePreviewInterface {
 
 	public static final int				RESULT_ERROR			= 753245;
 
@@ -36,7 +35,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	private VideoCaptureView			mVideoCaptureView;
 
 	private MediaRecorder				mRecorder;
-	private SurfaceHolder				mSurfaceHolder;
 
 	boolean								mRecording				= false;
 
@@ -45,7 +43,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	private Camera						mCamera;
 	private final CaptureConfiguration	mCaptureConfiguration	= new CaptureConfiguration();
 
-	private VideoCapturePreview			mVideoCapturePreview;
+	private CapturePreview				mVideoCapturePreview;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -71,10 +69,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			return;
 		}
 
-		mVideoCapturePreview = new VideoCapturePreview(mCamera, mVideoCaptureView);
-		mSurfaceHolder = mVideoCaptureView.getSurfaceView().getHolder();
-		mSurfaceHolder.addCallback(mVideoCapturePreview);
-		mSurfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
+		final SurfaceHolder surfaceHolder = mVideoCaptureView.getPreviewSurfaceHolder();
+		final int width = mCaptureConfiguration.getPreviewWidth();
+		final int height = mCaptureConfiguration.getPreviewHeight();
+		mVideoCapturePreview = new CapturePreview(this, mCamera, surfaceHolder, width, height);
 
 		mVideoCaptureView.updateUINotRecording();
 	}
@@ -175,7 +173,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	private void finishError(final String message) {
-		Toast.makeText(getApplicationContext(), "Can't capture video" + message, Toast.LENGTH_LONG).show();
+		Toast.makeText(getApplicationContext(), "Can't capture video: " + message, Toast.LENGTH_LONG).show();
 
 		final Intent result = new Intent();
 		result.putExtra(EXTRA_ERROR_MESSAGE, message);
@@ -196,7 +194,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	// METHODS TO CONTROL THE MEDIARECORDER
 	private boolean initRecorder(CaptureConfiguration captureConfiguration) {
 		final Camera camera = mCamera;
-		final Surface previewSurface = mSurfaceHolder.getSurface();
+		final Surface previewSurface = mVideoCaptureView.getPreviewSurfaceHolder().getSurface();
 		final String outputFilename = getOutputFilename();
 		final OnInfoListener recordingListener = new OnInfoListener() {
 
@@ -209,7 +207,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
 					CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
 					Toast.makeText(getApplicationContext(), "Capture stopped - Max duration reached", Toast.LENGTH_LONG)
-							.show();
+					.show();
 					stopRecording();
 					break;
 				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
@@ -291,77 +289,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		}
 	}
 
-	/**
-	 * @author Jeroen Mols
-	 */
-	class VideoCapturePreview implements SurfaceHolder.Callback {
-
-		private boolean			mPreviewRunning	= false;
-		private final Camera	mPreviewCamera;
-
-		public VideoCapturePreview(Camera camera, VideoCaptureView videoCaptureView) {
-			mPreviewCamera = camera;
-		}
-
-		@Override
-		public void surfaceCreated(final SurfaceHolder holder) {
-			// NOP
-		}
-
-		@Override
-		public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
-			if (mPreviewRunning) {
-				mPreviewCamera.stopPreview();
-			}
-
-			final Camera.Parameters params = mPreviewCamera.getParameters();
-			params.setPreviewSize(mCaptureConfiguration.getPreviewWidth(), mCaptureConfiguration.getPreviewHeight());
-			params.setPreviewFormat(ImageFormat.NV21);
-
-			try {
-				mPreviewCamera.setParameters(params);
-			} catch (final RuntimeException e) {
-				e.printStackTrace();
-				CLog.d(CLog.ACTIVITY, "Failed to show preview - invalid parameters set to camera preview");
-				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
-						Toast.LENGTH_LONG).show();
-				finishError("Invalid parameters set to camera preview");
-			}
-
-			try {
-				mPreviewCamera.setPreviewDisplay(holder);
-				mPreviewCamera.startPreview();
-				mPreviewRunning = true;
-			} catch (final IOException e) {
-				e.printStackTrace();
-				CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to connect camera to preview");
-				Toast.makeText(getApplicationContext(), "Can't capture video - Unable to show camera preview",
-						Toast.LENGTH_LONG).show();
-				finishError("Invalid parameters set to camera preview");
-			} catch (final RuntimeException e) {
-				e.printStackTrace();
-				CLog.d(CLog.ACTIVITY, "Failed to show preview - unable to start camera preview");
-				Toast.makeText(getApplicationContext(), "Unable to show camera preview", Toast.LENGTH_LONG).show();
-				// finishError("Invalid parameters set to camera preview");
-			}
-		}
-
-		@Override
-		public void surfaceDestroyed(final SurfaceHolder holder) {
-			// NOP
-		}
-
-		public void releasePreviewResources() {
-			if (mPreviewRunning) {
-				try {
-					mPreviewCamera.stopPreview();
-					mPreviewCamera.setPreviewCallback(null);
-					this.mPreviewRunning = false;
-				} catch (final Exception e) {
-					// TODO implement
-				}
-			}
-		}
+	@Override
+	public void onCapturePreviewFailed() {
+		finishError("Unable to show camera preview");
 	}
 
 }
