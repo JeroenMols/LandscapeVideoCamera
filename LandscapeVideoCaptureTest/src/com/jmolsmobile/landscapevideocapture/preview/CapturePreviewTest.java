@@ -13,7 +13,7 @@ import java.io.IOException;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
-import com.jmolsmobile.landscapevideocapture.recorder.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 
 public class CapturePreviewTest extends MockitoTestCase {
 

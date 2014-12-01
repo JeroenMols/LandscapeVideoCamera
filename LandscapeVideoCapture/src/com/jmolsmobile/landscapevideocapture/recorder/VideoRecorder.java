@@ -13,6 +13,9 @@ import android.view.SurfaceHolder;
 import com.jmolsmobile.landscapevideocapture.CLog;
 import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
 

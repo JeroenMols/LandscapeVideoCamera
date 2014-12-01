@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture.recorder;
+package com.jmolsmobile.landscapevideocapture.camera;
 
 import java.io.IOException;
 
@@ -8,7 +8,7 @@ import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.view.SurfaceHolder;
 
-import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 /**
  * @author Jeroen Mols

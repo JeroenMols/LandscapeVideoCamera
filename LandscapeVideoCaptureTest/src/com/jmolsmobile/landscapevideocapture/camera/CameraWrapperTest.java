@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture.recorder;
+package com.jmolsmobile.landscapevideocapture.camera;
 
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -10,7 +10,10 @@ import static org.mockito.Mockito.verify;
 import android.hardware.Camera;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
-import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 /**
  * @author Jeroen Mols

@@ -5,7 +5,7 @@ import java.io.IOException;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
-import com.jmolsmobile.landscapevideocapture.recorder.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 
 /**
  * @author Jeroen Mols

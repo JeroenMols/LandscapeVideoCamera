@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture.recorder;
+package com.jmolsmobile.landscapevideocapture.camera;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
 
