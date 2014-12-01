@@ -1,7 +1,12 @@
 package com.jmolsmobile.landscapevideocapture.recorder;
 
+import java.io.IOException;
+
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
+import android.hardware.Camera.Parameters;
+import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
 
@@ -48,6 +53,23 @@ public class CameraWrapper {
 
 	protected void unlockCameraFromSystem() {
 		mCamera.unlock();
+	}
+
+	public void startPreview(final SurfaceHolder holder) throws IOException {
+		mCamera.setPreviewDisplay(holder);
+		mCamera.startPreview();
+	}
+
+	public void stopPreview() throws Exception {
+		mCamera.stopPreview();
+		mCamera.setPreviewCallback(null);
+	}
+
+	public void configureForPreview(int width, int height) {
+		final Parameters params = mCamera.getParameters();
+		params.setPreviewSize(width, height);
+		params.setPreviewFormat(ImageFormat.NV21);
+		mCamera.setParameters(params);
 	}
 
 }

@@ -2,11 +2,10 @@ package com.jmolsmobile.landscapevideocapture.preview;
 
 import java.io.IOException;
 
-import android.graphics.ImageFormat;
-import android.hardware.Camera;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.recorder.CameraWrapper;
 
 /**
  * @author Jeroen Mols
@@ -14,15 +13,15 @@ import com.jmolsmobile.landscapevideocapture.CLog;
 public class CapturePreview implements SurfaceHolder.Callback {
 
 	private boolean							mPreviewRunning	= false;
-	private final Camera					mCamera;
 	private final CapturePreviewInterface	mInterface;
 	private final int						mPreviewWidth;
 	private final int						mPreviewHeight;
+	public final CameraWrapper				mCameraWrapper;
 
-	public CapturePreview(CapturePreviewInterface capturePreviewInterface, Camera camera, SurfaceHolder holder,
+	public CapturePreview(CapturePreviewInterface capturePreviewInterface, CameraWrapper cameraWrapper, SurfaceHolder holder,
 			int width, int height) {
 		mInterface = capturePreviewInterface;
-		mCamera = camera;
+		mCameraWrapper = cameraWrapper;
 		mPreviewWidth = width;
 		mPreviewHeight = height;
 
@@ -43,15 +42,15 @@ public class CapturePreview implements SurfaceHolder.Callback {
 	@Override
 	public void surfaceChanged(final SurfaceHolder holder, final int format, final int width, final int height) {
 		if (mPreviewRunning) {
-			mCamera.stopPreview();
+			try {
+				mCameraWrapper.stopPreview();
+			} catch (final Exception e) {
+				e.printStackTrace();
+			}
 		}
 
-		final Camera.Parameters params = mCamera.getParameters();
-		params.setPreviewSize(mPreviewWidth, mPreviewHeight);
-		params.setPreviewFormat(ImageFormat.NV21);
-
 		try {
-			setCameraParameters(params);
+			mCameraWrapper.configureForPreview(mPreviewWidth, mPreviewHeight);
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - invalid parameters set to camera preview");
@@ -60,7 +59,8 @@ public class CapturePreview implements SurfaceHolder.Callback {
 		}
 
 		try {
-			startPreview(holder);
+			mCameraWrapper.startPreview(holder);
+			setPreviewRunning(true);
 		} catch (final IOException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - unable to connect camera to preview (IOException)");
@@ -80,7 +80,7 @@ public class CapturePreview implements SurfaceHolder.Callback {
 	public void releasePreviewResources() {
 		if (mPreviewRunning) {
 			try {
-				stopPreview();
+				mCameraWrapper.stopPreview();
 				setPreviewRunning(false);
 			} catch (final Exception e) {
 				e.printStackTrace();
@@ -89,23 +89,8 @@ public class CapturePreview implements SurfaceHolder.Callback {
 		}
 	}
 
-	protected void setCameraParameters(final Camera.Parameters params) {
-		mCamera.setParameters(params);
-	}
-
-	protected void startPreview(final SurfaceHolder holder) throws IOException {
-		mCamera.setPreviewDisplay(holder);
-		mCamera.startPreview();
-		setPreviewRunning(true);
-	}
-
 	protected void setPreviewRunning(boolean running) {
 		mPreviewRunning = running;
-	}
-
-	protected void stopPreview() throws Exception {
-		mCamera.stopPreview();
-		mCamera.setPreviewCallback(null);
 	}
 
 }
