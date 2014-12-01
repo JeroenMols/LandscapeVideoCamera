@@ -22,8 +22,7 @@ import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
  */
 public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
-	private final CaptureHelper				mHelper		= new CaptureHelper();
-	private Camera							mCamera;
+	private CameraWrapper					mCameraWrapper	= new CameraWrapper();
 	private final Surface					mPreviewSurface;
 	private CapturePreview					mVideoCapturePreview;
 
@@ -31,7 +30,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	private final VideoFile					mVideoFile;
 
 	private MediaRecorder					mRecorder;
-	private boolean							mRecording	= false;
+	private boolean							mRecording		= false;
 	private final VideoRecorderInterface	mRecorderInterface;
 
 	public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration,
@@ -46,7 +45,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
 	protected void initializeCameraAndPreview(SurfaceHolder previewHolder) {
 		try {
-			mCamera = mHelper.openCamera();
+			mCameraWrapper.openCamera();
 		} catch (final OpenCameraException e) {
 			e.printStackTrace();
 			mRecorderInterface.onRecordingFailed(e.getMessage());
@@ -55,7 +54,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
 		final int width = mCaptureConfiguration.getPreviewWidth();
 		final int height = mCaptureConfiguration.getPreviewHeight();
-		mVideoCapturePreview = new CapturePreview(this, mCamera, previewHolder, width, height);
+		mVideoCapturePreview = new CapturePreview(this, mCameraWrapper.getCamera(), previewHolder, width, height);
 	}
 
 	public void toggleRecording() {
@@ -95,7 +94,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
 	private boolean initRecorder() {
 		try {
-			mHelper.prepareCameraForRecording(mCamera);
+			mCameraWrapper.prepareCameraForRecording();
 		} catch (final PrepareCameraException e) {
 			e.printStackTrace();
 			mRecorderInterface.onRecordingFailed("Unable to record video");
@@ -104,7 +103,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		}
 
 		mRecorder = createMediaRecorder();
-		configureMediaRecorder(mRecorder, mCamera);
+		configureMediaRecorder(mRecorder, mCameraWrapper.getCamera());
 
 		CLog.d(CLog.RECORDER, "MediaRecorder successfully initialized");
 		return true;
@@ -174,9 +173,9 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		if (mVideoCapturePreview != null) {
 			mVideoCapturePreview.releasePreviewResources();
 		}
-		if (mCamera != null) {
-			mCamera.release();
-			mCamera = null;
+		if (mCameraWrapper != null) {
+			mCameraWrapper.releaseCamera();
+			mCameraWrapper = null;
 		}
 		releaseRecorderResources();
 		CLog.d(CLog.RECORDER, "Released all resources");
