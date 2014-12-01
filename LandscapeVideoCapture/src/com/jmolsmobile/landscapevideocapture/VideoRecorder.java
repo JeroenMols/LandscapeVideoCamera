@@ -167,4 +167,8 @@ public class VideoRecorder implements CapturePreviewInterface {
 		mRecorderInterface.onRecordingFailed("Unable to show camera preview");
 	}
 
+	public CapturePreview getVideoCapturePreview() {
+		return mVideoCapturePreview;
+	}
+
 }
