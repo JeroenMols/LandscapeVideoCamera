@@ -174,4 +174,29 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
 	}
 
+	public void test_dontStopRecordingWhenUnknownInfo() throws Exception {
+		final VideoRecorder spyRecorder = createSpyRecorder(null, null);
+		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN, 0);
+		verify(spyRecorder, never()).stopRecording(anyString());
+	}
+
+	public void test_notifyListenerWhenMaxFileSize() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+		doReturn(true).when(spyRecorder).isRecording();
+
+		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED, 0);
+
+		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max file size reached");
+	}
+
+	public void test_notifyListenerWhenMaxDuration() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+		doReturn(true).when(spyRecorder).isRecording();
+
+		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED, 0);
+
+		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max duration reached");
+	}
 }

@@ -92,7 +92,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		}
 
 		mRecording = false;
-		mRecorderInterface.onRecordingStopped(null);
+		mRecorderInterface.onRecordingStopped(message);
 	}
 
 	private boolean initRecorder() {
