@@ -32,7 +32,7 @@ VideoRecorderInterface {
 	private final CaptureHelper		mHelper					= new CaptureHelper();
 	private VideoCaptureView		mVideoCaptureView;
 	private CapturePreview			mVideoCapturePreview;
-	private VideoRecorder			mVideoRecorder;
+	VideoRecorder					mVideoRecorder;
 
 	private boolean					mVideoRecorded			= false;
 
@@ -55,7 +55,7 @@ VideoRecorderInterface {
 		initializeCamera();
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
-		mVideoRecorder = new VideoRecorder(captureConfiguration);
+		mVideoRecorder = new VideoRecorder(captureConfiguration, this);
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
@@ -73,7 +73,7 @@ VideoRecorderInterface {
 	@Override
 	protected void onPause() {
 		if (mVideoRecorder != null && mVideoRecorder.isRecording()) {
-			stopRecording();
+			mVideoRecorder.stopRecording();
 		}
 		releaseAllResources();
 		super.onPause();
@@ -121,9 +121,9 @@ VideoRecorderInterface {
 	@Override
 	public void onRecordButtonClicked() {
 		if (mVideoRecorder.isRecording()) {
-			stopRecording();
+			mVideoRecorder.stopRecording();
 		} else {
-			startRecording();
+			startRecording(this);
 		}
 	}
 
@@ -150,6 +150,12 @@ VideoRecorderInterface {
 	@Override
 	public void onRecordingStopped() {
 		mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
+		releaseAllResources();
+	}
+
+	@Override
+	public void onVideoRecorded() {
+		mVideoRecorded = true;
 	}
 
 	private void finishCompleted() {
@@ -174,7 +180,7 @@ VideoRecorderInterface {
 	}
 
 	// METHODS TO CONTROL THE RECORDING
-	public void startRecording() {
+	public void startRecording(VideoRecorderInterface recorderInterface) {
 		mVideoRecorder.setRecording(false);
 
 		if (!mVideoRecorder.initRecorder(this, mVideoRecorder.getCaptureConfiguration(), mCamera, mVideoFile,
@@ -184,22 +190,8 @@ VideoRecorderInterface {
 
 		// Update UI
 		mVideoRecorder.setRecording(true);
-		this.onRecordingStarted();
+		recorderInterface.onRecordingStarted();
 		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + getOutputFilename());
-	}
-
-	public boolean stopRecording() {
-		try {
-			mVideoRecorder.getMediaRecorder().stop();
-			mVideoRecorded = true;
-		} catch (final RuntimeException e) {
-			CLog.d(CLog.ACTIVITY, "Failed to stop recording");
-		}
-		mVideoRecorder.setRecording(false);
-
-		onRecordingStopped();
-		releaseAllResources();
-		return true;
 	}
 
 	private void releaseAllResources() {
@@ -228,13 +220,15 @@ VideoRecorderInterface {
 
 	public class VideoRecorder {
 
-		private final CaptureConfiguration	mCaptureConfiguration;
-		private MediaRecorder				mRecorder;
-		private final CaptureHelper			mHelper		= new CaptureHelper();
-		boolean								mRecording	= false;
+		private final CaptureConfiguration		mCaptureConfiguration;
+		private MediaRecorder					mRecorder;
+		private final CaptureHelper				mHelper		= new CaptureHelper();
+		boolean									mRecording	= false;
+		private final VideoRecorderInterface	mRecorderInterface;
 
-		public VideoRecorder(CaptureConfiguration captureConfiguration) {
+		public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface) {
 			mCaptureConfiguration = captureConfiguration;
+			mRecorderInterface = recorderInterface;
 		}
 
 		public CaptureConfiguration getCaptureConfiguration() {
@@ -258,13 +252,13 @@ VideoRecorderInterface {
 						CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
 						Toast.makeText(videoCaptureActivity.getApplicationContext(),
 								"Capture stopped - Max duration reached", Toast.LENGTH_LONG).show();
-						videoCaptureActivity.stopRecording();
+						stopRecording();
 						break;
 					case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
 						CLog.d(CLog.ACTIVITY, "MediaRecorder max filesize reached");
 						Toast.makeText(videoCaptureActivity.getApplicationContext(),
 								"Capture stopped - Max file size reached", Toast.LENGTH_LONG).show();
-						videoCaptureActivity.stopRecording();
+						stopRecording();
 						break;
 					default:
 						break;
@@ -331,6 +325,18 @@ VideoRecorderInterface {
 
 		public void setRecording(boolean recording) {
 			mRecording = recording;
+		}
+
+		public void stopRecording() {
+			try {
+				getMediaRecorder().stop();
+				mRecorderInterface.onVideoRecorded();
+			} catch (final RuntimeException e) {
+				CLog.d(CLog.ACTIVITY, "Failed to stop recording");
+			}
+
+			mRecording = false;
+			mRecorderInterface.onRecordingStopped();
 		}
 
 	}

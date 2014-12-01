@@ -6,4 +6,6 @@ public interface VideoRecorderInterface {
 
 	public abstract void onRecordingStarted();
 
+	public abstract void onVideoRecorded();
+
 }
