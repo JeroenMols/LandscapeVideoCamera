@@ -84,7 +84,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		if (!isRecording()) return;
 
 		try {
-			mRecorder.stop();
+			getMediaRecorder().stop();
 			mRecorderInterface.onRecordingSuccess();
 			CLog.d(CLog.RECORDER, "Successfully stopped recording - outputfile: " + mVideoFile.getFullPath());
 		} catch (final RuntimeException e) {
@@ -105,8 +105,8 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 			return false;
 		}
 
-		mRecorder = createMediaRecorder();
-		configureMediaRecorder(mRecorder, mCameraWrapper.getCamera());
+		mRecorder = new MediaRecorder();
+		configureMediaRecorder(getMediaRecorder(), mCameraWrapper.getCamera());
 
 		CLog.d(CLog.RECORDER, "MediaRecorder successfully initialized");
 		return true;
@@ -135,13 +135,9 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		recorder.setOnInfoListener(this);
 	}
 
-	protected MediaRecorder createMediaRecorder() {
-		return new MediaRecorder();
-	}
-
 	private boolean prepareRecorder() {
 		try {
-			mRecorder.prepare();
+			getMediaRecorder().prepare();
 			CLog.d(CLog.RECORDER, "MediaRecorder successfully prepared");
 			return true;
 		} catch (final IllegalStateException e) {
@@ -157,7 +153,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
 	private boolean startRecorder() {
 		try {
-			mRecorder.start();
+			getMediaRecorder().start();
 			CLog.d(CLog.RECORDER, "MediaRecorder successfully started");
 			return true;
 		} catch (final IllegalStateException e) {
@@ -171,9 +167,13 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		return mRecording;
 	}
 
+	protected MediaRecorder getMediaRecorder() {
+		return mRecorder;
+	}
+
 	private void releaseRecorderResources() {
-		if (mRecorder != null) {
-			mRecorder.release();
+		if (getMediaRecorder() != null) {
+			getMediaRecorder().release();
 		}
 	}
 

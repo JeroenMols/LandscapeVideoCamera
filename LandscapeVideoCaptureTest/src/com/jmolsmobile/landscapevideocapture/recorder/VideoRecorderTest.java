@@ -88,7 +88,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 	private VideoRecorder createSpyRecorder(final VideoRecorderInterface mockInterface, final MediaRecorder mockRecorder) {
 		final VideoRecorder spyRecorder = spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class),
 				mock(VideoFile.class), mock(CameraWrapper.class), mock(SurfaceHolder.class)));
-		doReturn(mockRecorder).when(spyRecorder).createMediaRecorder();
+		doReturn(mockRecorder).when(spyRecorder).getMediaRecorder();
 		return spyRecorder;
 	}
 
@@ -123,6 +123,35 @@ public class VideoRecorderTest extends MockitoTestCase {
 		spyRecorder.startRecording();
 
 		verify(mockInterface, never()).onRecordingStarted();
+	}
+
+	public void test_dontNotifyListenerWhenNotStopped() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, false);
+
+		spyRecorder.stopRecording(null);
+
+		verify(mockInterface, never()).onRecordingStopped(anyString());
+	}
+
+	public void test_notifyListenerWhenStoppedFailed() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, true);
+
+		spyRecorder.stopRecording("test");
+
+		verify(mockInterface, never()).onRecordingSuccess();
+		verify(mockInterface, times(1)).onRecordingStopped("test");
+	}
+
+	public void test_notifyListenerWhenStoppedSuccess() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, mock(MediaRecorder.class), true);
+
+		spyRecorder.stopRecording("test");
+
+		verify(mockInterface, times(1)).onRecordingSuccess();
+		verify(mockInterface, times(1)).onRecordingStopped("test");
 	}
 
 	public void test_mediaRecorderShouldHaveMediaRecorderOptions() {
@@ -198,5 +227,22 @@ public class VideoRecorderTest extends MockitoTestCase {
 		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED, 0);
 
 		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max duration reached");
+	}
+
+	public void test_notifyListenerWhenPreviewFails() {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null,
+				mock(CameraWrapper.class), mock(SurfaceHolder.class));
+		recorder.onCapturePreviewFailed();
+
+		verify(mockInterface, times(1)).onRecordingFailed("Unable to show camera preview");
+	}
+
+	private VideoRecorder createSpyRecorderForStopTests(final VideoRecorderInterface mockInterface,
+			final MediaRecorder recorder, final boolean isRecording) {
+		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+		doReturn(isRecording).when(spyRecorder).isRecording();
+		doReturn(recorder).when(spyRecorder).getMediaRecorder();
+		return spyRecorder;
 	}
 }
