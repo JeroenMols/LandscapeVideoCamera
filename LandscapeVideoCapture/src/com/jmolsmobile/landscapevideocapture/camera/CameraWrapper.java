@@ -44,16 +44,8 @@ public class CameraWrapper {
 	}
 
 	public void releaseCamera() {
-		if (mCamera == null) return;
-		mCamera.release();
-	}
-
-	protected Camera openCameraFromSystem() {
-		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
-	}
-
-	protected void unlockCameraFromSystem() {
-		mCamera.unlock();
+		if (getCamera() == null) return;
+		releaseCameraFromSystem();
 	}
 
 	public void startPreview(final SurfaceHolder holder) throws IOException {
@@ -71,6 +63,18 @@ public class CameraWrapper {
 		params.setPreviewSize(width, height);
 		params.setPreviewFormat(ImageFormat.NV21);
 		mCamera.setParameters(params);
+	}
+
+	protected Camera openCameraFromSystem() {
+		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
+	}
+
+	protected void unlockCameraFromSystem() {
+		mCamera.unlock();
+	}
+
+	protected void releaseCameraFromSystem() {
+		mCamera.release();
 	}
 
 }

@@ -10,9 +10,6 @@ import static org.mockito.Mockito.verify;
 import android.hardware.Camera;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
-import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
-import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
-import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 /**
@@ -86,6 +83,15 @@ public class CameraWrapperTest extends MockitoTestCase {
 	public void test_releaseCameraWhenCameraNull() {
 		final CameraWrapper wrapper = new CameraWrapper();
 		wrapper.releaseCamera();
+	}
+
+	public void test_releaseCameraWhenCameraNotNull() {
+		final CameraWrapper wrapper = spy(new CameraWrapper());
+		doNothing().when(wrapper).releaseCameraFromSystem();
+		doReturn(mock(Camera.class)).when(wrapper).getCamera();
+		wrapper.releaseCamera();
+
+		verify(wrapper, times(1)).releaseCameraFromSystem();
 	}
 
 	public void test_prepareCameraWhenCameraNull() {
