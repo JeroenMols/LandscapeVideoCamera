@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.recorder;
 
 import android.graphics.Bitmap;
 import android.hardware.Camera;
@@ -9,7 +9,9 @@ import android.media.ThumbnailUtils;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Surface;
 
-import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
+import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
 
 /**
  * @author Jeroen Mols

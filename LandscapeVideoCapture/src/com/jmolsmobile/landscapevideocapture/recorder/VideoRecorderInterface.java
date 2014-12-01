@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.recorder;
 
 public interface VideoRecorderInterface {
 

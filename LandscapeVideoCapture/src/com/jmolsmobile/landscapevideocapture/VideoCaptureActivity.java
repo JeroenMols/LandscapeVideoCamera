@@ -1,5 +1,10 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
+import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
+import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

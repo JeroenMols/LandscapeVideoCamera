@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.recorder;
 
 import java.io.IOException;
 
@@ -8,6 +8,12 @@ import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+
+import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.VideoFile;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
 
 /**
  * @author Jeroen Mols
@@ -23,7 +29,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	private final VideoFile					mVideoFile;
 
 	private MediaRecorder					mRecorder;
-	boolean									mRecording	= false;
+	private boolean							mRecording	= false;
 	private final VideoRecorderInterface	mRecorderInterface;
 
 	public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration,

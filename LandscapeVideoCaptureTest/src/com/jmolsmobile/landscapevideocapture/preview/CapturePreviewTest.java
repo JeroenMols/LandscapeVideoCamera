@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.preview;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
@@ -11,6 +11,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
+
+import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
 
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;

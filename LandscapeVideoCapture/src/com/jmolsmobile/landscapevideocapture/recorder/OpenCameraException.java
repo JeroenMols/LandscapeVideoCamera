@@ -1,4 +1,6 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.recorder;
+
+import com.jmolsmobile.landscapevideocapture.CLog;
 
 /**
  * @author Jeroen Mols

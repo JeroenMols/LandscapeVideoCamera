@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,6 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
+import com.jmolsmobile.landscapevideocapture.R;
 import com.jmolsmobile.landscapevideocapture.R.id;
 
 /**
@@ -73,7 +74,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mSurfaceView.setVisibility(View.VISIBLE);
 	}
 
-	void updateUIRecordingOngoing() {
+	public void updateUIRecordingOngoing() {
 		mRecordBtnIv.setSelected(true);
 		mRecordBtnIv.setVisibility(View.VISIBLE);
 		mAcceptBtnIv.setVisibility(View.GONE);
@@ -82,7 +83,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mSurfaceView.setVisibility(View.VISIBLE);
 	}
 
-	void updateUIRecordingFinished(Bitmap videoThumbnail) {
+	public void updateUIRecordingFinished(Bitmap videoThumbnail) {
 		mRecordBtnIv.setVisibility(View.INVISIBLE);
 		mAcceptBtnIv.setVisibility(View.VISIBLE);
 		mDeclineBtnIv.setVisibility(View.VISIBLE);

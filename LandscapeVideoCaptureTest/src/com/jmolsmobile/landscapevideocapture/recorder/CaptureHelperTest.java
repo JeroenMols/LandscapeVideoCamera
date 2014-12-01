@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.recorder;
 
 import org.mockito.Mockito;
 
@@ -7,7 +7,12 @@ import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.view.Surface;
 
-import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
+import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
+import com.jmolsmobile.landscapevideocapture.recorder.CaptureHelper;
+import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException;
+import com.jmolsmobile.landscapevideocapture.recorder.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
 
 public class CaptureHelperTest extends MockitoTestCase {
 

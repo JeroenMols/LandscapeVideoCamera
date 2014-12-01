@@ -1,6 +1,8 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.preview;
 
 import java.io.IOException;
+
+import com.jmolsmobile.landscapevideocapture.CLog;
 
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
