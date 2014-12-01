@@ -55,7 +55,7 @@ VideoRecorderInterface {
 		initializeCamera();
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
-		mVideoRecorder = new VideoRecorder(captureConfiguration, this);
+		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, null, mCamera);
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
@@ -73,7 +73,7 @@ VideoRecorderInterface {
 	@Override
 	protected void onPause() {
 		if (mVideoRecorder != null && mVideoRecorder.isRecording()) {
-			mVideoRecorder.stopRecording();
+			mVideoRecorder.stopRecording(null);
 		}
 		releaseAllResources();
 		super.onPause();
@@ -121,7 +121,7 @@ VideoRecorderInterface {
 	@Override
 	public void onRecordButtonClicked() {
 		if (mVideoRecorder.isRecording()) {
-			mVideoRecorder.stopRecording();
+			mVideoRecorder.stopRecording(null);
 		} else {
 			startRecording(this);
 		}
@@ -148,14 +148,23 @@ VideoRecorderInterface {
 	}
 
 	@Override
-	public void onRecordingStopped() {
+	public void onRecordingStopped(String message) {
+		if (message != null) {
+			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
+		}
+
 		mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
 		releaseAllResources();
 	}
 
 	@Override
-	public void onVideoRecorded() {
+	public void onRecordingSuccess() {
 		mVideoRecorded = true;
+	}
+
+	@Override
+	public void onRecordingFailed() {
+		finishError("Unable to record video");
 	}
 
 	private void finishCompleted() {
@@ -183,8 +192,7 @@ VideoRecorderInterface {
 	public void startRecording(VideoRecorderInterface recorderInterface) {
 		mVideoRecorder.setRecording(false);
 
-		if (!mVideoRecorder.initRecorder(this, mVideoRecorder.getCaptureConfiguration(), mCamera, mVideoFile,
-				mVideoCaptureView, mHelper)) return;
+		if (!mVideoRecorder.initRecorder()) return;
 		if (!mVideoRecorder.prepareRecorder()) return;
 		if (!mVideoRecorder.startRecorder()) return;
 
@@ -225,21 +233,25 @@ VideoRecorderInterface {
 		private final CaptureHelper				mHelper		= new CaptureHelper();
 		boolean									mRecording	= false;
 		private final VideoRecorderInterface	mRecorderInterface;
+		private final VideoFile					mVideoFile;
+		private final Surface					mPreviewSurface;
+		private final Camera					mCamera;
 
-		public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface) {
+		public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
+				VideoFile videoFile, Surface previewSurface, Camera camera) {
 			mCaptureConfiguration = captureConfiguration;
 			mRecorderInterface = recorderInterface;
+			mVideoFile = videoFile;
+			mPreviewSurface = previewSurface;
+			mCamera = camera;
 		}
 
 		public CaptureConfiguration getCaptureConfiguration() {
 			return mCaptureConfiguration;
 		}
 
-		boolean initRecorder(final VideoCaptureActivity videoCaptureActivity,
-				CaptureConfiguration captureConfiguration, Camera camera, VideoFile videoFile,
-				VideoCaptureView videoCaptureView, CaptureHelper captureHelper) {
-			final Surface previewSurface = videoCaptureView.getPreviewSurfaceHolder().getSurface();
-			final String outputFilename = videoFile.getFile().getAbsolutePath();
+		boolean initRecorder() {
+			final String outputFilename = mVideoFile.getFile().getAbsolutePath();
 			final OnInfoListener recordingListener = new OnInfoListener() {
 
 				@Override
@@ -250,15 +262,11 @@ VideoRecorderInterface {
 						break;
 					case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
 						CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
-						Toast.makeText(videoCaptureActivity.getApplicationContext(),
-								"Capture stopped - Max duration reached", Toast.LENGTH_LONG).show();
-						stopRecording();
+						stopRecording("Capture stopped - Max duration reached");
 						break;
 					case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
 						CLog.d(CLog.ACTIVITY, "MediaRecorder max filesize reached");
-						Toast.makeText(videoCaptureActivity.getApplicationContext(),
-								"Capture stopped - Max file size reached", Toast.LENGTH_LONG).show();
-						stopRecording();
+						stopRecording("Capture stopped - Max file size reached");
 						break;
 					default:
 						break;
@@ -267,14 +275,14 @@ VideoRecorderInterface {
 			};
 
 			try {
-				captureHelper.prepareCameraForRecording(camera);
+				mHelper.prepareCameraForRecording(mCamera);
 			} catch (final PrepareCameraException e) {
 				e.printStackTrace();
-				videoCaptureActivity.finishError(e.getMessage());
+				mRecorderInterface.onRecordingFailed();
 				return false;
 			}
 
-			mRecorder = mHelper.createMediaRecorder(camera, previewSurface, captureConfiguration, outputFilename,
+			mRecorder = mHelper.createMediaRecorder(mCamera, mPreviewSurface, mCaptureConfiguration, outputFilename,
 					recordingListener);
 
 			CLog.d(CLog.ACTIVITY, "MediaRecorder successfully initialized");
@@ -327,16 +335,16 @@ VideoRecorderInterface {
 			mRecording = recording;
 		}
 
-		public void stopRecording() {
+		public void stopRecording(String message) {
 			try {
 				getMediaRecorder().stop();
-				mRecorderInterface.onVideoRecorded();
+				mRecorderInterface.onRecordingSuccess();
 			} catch (final RuntimeException e) {
 				CLog.d(CLog.ACTIVITY, "Failed to stop recording");
 			}
 
 			mRecording = false;
-			mRecorderInterface.onRecordingStopped();
+			mRecorderInterface.onRecordingStopped(null);
 		}
 
 	}
