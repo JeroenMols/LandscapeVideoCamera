@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -13,8 +12,7 @@ import android.widget.Toast;
 /**
  * @author Jeroen Mols
  */
-public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, CapturePreviewInterface,
-		VideoRecorderInterface {
+public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, VideoRecorderInterface {
 
 	public static final int			RESULT_ERROR			= 753245;
 
@@ -27,12 +25,12 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	private VideoFile				mVideoFile				= null;
 	private final CaptureHelper		mHelper					= new CaptureHelper();
 	private VideoCaptureView		mVideoCaptureView;
-	private CapturePreview			mVideoCapturePreview;
-	VideoRecorder					mVideoRecorder;
+
+	private VideoRecorder			mVideoRecorder;
 
 	private boolean					mVideoRecorded			= false;
 
-	private Camera					mCamera;
+	Camera							mCamera;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -52,17 +50,13 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
 		final Surface previewSurface = mVideoCaptureView.getPreviewSurfaceHolder().getSurface();
-		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, previewSurface, mCamera);
+		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, previewSurface, mCamera,
+				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
 			return;
 		}
-
-		final SurfaceHolder surfaceHolder = mVideoCaptureView.getPreviewSurfaceHolder();
-		final int width = mVideoRecorder.getCaptureConfiguration().getPreviewWidth();
-		final int height = mVideoRecorder.getCaptureConfiguration().getPreviewHeight();
-		mVideoCapturePreview = new CapturePreview(this, mCamera, surfaceHolder, width, height);
 
 		mVideoCaptureView.updateUINotRecording();
 	}
@@ -125,11 +119,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	@Override
-	public void onCapturePreviewFailed() {
-		finishError("Unable to show camera preview");
-	}
-
-	@Override
 	public void onRecordingStarted() {
 		mVideoCaptureView.updateUIRecordingOngoing();
 	}
@@ -150,8 +139,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	@Override
-	public void onRecordingFailed() {
-		finishError("Unable to record video");
+	public void onRecordingFailed(String message) {
+		finishError(message);
 	}
 
 	private void finishCompleted() {
@@ -176,15 +165,14 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	private void releaseAllResources() {
-		if (mVideoCapturePreview != null) {
-			mVideoCapturePreview.releasePreviewResources();
-		}
-
-		if (mCamera != null) {
-			mCamera.release();
-			mCamera = null;
-		}
 		if (mVideoRecorder != null) {
+			if (mVideoRecorder.getVideoCapturePreview() != null) {
+				mVideoRecorder.getVideoCapturePreview().releasePreviewResources();
+			}
+			if (mCamera != null) {
+				mCamera.release();
+				mCamera = null;
+			}
 			mVideoRecorder.releaseRecorderResources();
 		}
 		CLog.d(CLog.ACTIVITY, "Released all resources");

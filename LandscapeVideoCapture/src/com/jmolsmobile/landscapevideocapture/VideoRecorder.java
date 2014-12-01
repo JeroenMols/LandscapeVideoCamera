@@ -6,11 +6,12 @@ import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 /**
  * @author Jeroen Mols
  */
-public class VideoRecorder {
+public class VideoRecorder implements CapturePreviewInterface {
 
 	private final CaptureConfiguration		mCaptureConfiguration;
 	private MediaRecorder					mRecorder;
@@ -20,14 +21,25 @@ public class VideoRecorder {
 	private final VideoFile					mVideoFile;
 	private final Surface					mPreviewSurface;
 	private final Camera					mCamera;
+	private CapturePreview					mVideoCapturePreview;
+
+	public CapturePreview getVideoCapturePreview() {
+		return mVideoCapturePreview;
+	}
+
+	public void setVideoCapturePreview(CapturePreview mVideoCapturePreview) {
+		this.mVideoCapturePreview = mVideoCapturePreview;
+	}
 
 	public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
-			VideoFile videoFile, Surface previewSurface, Camera camera) {
+			VideoFile videoFile, Surface previewSurface, Camera camera, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
 		mRecorderInterface = recorderInterface;
 		mVideoFile = videoFile;
-		mPreviewSurface = previewSurface;
+		mPreviewSurface = previewHolder.getSurface();
 		mCamera = camera;
+
+		initializeCapturePreview(previewHolder);
 	}
 
 	public CaptureConfiguration getCaptureConfiguration() {
@@ -62,7 +74,7 @@ public class VideoRecorder {
 			mHelper.prepareCameraForRecording(mCamera);
 		} catch (final PrepareCameraException e) {
 			e.printStackTrace();
-			mRecorderInterface.onRecordingFailed();
+			mRecorderInterface.onRecordingFailed("Unable to record video");
 			return false;
 		}
 
@@ -150,6 +162,17 @@ public class VideoRecorder {
 		} else {
 			startRecording();
 		}
+	}
+
+	private void initializeCapturePreview(SurfaceHolder previewSurfaceHolder) {
+		final int width = mCaptureConfiguration.getPreviewWidth();
+		final int height = mCaptureConfiguration.getPreviewHeight();
+		mVideoCapturePreview = new CapturePreview(this, mCamera, previewSurfaceHolder, width, height);
+	}
+
+	@Override
+	public void onCapturePreviewFailed() {
+		mRecorderInterface.onRecordingFailed("Unable to show camera preview");
 	}
 
 }

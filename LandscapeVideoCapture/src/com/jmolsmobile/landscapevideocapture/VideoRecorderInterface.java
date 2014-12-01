@@ -8,6 +8,6 @@ public interface VideoRecorderInterface {
 
 	public abstract void onRecordingSuccess();
 
-	public abstract void onRecordingFailed();
+	public abstract void onRecordingFailed(String message);
 
 }
