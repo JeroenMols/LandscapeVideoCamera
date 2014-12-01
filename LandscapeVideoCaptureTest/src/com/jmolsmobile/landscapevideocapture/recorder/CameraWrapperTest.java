@@ -12,6 +12,9 @@ import android.hardware.Camera;
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
 
+/**
+ * @author Jeroen Mols
+ */
 public class CameraWrapperTest extends MockitoTestCase {
 
 	public void test_openCameraSuccess() {
