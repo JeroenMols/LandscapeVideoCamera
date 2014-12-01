@@ -3,7 +3,6 @@ package com.jmolsmobile.landscapevideocapture;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Surface;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -21,40 +20,44 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	private static final String		SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
 	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
-	private VideoFile				mVideoFile				= null;
-	final CaptureHelper				mHelper					= new CaptureHelper();
-	private VideoCaptureView		mVideoCaptureView;
-
-	private VideoRecorder			mVideoRecorder;
-
 	private boolean					mVideoRecorded			= false;
+	VideoFile						mVideoFile				= null;
+	private CaptureConfiguration	mCaptureConfiguration;
+
+	private VideoCaptureView		mVideoCaptureView;
+	private VideoRecorder			mVideoRecorder;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-		initializeFields(savedInstanceState);
-
 		setContentView(R.layout.activity_videocapture);
-		final CaptureConfiguration captureConfiguration = new CaptureConfiguration();
+
+		initializeCaptureConfiguration(savedInstanceState);
 
 		mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
 		if (mVideoCaptureView == null) return; // Wrong orientation
 
-		mVideoCaptureView.setRecordingButtonInterface(this);
+		initializeRecordingUI();
+	}
 
-		final Surface previewSurface = mVideoCaptureView.getPreviewSurfaceHolder().getSurface();
-		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile,
+	private void initializeCaptureConfiguration(final Bundle savedInstanceState) {
+		mCaptureConfiguration = new CaptureConfiguration();
+		mVideoRecorded = generateVideoRecorded(savedInstanceState);
+		mVideoFile = generateOutputFile(savedInstanceState);
+	}
+
+	private void initializeRecordingUI() {
+		mVideoCaptureView.setRecordingButtonInterface(this);
+		mVideoRecorder = new VideoRecorder(mCaptureConfiguration, this, mVideoFile,
 				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
-			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
-			return;
+			mVideoCaptureView.updateUIRecordingFinished(mVideoRecorder.getVideoThumbnail());
+		} else {
+			mVideoCaptureView.updateUINotRecording();
 		}
-
-		mVideoCaptureView.updateUINotRecording();
 	}
 
 	@Override
@@ -64,34 +67,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		}
 		releaseAllResources();
 		super.onPause();
-	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
-		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mVideoFile.getFullPath());
-		super.onSaveInstanceState(savedInstanceState);
-	}
-
-	private void initializeFields(final Bundle savedInstanceState) {
-		mVideoRecorded = generateVideoRecorded(savedInstanceState);
-		mVideoFile = generateOutputFile(savedInstanceState);
-	}
-
-	private boolean generateVideoRecorded(final Bundle savedInstanceState) {
-		if (savedInstanceState == null) return false;
-		return savedInstanceState.getBoolean(SAVED_RECORDED_BOOLEAN, false);
-	}
-
-	protected VideoFile generateOutputFile(Bundle savedInstanceState) {
-		VideoFile returnFile = null;
-		if (savedInstanceState != null) {
-			returnFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
-		} else {
-			returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
-		}
-		// TODO: add checks to see if outputfile is writeable
-		return returnFile;
 	}
 
 	@Override
@@ -125,7 +100,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		}
 
-		mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
+		mVideoCaptureView.updateUIRecordingFinished(mVideoRecorder.getVideoThumbnail());
 		releaseAllResources();
 	}
 
@@ -151,7 +126,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		finish();
 	}
 
-	void finishError(final String message) {
+	private void finishError(final String message) {
 		Toast.makeText(getApplicationContext(), "Can't capture video: " + message, Toast.LENGTH_LONG).show();
 
 		final Intent result = new Intent();
@@ -165,6 +140,29 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			mVideoRecorder.releaseAllResources();
 			mVideoRecorder = null;
 		}
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
+		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mVideoFile.getFullPath());
+		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	private boolean generateVideoRecorded(final Bundle savedInstanceState) {
+		if (savedInstanceState == null) return false;
+		return savedInstanceState.getBoolean(SAVED_RECORDED_BOOLEAN, false);
+	}
+
+	protected VideoFile generateOutputFile(Bundle savedInstanceState) {
+		VideoFile returnFile = null;
+		if (savedInstanceState != null) {
+			returnFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
+		} else {
+			returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
+		}
+		// TODO: add checks to see if outputfile is writeable
+		return returnFile;
 	}
 
 }

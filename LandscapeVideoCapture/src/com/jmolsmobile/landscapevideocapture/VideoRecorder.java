@@ -2,6 +2,7 @@ package com.jmolsmobile.landscapevideocapture;
 
 import java.io.IOException;
 
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
@@ -192,6 +193,10 @@ public class VideoRecorder implements CapturePreviewInterface {
 		}
 		releaseRecorderResources();
 		CLog.d(CLog.ACTIVITY, "Released all resources");
+	}
+
+	public Bitmap getVideoThumbnail() {
+		return mHelper.generateThumbnail(mVideoFile.getFullPath());
 	}
 
 }
