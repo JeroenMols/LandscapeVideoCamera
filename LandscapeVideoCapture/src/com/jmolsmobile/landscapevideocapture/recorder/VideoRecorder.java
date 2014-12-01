@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -42,7 +44,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		initializeCameraAndPreview(previewHolder);
 	}
 
-	private void initializeCameraAndPreview(SurfaceHolder previewHolder) {
+	protected void initializeCameraAndPreview(SurfaceHolder previewHolder) {
 		try {
 			mCamera = mHelper.openCamera();
 		} catch (final OpenCameraException e) {
@@ -101,11 +103,37 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 			return false;
 		}
 
-		final String outputFilename = mVideoFile.getFullPath();
-		mRecorder = mHelper.createMediaRecorder(mCamera, mPreviewSurface, mCaptureConfiguration, outputFilename, this);
+		mRecorder = createMediaRecorder();
+		configureMediaRecorder(mRecorder, mCamera);
 
 		CLog.d(CLog.RECORDER, "MediaRecorder successfully initialized");
 		return true;
+	}
+
+	protected void configureMediaRecorder(final MediaRecorder recorder, Camera camera) throws IllegalStateException,
+	IllegalArgumentException {
+		recorder.setCamera(camera);
+		recorder.setAudioSource(mCaptureConfiguration.getAudioSource());
+		recorder.setVideoSource(mCaptureConfiguration.getVideoSource());
+
+		// Order is important
+		recorder.setOutputFormat(mCaptureConfiguration.getOutputFormat());
+		recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
+		recorder.setOutputFile(mVideoFile.getFullPath());
+
+		recorder.setVideoSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
+		recorder.setVideoEncodingBitRate(mCaptureConfiguration.getVideoBitrate());
+
+		recorder.setAudioEncoder(mCaptureConfiguration.getAudioEncoder());
+		recorder.setVideoEncoder(mCaptureConfiguration.getVideoEncoder());
+
+		recorder.setPreviewDisplay(mPreviewSurface);
+		recorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
+		recorder.setOnInfoListener(this);
+	}
+
+	protected MediaRecorder createMediaRecorder() {
+		return new MediaRecorder();
 	}
 
 	private boolean prepareRecorder() {
@@ -155,7 +183,12 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	}
 
 	public Bitmap getVideoThumbnail() {
-		return mHelper.generateThumbnail(mVideoFile.getFullPath());
+		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoFile.getFullPath(),
+				Thumbnails.FULL_SCREEN_KIND);
+		if (thumbnail == null) {
+			CLog.d(CLog.RECORDER, "Failed to generate video preview");
+		}
+		return thumbnail;
 	}
 
 	@Override
