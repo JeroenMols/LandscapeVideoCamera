@@ -10,7 +10,7 @@ public class OpenCameraException extends Exception {
 	private static final String	LOG_PREFIX			= "Unable to open camera - ";
 	private static final long	serialVersionUID	= -7340415176385044242L;
 
-	enum OpenType {
+	public enum OpenType {
 		INUSE("Camera disabled or in use by other process"), NOCAMERA("Device does not have camera");
 
 		private String	mMessage;

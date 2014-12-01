@@ -24,7 +24,7 @@ import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
  */
 public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
-	private CameraWrapper					mCameraWrapper	= new CameraWrapper();
+	private CameraWrapper					mCameraWrapper;
 	private final Surface					mPreviewSurface;
 	private CapturePreview					mVideoCapturePreview;
 
@@ -32,14 +32,15 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	private final VideoFile					mVideoFile;
 
 	private MediaRecorder					mRecorder;
-	private boolean							mRecording		= false;
+	private boolean							mRecording	= false;
 	private final VideoRecorderInterface	mRecorderInterface;
 
 	public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration,
-			VideoFile videoFile, SurfaceHolder previewHolder) {
+			VideoFile videoFile, CameraWrapper cameraWrapper, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
 		mRecorderInterface = recorderInterface;
 		mVideoFile = videoFile;
+		mCameraWrapper = cameraWrapper;
 		mPreviewSurface = previewHolder.getSurface();
 
 		initializeCameraAndPreview(previewHolder);
@@ -60,14 +61,14 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	}
 
 	public void toggleRecording() {
-		if (mRecording) {
+		if (isRecording()) {
 			stopRecording(null);
 		} else {
 			startRecording();
 		}
 	}
 
-	private void startRecording() {
+	protected void startRecording() {
 		mRecording = false;
 
 		if (!initRecorder()) return;
@@ -80,7 +81,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	}
 
 	public void stopRecording(String message) {
-		if (!mRecording) return;
+		if (!isRecording()) return;
 
 		try {
 			mRecorder.stop();
@@ -164,6 +165,10 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 			CLog.e(CLog.RECORDER, "MediaRecorder start failed - " + e.toString());
 			return false;
 		}
+	}
+
+	protected boolean isRecording() {
+		return mRecording;
 	}
 
 	private void releaseRecorderResources() {

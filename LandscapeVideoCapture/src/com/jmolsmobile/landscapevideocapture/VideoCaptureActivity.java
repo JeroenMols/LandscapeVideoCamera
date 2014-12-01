@@ -1,16 +1,17 @@
 package com.jmolsmobile.landscapevideocapture;
 
-import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
-import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
-import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
-import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
+import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
+import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
 
 /**
  * @author Jeroen Mols
@@ -55,7 +56,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	private void initializeRecordingUI() {
 		mVideoCaptureView.setRecordingButtonInterface(this);
-		mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile,
+		mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(),
 				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
