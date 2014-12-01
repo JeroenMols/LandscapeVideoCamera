@@ -32,7 +32,7 @@ public class VideoRecorder implements CapturePreviewInterface {
 	}
 
 	public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
-			VideoFile videoFile, Surface previewSurface, Camera camera, SurfaceHolder previewHolder) {
+			VideoFile videoFile, Camera camera, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
 		mRecorderInterface = recorderInterface;
 		mVideoFile = videoFile;
