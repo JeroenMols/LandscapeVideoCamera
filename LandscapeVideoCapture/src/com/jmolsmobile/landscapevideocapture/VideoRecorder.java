@@ -144,4 +144,12 @@ public class VideoRecorder {
 		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + mVideoFile.getFullPath());
 	}
 
+	public void toggleRecording() {
+		if (mRecording) {
+			stopRecording(null);
+		} else {
+			startRecording();
+		}
+	}
+
 }

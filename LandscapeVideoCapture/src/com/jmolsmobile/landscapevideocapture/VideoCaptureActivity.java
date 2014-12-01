@@ -14,7 +14,7 @@ import android.widget.Toast;
  * @author Jeroen Mols
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, CapturePreviewInterface,
-VideoRecorderInterface {
+		VideoRecorderInterface {
 
 	public static final int			RESULT_ERROR			= 753245;
 
@@ -40,7 +40,7 @@ VideoRecorderInterface {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		restoreInstanceState(savedInstanceState);
+		initializeFields(savedInstanceState);
 
 		setContentView(R.layout.activity_videocapture);
 		final CaptureConfiguration captureConfiguration = new CaptureConfiguration();
@@ -78,13 +78,12 @@ VideoRecorderInterface {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
 		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mVideoFile.getFullPath());
+		super.onSaveInstanceState(savedInstanceState);
 	}
 
-	// TODO clean up restore methods
-	private void restoreInstanceState(final Bundle savedInstanceState) {
+	private void initializeFields(final Bundle savedInstanceState) {
 		mVideoRecorded = generateVideoRecorded(savedInstanceState);
 		mVideoFile = generateOutputFile(savedInstanceState);
 	}
@@ -101,7 +100,6 @@ VideoRecorderInterface {
 		} else {
 			returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
 		}
-
 		// TODO: add checks to see if outputfile is writeable
 		return returnFile;
 	}
@@ -113,11 +111,7 @@ VideoRecorderInterface {
 
 	@Override
 	public void onRecordButtonClicked() {
-		if (mVideoRecorder.isRecording()) {
-			mVideoRecorder.stopRecording(null);
-		} else {
-			mVideoRecorder.startRecording();
-		}
+		mVideoRecorder.toggleRecording();
 	}
 
 	@Override
