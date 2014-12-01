@@ -2,17 +2,14 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 import org.mockito.Mockito;
 
-import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
-import com.jmolsmobile.landscapevideocapture.R;
-import com.jmolsmobile.landscapevideocapture.R.id;
-import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
-import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
-
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
+
+import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
+import com.jmolsmobile.landscapevideocapture.R;
 
 /**
  * @author Jeroen Mols

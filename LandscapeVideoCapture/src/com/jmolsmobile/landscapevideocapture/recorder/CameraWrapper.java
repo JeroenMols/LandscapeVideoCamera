@@ -13,6 +13,7 @@ import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenTy
 /**
  * @author Jeroen Mols
  */
+@SuppressWarnings("deprecation")
 public class CameraWrapper {
 
 	private Camera	mCamera	= null;

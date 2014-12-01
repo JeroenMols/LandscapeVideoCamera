@@ -15,6 +15,7 @@ import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenTy
 /**
  * @author Jeroen Mols
  */
+@SuppressWarnings("deprecation")
 public class CameraWrapperTest extends MockitoTestCase {
 
 	public void test_openCameraSuccess() {
@@ -57,7 +58,6 @@ public class CameraWrapperTest extends MockitoTestCase {
 
 	public void test_prepareCameraShouldCallUnlock() {
 		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		final Camera mockCamera = mock(Camera.class);
 		doNothing().when(spyWrapper).unlockCameraFromSystem();
 
 		try {
@@ -70,7 +70,6 @@ public class CameraWrapperTest extends MockitoTestCase {
 
 	public void test_prepareCameraWhenRuntimeException() {
 		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		final Camera mockCamera = mock(Camera.class);
 		doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
 
 		try {

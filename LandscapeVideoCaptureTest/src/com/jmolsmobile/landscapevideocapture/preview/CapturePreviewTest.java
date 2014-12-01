@@ -19,6 +19,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 
 	private final CameraWrapper	mCameraWrapper	= null;
 
+	@SuppressWarnings("deprecation")
 	public void test_shouldInitializeSurfaceHolder() throws Exception {
 		final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
 		final CapturePreview preview = new CapturePreview(null, mCameraWrapper, mockHolder, 0, 0);

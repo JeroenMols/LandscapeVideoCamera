@@ -3,7 +3,6 @@ package com.jmolsmobile.landscapevideocapture.recorder;
 import java.io.IOException;
 
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
 import android.media.ThumbnailUtils;
@@ -109,8 +108,9 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		return true;
 	}
 
-	protected void configureMediaRecorder(final MediaRecorder recorder, Camera camera) throws IllegalStateException,
-	IllegalArgumentException {
+	@SuppressWarnings("deprecation")
+	protected void configureMediaRecorder(final MediaRecorder recorder, android.hardware.Camera camera)
+			throws IllegalStateException, IllegalArgumentException {
 		recorder.setCamera(camera);
 		recorder.setAudioSource(mCaptureConfiguration.getAudioSource());
 		recorder.setVideoSource(mCaptureConfiguration.getVideoSource());

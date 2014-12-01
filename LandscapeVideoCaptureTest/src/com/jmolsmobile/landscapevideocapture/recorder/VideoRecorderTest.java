@@ -15,6 +15,7 @@ import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 
+@SuppressWarnings("deprecation")
 public class VideoRecorderTest extends MockitoTestCase {
 
 	public void test_mediaRecorderShouldHaveMediaRecorderOptions() {
