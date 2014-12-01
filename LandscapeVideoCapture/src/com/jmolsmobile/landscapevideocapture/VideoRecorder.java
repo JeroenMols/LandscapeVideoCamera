@@ -23,14 +23,6 @@ public class VideoRecorder implements CapturePreviewInterface {
 	private final Camera					mCamera;
 	private CapturePreview					mVideoCapturePreview;
 
-	public CapturePreview getVideoCapturePreview() {
-		return mVideoCapturePreview;
-	}
-
-	public void setVideoCapturePreview(CapturePreview mVideoCapturePreview) {
-		this.mVideoCapturePreview = mVideoCapturePreview;
-	}
-
 	public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
 			VideoFile videoFile, Camera camera, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
