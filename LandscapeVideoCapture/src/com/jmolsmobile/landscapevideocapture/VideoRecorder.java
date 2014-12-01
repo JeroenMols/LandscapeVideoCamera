@@ -20,18 +20,39 @@ public class VideoRecorder implements CapturePreviewInterface {
 	private final VideoRecorderInterface	mRecorderInterface;
 	private final VideoFile					mVideoFile;
 	private final Surface					mPreviewSurface;
-	private final Camera					mCamera;
+	private Camera							mCamera;
 	private CapturePreview					mVideoCapturePreview;
 
+	public Camera getCamera() {
+		return mCamera;
+	}
+
+	public void setCamera(Camera camera) {
+		mCamera = camera;
+	}
+
 	public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
-			VideoFile videoFile, Camera camera, SurfaceHolder previewHolder) {
+			VideoFile videoFile, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
 		mRecorderInterface = recorderInterface;
 		mVideoFile = videoFile;
 		mPreviewSurface = previewHolder.getSurface();
-		mCamera = camera;
 
-		initializeCapturePreview(previewHolder);
+		initializeCameraAndPreview(previewHolder);
+	}
+
+	private void initializeCameraAndPreview(SurfaceHolder previewHolder) {
+		try {
+			mCamera = mHelper.openCamera();
+		} catch (final OpenCameraException e) {
+			e.printStackTrace();
+			mRecorderInterface.onRecordingFailed(e.getMessage());
+			return;
+		}
+
+		final int width = mCaptureConfiguration.getPreviewWidth();
+		final int height = mCaptureConfiguration.getPreviewHeight();
+		mVideoCapturePreview = new CapturePreview(this, mCamera, previewHolder, width, height);
 	}
 
 	public CaptureConfiguration getCaptureConfiguration() {
@@ -156,19 +177,21 @@ public class VideoRecorder implements CapturePreviewInterface {
 		}
 	}
 
-	private void initializeCapturePreview(SurfaceHolder previewSurfaceHolder) {
-		final int width = mCaptureConfiguration.getPreviewWidth();
-		final int height = mCaptureConfiguration.getPreviewHeight();
-		mVideoCapturePreview = new CapturePreview(this, mCamera, previewSurfaceHolder, width, height);
-	}
-
 	@Override
 	public void onCapturePreviewFailed() {
 		mRecorderInterface.onRecordingFailed("Unable to show camera preview");
 	}
 
-	public CapturePreview getVideoCapturePreview() {
-		return mVideoCapturePreview;
+	public void releaseAllResources() {
+		if (mVideoCapturePreview != null) {
+			mVideoCapturePreview.releasePreviewResources();
+		}
+		if (mCamera != null) {
+			mCamera.release();
+			mCamera = null; // TODO change this so it can be used for sequential recordings
+		}
+		releaseRecorderResources();
+		CLog.d(CLog.ACTIVITY, "Released all resources");
 	}
 
 }

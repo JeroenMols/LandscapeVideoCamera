@@ -2,7 +2,6 @@ package com.jmolsmobile.landscapevideocapture;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.hardware.Camera;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.Window;
@@ -23,14 +22,12 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
 
 	private VideoFile				mVideoFile				= null;
-	private final CaptureHelper		mHelper					= new CaptureHelper();
+	final CaptureHelper				mHelper					= new CaptureHelper();
 	private VideoCaptureView		mVideoCaptureView;
 
 	private VideoRecorder			mVideoRecorder;
 
 	private boolean					mVideoRecorded			= false;
-
-	Camera							mCamera;
 
 	@Override
 	public void onCreate(final Bundle savedInstanceState) {
@@ -46,11 +43,11 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
 		if (mVideoCaptureView == null) return; // Wrong orientation
 
-		initializeCamera();
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
 		final Surface previewSurface = mVideoCaptureView.getPreviewSurfaceHolder().getSurface();
-		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, mCamera, mVideoCaptureView.getPreviewSurfaceHolder());
+		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile,
+				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
@@ -154,7 +151,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		finish();
 	}
 
-	private void finishError(final String message) {
+	void finishError(final String message) {
 		Toast.makeText(getApplicationContext(), "Can't capture video: " + message, Toast.LENGTH_LONG).show();
 
 		final Intent result = new Intent();
@@ -165,24 +162,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	private void releaseAllResources() {
 		if (mVideoRecorder != null) {
-			if (mVideoRecorder.getVideoCapturePreview() != null) {
-				mVideoRecorder.getVideoCapturePreview().releasePreviewResources();
-			}
-			if (mCamera != null) {
-				mCamera.release();
-				mCamera = null;
-			}
-			mVideoRecorder.releaseRecorderResources();
-		}
-		CLog.d(CLog.ACTIVITY, "Released all resources");
-	}
-
-	private void initializeCamera() {
-		try {
-			mCamera = mHelper.openCamera();
-		} catch (final OpenCameraException e) {
-			e.printStackTrace();
-			finishError(e.getMessage());
+			mVideoRecorder.releaseAllResources();
+			mVideoRecorder = null;
 		}
 	}
 
