@@ -66,7 +66,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
 		preview.setPreviewRunning(true);
 
-		createCapturePreviewAndCallSurfaceChanged(null, mockWrapper);
+		preview.surfaceChanged(null, 0, 0, 0);
 
 		verify(mockWrapper, times(1)).configureForPreview(anyInt(), anyInt());
 	}
