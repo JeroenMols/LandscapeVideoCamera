@@ -50,7 +50,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	private void initializeRecordingUI() {
 		mVideoCaptureView.setRecordingButtonInterface(this);
-		mVideoRecorder = new VideoRecorder(mCaptureConfiguration, this, mVideoFile,
+		mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile,
 				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
@@ -62,7 +62,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	@Override
 	protected void onPause() {
-		if (mVideoRecorder != null && mVideoRecorder.isRecording()) {
+		if (mVideoRecorder != null && mVideoRecorder.mRecording) {
 			mVideoRecorder.stopRecording(null);
 		}
 		releaseAllResources();

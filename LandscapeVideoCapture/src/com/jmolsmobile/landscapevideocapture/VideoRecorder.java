@@ -12,27 +12,21 @@ import android.view.SurfaceHolder;
 /**
  * @author Jeroen Mols
  */
-public class VideoRecorder implements CapturePreviewInterface {
+public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
-	private final CaptureConfiguration		mCaptureConfiguration;
-	private MediaRecorder					mRecorder;
 	private final CaptureHelper				mHelper		= new CaptureHelper();
-	boolean									mRecording	= false;
-	private final VideoRecorderInterface	mRecorderInterface;
-	private final VideoFile					mVideoFile;
-	private final Surface					mPreviewSurface;
 	private Camera							mCamera;
+	private final Surface					mPreviewSurface;
 	private CapturePreview					mVideoCapturePreview;
 
-	public Camera getCamera() {
-		return mCamera;
-	}
+	private final CaptureConfiguration		mCaptureConfiguration;
+	private final VideoFile					mVideoFile;
 
-	public void setCamera(Camera camera) {
-		mCamera = camera;
-	}
+	private MediaRecorder					mRecorder;
+	boolean									mRecording	= false;
+	private final VideoRecorderInterface	mRecorderInterface;
 
-	public VideoRecorder(CaptureConfiguration captureConfiguration, VideoRecorderInterface recorderInterface,
+	public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration,
 			VideoFile videoFile, SurfaceHolder previewHolder) {
 		mCaptureConfiguration = captureConfiguration;
 		mRecorderInterface = recorderInterface;
@@ -56,120 +50,6 @@ public class VideoRecorder implements CapturePreviewInterface {
 		mVideoCapturePreview = new CapturePreview(this, mCamera, previewHolder, width, height);
 	}
 
-	public CaptureConfiguration getCaptureConfiguration() {
-		return mCaptureConfiguration;
-	}
-
-	boolean initRecorder() {
-		final String outputFilename = mVideoFile.getFullPath();
-		final OnInfoListener recordingListener = new OnInfoListener() {
-
-			@Override
-			public void onInfo(MediaRecorder mr, int what, int extra) {
-				switch (what) {
-				case MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN:
-					// NOP
-					break;
-				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
-					CLog.d(CLog.ACTIVITY, "MediaRecorder max duration reached");
-					stopRecording("Capture stopped - Max duration reached");
-					break;
-				case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
-					CLog.d(CLog.ACTIVITY, "MediaRecorder max filesize reached");
-					stopRecording("Capture stopped - Max file size reached");
-					break;
-				default:
-					break;
-				}
-			}
-		};
-
-		try {
-			mHelper.prepareCameraForRecording(mCamera);
-		} catch (final PrepareCameraException e) {
-			e.printStackTrace();
-			mRecorderInterface.onRecordingFailed("Unable to record video");
-			return false;
-		}
-
-		mRecorder = mHelper.createMediaRecorder(mCamera, mPreviewSurface, mCaptureConfiguration, outputFilename,
-				recordingListener);
-
-		CLog.d(CLog.ACTIVITY, "MediaRecorder successfully initialized");
-		return true;
-	}
-
-	public MediaRecorder getMediaRecorder() {
-		return mRecorder;
-	}
-
-	boolean prepareRecorder() {
-		try {
-			mRecorder.prepare();
-			CLog.d(CLog.ACTIVITY, "MediaRecorder successfully prepared");
-			return true;
-		} catch (final IllegalStateException e) {
-			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "MediaRecorder preparation failed - " + e.toString());
-			return false;
-		} catch (final IOException e) {
-			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "MediaRecorder preparation failed - " + e.toString());
-			return false;
-		}
-	}
-
-	boolean startRecorder() {
-		try {
-			getMediaRecorder().start();
-			CLog.d(CLog.ACTIVITY, "MediaRecorder successfully started");
-			return true;
-		} catch (final IllegalStateException e) {
-			e.printStackTrace();
-			CLog.d(CLog.ACTIVITY, "MediaRecorder start failed - " + e.toString());
-			return false;
-		}
-	}
-
-	void releaseRecorderResources() {
-		if (mRecorder != null) {
-			mRecorder.release();
-		}
-	}
-
-	public boolean isRecording() {
-		return mRecording;
-	}
-
-	public void setRecording(boolean recording) {
-		mRecording = recording;
-	}
-
-	public void stopRecording(String message) {
-		try {
-			getMediaRecorder().stop();
-			mRecorderInterface.onRecordingSuccess();
-		} catch (final RuntimeException e) {
-			CLog.d(CLog.ACTIVITY, "Failed to stop recording");
-		}
-
-		mRecording = false;
-		mRecorderInterface.onRecordingStopped(null);
-	}
-
-	public void startRecording() {
-		setRecording(false);
-
-		if (!initRecorder()) return;
-		if (!prepareRecorder()) return;
-		if (!startRecorder()) return;
-
-		// Update UI
-		setRecording(true);
-		mRecorderInterface.onRecordingStarted();
-		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + mVideoFile.getFullPath());
-	}
-
 	public void toggleRecording() {
 		if (mRecording) {
 			stopRecording(null);
@@ -178,9 +58,80 @@ public class VideoRecorder implements CapturePreviewInterface {
 		}
 	}
 
-	@Override
-	public void onCapturePreviewFailed() {
-		mRecorderInterface.onRecordingFailed("Unable to show camera preview");
+	private void startRecording() {
+		mRecording = false;
+
+		if (!initRecorder()) return;
+		if (!prepareRecorder()) return;
+		if (!startRecorder()) return;
+
+		mRecording = true;
+		mRecorderInterface.onRecordingStarted();
+		CLog.d(CLog.RECORDER, "Successfully started recording - outputfile: " + mVideoFile.getFullPath());
+	}
+
+	public void stopRecording(String message) {
+		try {
+			mRecorder.stop();
+			mRecorderInterface.onRecordingSuccess();
+			CLog.d(CLog.RECORDER, "Successfully stopped recording - outputfile: " + mVideoFile.getFullPath());
+		} catch (final RuntimeException e) {
+			CLog.d(CLog.RECORDER, "Failed to stop recording");
+		}
+
+		mRecording = false;
+		mRecorderInterface.onRecordingStopped(null);
+	}
+
+	private boolean initRecorder() {
+		try {
+			mHelper.prepareCameraForRecording(mCamera);
+		} catch (final PrepareCameraException e) {
+			e.printStackTrace();
+			mRecorderInterface.onRecordingFailed("Unable to record video");
+			CLog.e(CLog.RECORDER, "Failed to initialize recorder - " + e.toString());
+			return false;
+		}
+
+		final String outputFilename = mVideoFile.getFullPath();
+		mRecorder = mHelper.createMediaRecorder(mCamera, mPreviewSurface, mCaptureConfiguration, outputFilename, this);
+
+		CLog.d(CLog.RECORDER, "MediaRecorder successfully initialized");
+		return true;
+	}
+
+	private boolean prepareRecorder() {
+		try {
+			mRecorder.prepare();
+			CLog.d(CLog.RECORDER, "MediaRecorder successfully prepared");
+			return true;
+		} catch (final IllegalStateException e) {
+			e.printStackTrace();
+			CLog.e(CLog.RECORDER, "MediaRecorder preparation failed - " + e.toString());
+			return false;
+		} catch (final IOException e) {
+			e.printStackTrace();
+			CLog.e(CLog.RECORDER, "MediaRecorder preparation failed - " + e.toString());
+			return false;
+		}
+	}
+
+	private boolean startRecorder() {
+		try {
+			mRecorder.start();
+			CLog.d(CLog.RECORDER, "MediaRecorder successfully started");
+			return true;
+		} catch (final IllegalStateException e) {
+			e.printStackTrace();
+			CLog.e(CLog.RECORDER, "MediaRecorder start failed - " + e.toString());
+			return false;
+		}
+	}
+
+	private void releaseRecorderResources() {
+		if (mRecorder != null) {
+			mRecorder.release();
+		}
 	}
 
 	public void releaseAllResources() {
@@ -189,14 +140,38 @@ public class VideoRecorder implements CapturePreviewInterface {
 		}
 		if (mCamera != null) {
 			mCamera.release();
-			mCamera = null; // TODO change this so it can be used for sequential recordings
+			mCamera = null;
 		}
 		releaseRecorderResources();
-		CLog.d(CLog.ACTIVITY, "Released all resources");
+		CLog.d(CLog.RECORDER, "Released all resources");
 	}
 
 	public Bitmap getVideoThumbnail() {
 		return mHelper.generateThumbnail(mVideoFile.getFullPath());
+	}
+
+	@Override
+	public void onCapturePreviewFailed() {
+		mRecorderInterface.onRecordingFailed("Unable to show camera preview");
+	}
+
+	@Override
+	public void onInfo(MediaRecorder mr, int what, int extra) {
+		switch (what) {
+		case MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN:
+			// NOP
+			break;
+		case MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED:
+			CLog.d(CLog.RECORDER, "MediaRecorder max duration reached");
+			stopRecording("Capture stopped - Max duration reached");
+			break;
+		case MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED:
+			CLog.d(CLog.RECORDER, "MediaRecorder max filesize reached");
+			stopRecording("Capture stopped - Max file size reached");
+			break;
+		default:
+			break;
+		}
 	}
 
 }
