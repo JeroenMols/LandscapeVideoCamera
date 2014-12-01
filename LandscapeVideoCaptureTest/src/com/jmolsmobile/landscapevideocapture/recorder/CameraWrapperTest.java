@@ -12,16 +12,16 @@ import android.hardware.Camera;
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.recorder.OpenCameraException.OpenType;
 
-public class CaptureWrapperTest extends MockitoTestCase {
+public class CameraWrapperTest extends MockitoTestCase {
 
 	public void test_openCameraSuccess() {
-		final CameraWrapper spyHelper = spy(new CameraWrapper());
+		final CameraWrapper spyWrapper = spy(new CameraWrapper());
 		final Camera mockCamera = mock(Camera.class);
-		doReturn(mockCamera).when(spyHelper).openCameraFromSystem();
+		doReturn(mockCamera).when(spyWrapper).openCameraFromSystem();
 
 		try {
-			spyHelper.openCamera();
-			final Camera camera = spyHelper.getCamera();
+			spyWrapper.openCamera();
+			final Camera camera = spyWrapper.getCamera();
 			assertEquals(mockCamera, camera);
 		} catch (final OpenCameraException e) {
 			fail("Should not throw exception");
@@ -29,11 +29,11 @@ public class CaptureWrapperTest extends MockitoTestCase {
 	}
 
 	public void test_openCameraNoCamera() {
-		final CameraWrapper spyHelper = spy(new CameraWrapper());
-		doReturn(null).when(spyHelper).openCameraFromSystem();
+		final CameraWrapper spyWrapper = spy(new CameraWrapper());
+		doReturn(null).when(spyWrapper).openCameraFromSystem();
 
 		try {
-			spyHelper.openCamera();
+			spyWrapper.openCamera();
 			fail("Missing exception");
 		} catch (final OpenCameraException e) {
 			assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
@@ -41,11 +41,11 @@ public class CaptureWrapperTest extends MockitoTestCase {
 	}
 
 	public void test_openCameraInUse() {
-		final CameraWrapper spyHelper = spy(new CameraWrapper());
-		doThrow(new RuntimeException()).when(spyHelper).openCameraFromSystem();
+		final CameraWrapper spyWrapper = spy(new CameraWrapper());
+		doThrow(new RuntimeException()).when(spyWrapper).openCameraFromSystem();
 
 		try {
-			spyHelper.openCamera();
+			spyWrapper.openCamera();
 			fail("Missing exception");
 		} catch (final OpenCameraException e) {
 			assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
@@ -53,25 +53,25 @@ public class CaptureWrapperTest extends MockitoTestCase {
 	}
 
 	public void test_prepareCameraShouldCallUnlock() {
-		final CameraWrapper spyHelper = spy(new CameraWrapper());
+		final CameraWrapper spyWrapper = spy(new CameraWrapper());
 		final Camera mockCamera = mock(Camera.class);
-		doNothing().when(spyHelper).unlockCameraFromSystem();
+		doNothing().when(spyWrapper).unlockCameraFromSystem();
 
 		try {
-			spyHelper.prepareCameraForRecording();
-			verify(spyHelper, times(1)).unlockCameraFromSystem();
+			spyWrapper.prepareCameraForRecording();
+			verify(spyWrapper, times(1)).unlockCameraFromSystem();
 		} catch (final PrepareCameraException e) {
 			fail("Should not throw exception");
 		}
 	}
 
 	public void test_prepareCameraWhenRuntimeException() {
-		final CameraWrapper spyHelper = spy(new CameraWrapper());
+		final CameraWrapper spyWrapper = spy(new CameraWrapper());
 		final Camera mockCamera = mock(Camera.class);
-		doThrow(new RuntimeException()).when(spyHelper).unlockCameraFromSystem();
+		doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
 
 		try {
-			spyHelper.prepareCameraForRecording();
+			spyWrapper.prepareCameraForRecording();
 			fail("Missing exception");
 		} catch (final PrepareCameraException e) {
 			assertEquals("Unable to use camera for recording", e.getMessage());
