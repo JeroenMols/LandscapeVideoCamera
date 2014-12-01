@@ -10,6 +10,7 @@ public class CLog {
 	public static final String	EXCEPTION	= "VideoCapture_Exception";
 	public static final String	ACTIVITY	= "VideoCapture_Activity";
 	public static final String	PREVIEW		= "VideoCapture_Preview";
+	public static final String	HELPER		= "VideoCapture_CaptureHelper";
 
 	public static void v(String tag, String msg) {
 		Log.v(tag, msg);

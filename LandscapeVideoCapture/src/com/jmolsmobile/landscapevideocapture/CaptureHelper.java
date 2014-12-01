@@ -1,9 +1,12 @@
 package com.jmolsmobile.landscapevideocapture;
 
+import android.graphics.Bitmap;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
+import android.media.ThumbnailUtils;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Surface;
 
 import com.jmolsmobile.landscapevideocapture.OpenCameraException.OpenType;
@@ -60,6 +63,15 @@ public class CaptureHelper {
 		return recorder;
 	}
 
+	@SuppressWarnings("deprecation")
+	public Bitmap generateThumbnail(String outputFilename) {
+		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(outputFilename, Thumbnails.FULL_SCREEN_KIND);
+		if (thumbnail == null) {
+			CLog.d(CLog.HELPER, "Failed to generate video preview");
+		}
+		return thumbnail;
+	}
+
 	protected Camera openCameraFromSystem() {
 		return Camera.open(CameraInfo.CAMERA_FACING_BACK);
 	}
@@ -71,4 +83,5 @@ public class CaptureHelper {
 	protected MediaRecorder createMediaRecorder() {
 		return new MediaRecorder();
 	}
+
 }
