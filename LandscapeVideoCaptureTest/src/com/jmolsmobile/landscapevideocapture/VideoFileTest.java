@@ -15,63 +15,59 @@ public class VideoFileTest extends TestCase {
 
 	public void test_filenameShouldNotBeNull() {
 		final VideoFile videoFile = new VideoFile("");
-		assertNotNull(getFilename(videoFile));
+		assertNotNull(videoFile.getFile().getName());
 	}
 
 	public void test_filenameShouldEndWithExtension() {
 		final VideoFile videoFile = new VideoFile("");
-		assertTrue(getFilename(videoFile).endsWith(".mp4"));
+		assertTrue(videoFile.getFile().getName().endsWith(".mp4"));
 	}
 
 	public void test_filenameShouldStartWithVideo() {
 		final VideoFile videoFile = new VideoFile("");
-		assertTrue(getFilename(videoFile).startsWith("video"));
+		assertTrue(videoFile.getFile().getName().startsWith("video"));
 	}
 
 	public void test_filenameShouldBeUnique() {
 		final VideoFile videoFile1 = new VideoFile("", new Date());
 		final VideoFile videoFile2 = new VideoFile("", new Date(System.currentTimeMillis() + 1000));
-		assertFalse(getFilename(videoFile1).equals(getFilename(videoFile2)));
+		assertFalse(videoFile1.getFile().getName().equals(videoFile2.getFile().getName()));
 	}
 
 	public void test_filenameShouldContainDateAndTime() {
 		final Date date = new Date();
 		final VideoFile videoFile = new VideoFile("", date);
 		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
-		assertTrue(getFilename(videoFile).contains("_" + dateAndTimeString));
+		assertTrue(videoFile.getFile().getName().contains("_" + dateAndTimeString));
 	}
 
 	public void test_filenameShouldContainSpecifiedDateAndTime() {
 		final Date date = new Date(0);
 		final VideoFile videoFile = new VideoFile("", date);
 		final String dateAndTimeString = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(date);
-		assertTrue(getFilename(videoFile).contains(dateAndTimeString));
+		assertTrue(videoFile.getFile().getName().contains(dateAndTimeString));
 	}
 
 	public void test_filenameCanBeSpecified() {
 		final String expectedFilename = "test.mp4";
 		final VideoFile videoFile = new VideoFile(expectedFilename);
-		assertEquals(getFilename(videoFile), expectedFilename);
+		assertEquals(videoFile.getFile().getName(), expectedFilename);
 	}
 
 	public void test_filenameIsDefaultWhenSpecifiedNull() {
 		final VideoFile videoFile = new VideoFile(null);
-		assertTrue(getFilename(videoFile).matches("video_[0-9]{8}_[0-9]{6}\\.mp4"));
+		assertTrue(videoFile.getFile().getName().matches("video_[0-9]{8}_[0-9]{6}\\.mp4"));
 	}
 
 	public void test_fileShouldContainPathToVideoFolder() {
 		final VideoFile videoFile = new VideoFile("");
 		final String expectedPath = Environment.DIRECTORY_MOVIES;
-		assertTrue(videoFile.getFile().getAbsolutePath().contains(expectedPath));
+		assertTrue(videoFile.getFullPath().contains(expectedPath));
 	}
 
 	public void test_fileShouldNotStartWithDoublePath() {
 		final String expectedPath = "sdcard/videofile.mp4";
 		final VideoFile videoFile = new VideoFile(expectedPath);
-		assertTrue(videoFile.getFile().getAbsolutePath().contains(expectedPath));
-	}
-
-	private String getFilename(final VideoFile videoFile) {
-		return videoFile.getFile().getName();
+		assertTrue(videoFile.getFullPath().contains(expectedPath));
 	}
 }

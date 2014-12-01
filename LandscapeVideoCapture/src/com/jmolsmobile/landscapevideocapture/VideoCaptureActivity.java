@@ -14,7 +14,7 @@ import android.widget.Toast;
  * @author Jeroen Mols
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, CapturePreviewInterface,
-		VideoRecorderInterface {
+VideoRecorderInterface {
 
 	public static final int			RESULT_ERROR			= 753245;
 
@@ -55,7 +55,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, previewSurface, mCamera);
 
 		if (mVideoRecorded) {
-			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
+			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
 			return;
 		}
 
@@ -80,7 +80,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
-		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, getOutputFilename());
+		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mVideoFile.getFullPath());
 	}
 
 	// TODO clean up restore methods
@@ -109,10 +109,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	@Override
 	public void onBackPressed() {
 		finishCancelled();
-	}
-
-	private String getOutputFilename() {
-		return mVideoFile.getFile().getAbsolutePath();
 	}
 
 	@Override
@@ -150,7 +146,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		}
 
-		mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
+		mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(mVideoFile.getFullPath()));
 		releaseAllResources();
 	}
 
@@ -166,7 +162,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	private void finishCompleted() {
 		final Intent result = new Intent();
-		result.putExtra(EXTRA_OUTPUT_FILENAME, getOutputFilename());
+		result.putExtra(EXTRA_OUTPUT_FILENAME, mVideoFile.getFullPath());
 		this.setResult(RESULT_OK, result);
 		finish();
 	}

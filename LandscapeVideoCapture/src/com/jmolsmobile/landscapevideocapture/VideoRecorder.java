@@ -35,7 +35,7 @@ public class VideoRecorder {
 	}
 
 	boolean initRecorder() {
-		final String outputFilename = mVideoFile.getFile().getAbsolutePath();
+		final String outputFilename = mVideoFile.getFullPath();
 		final OnInfoListener recordingListener = new OnInfoListener() {
 
 			@Override
@@ -141,7 +141,7 @@ public class VideoRecorder {
 		// Update UI
 		setRecording(true);
 		mRecorderInterface.onRecordingStarted();
-		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + mVideoFile.getFile().getAbsolutePath());
+		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + mVideoFile.getFullPath());
 	}
 
 }

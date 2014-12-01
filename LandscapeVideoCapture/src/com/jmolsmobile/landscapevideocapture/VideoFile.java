@@ -30,16 +30,20 @@ public class VideoFile {
 		this.mDate = date;
 	}
 
+	public String getFullPath() {
+		return getFile().getAbsolutePath();
+	}
+
 	public File getFile() {
-		final String filename = getFilename();
+		final String filename = generateFilename();
 		if (filename.contains(DIRECTORY_SEPARATOR)) return new File(filename);
 
 		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
 		path.mkdirs();
-		return new File(path, getFilename());
+		return new File(path, generateFilename());
 	}
 
-	private String getFilename() {
+	private String generateFilename() {
 		if (isValidFilename()) return mFilename;
 
 		final String dateStamp = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault()).format(getDate());
