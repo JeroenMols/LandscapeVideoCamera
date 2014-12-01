@@ -9,7 +9,6 @@ import android.os.Environment;
 
 /**
  * @author Jeroen Mols
- * @date 22 November 2014
  */
 public class VideoFile {
 

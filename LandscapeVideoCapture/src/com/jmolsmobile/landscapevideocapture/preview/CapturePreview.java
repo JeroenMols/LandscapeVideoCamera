@@ -2,11 +2,11 @@ package com.jmolsmobile.landscapevideocapture.preview;
 
 import java.io.IOException;
 
-import com.jmolsmobile.landscapevideocapture.CLog;
-
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.view.SurfaceHolder;
+
+import com.jmolsmobile.landscapevideocapture.CLog;
 
 /**
  * @author Jeroen Mols
@@ -29,6 +29,7 @@ public class CapturePreview implements SurfaceHolder.Callback {
 		initalizeSurfaceHolder(holder);
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initalizeSurfaceHolder(final SurfaceHolder surfaceHolder) {
 		surfaceHolder.addCallback(this);
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
