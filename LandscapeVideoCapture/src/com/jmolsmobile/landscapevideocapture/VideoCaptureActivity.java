@@ -18,7 +18,7 @@ import android.widget.Toast;
  * @author Jeroen Mols
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, CapturePreviewInterface,
-VideoRecorderInterface {
+		VideoRecorderInterface {
 
 	public static final int			RESULT_ERROR			= 753245;
 
@@ -55,7 +55,8 @@ VideoRecorderInterface {
 		initializeCamera();
 		mVideoCaptureView.setRecordingButtonInterface(this);
 
-		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, null, mCamera);
+		final Surface previewSurface = mVideoCaptureView.getPreviewSurfaceHolder().getSurface();
+		mVideoRecorder = new VideoRecorder(captureConfiguration, this, mVideoFile, previewSurface, mCamera);
 
 		if (mVideoRecorded) {
 			mVideoCaptureView.updateUIRecordingFinished(mHelper.generateThumbnail(getOutputFilename()));
@@ -123,7 +124,7 @@ VideoRecorderInterface {
 		if (mVideoRecorder.isRecording()) {
 			mVideoRecorder.stopRecording(null);
 		} else {
-			startRecording(this);
+			mVideoRecorder.startRecording();
 		}
 	}
 
@@ -186,20 +187,6 @@ VideoRecorderInterface {
 		result.putExtra(EXTRA_ERROR_MESSAGE, message);
 		this.setResult(RESULT_ERROR, result);
 		finish();
-	}
-
-	// METHODS TO CONTROL THE RECORDING
-	public void startRecording(VideoRecorderInterface recorderInterface) {
-		mVideoRecorder.setRecording(false);
-
-		if (!mVideoRecorder.initRecorder()) return;
-		if (!mVideoRecorder.prepareRecorder()) return;
-		if (!mVideoRecorder.startRecorder()) return;
-
-		// Update UI
-		mVideoRecorder.setRecording(true);
-		recorderInterface.onRecordingStarted();
-		CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: " + getOutputFilename());
 	}
 
 	private void releaseAllResources() {
@@ -345,6 +332,20 @@ VideoRecorderInterface {
 
 			mRecording = false;
 			mRecorderInterface.onRecordingStopped(null);
+		}
+
+		public void startRecording() {
+			setRecording(false);
+
+			if (!initRecorder()) return;
+			if (!prepareRecorder()) return;
+			if (!startRecorder()) return;
+
+			// Update UI
+			setRecording(true);
+			mRecorderInterface.onRecordingStarted();
+			CLog.d(CLog.ACTIVITY, "Successfully started recording - outputfile: "
+					+ mVideoFile.getFile().getAbsolutePath());
 		}
 
 	}
