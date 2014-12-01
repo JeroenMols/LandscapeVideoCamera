@@ -47,6 +47,30 @@ public class CapturePreviewTest extends MockitoTestCase {
 		verify(mockWrapper, times(1)).stopPreview();
 	}
 
+	public void test_shouldNotThrowExceptionWhenStopPreviewFails() throws Exception {
+		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+		doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		preview.setPreviewRunning(true);
+
+		try {
+			preview.releasePreviewResources();
+		} catch (final Exception e) {
+			fail("should not throw exception");
+		}
+	}
+
+	public void test_shouldStopPreviewOnStartPreviewAndPreviewRunning() throws Exception {
+		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+		doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		preview.setPreviewRunning(true);
+
+		createCapturePreviewAndCallSurfaceChanged(null, mockWrapper);
+
+		verify(mockWrapper, times(1)).configureForPreview(anyInt(), anyInt());
+	}
+
 	public void test_shouldCallInterfaceWhenSettingParametersFails() throws Exception {
 		final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
