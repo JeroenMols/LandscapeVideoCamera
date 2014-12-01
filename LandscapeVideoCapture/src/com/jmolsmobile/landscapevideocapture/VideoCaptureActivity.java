@@ -62,7 +62,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
 	@Override
 	protected void onPause() {
-		if (mVideoRecorder != null && mVideoRecorder.mRecording) {
+		if (mVideoRecorder != null) {
 			mVideoRecorder.stopRecording(null);
 		}
 		releaseAllResources();

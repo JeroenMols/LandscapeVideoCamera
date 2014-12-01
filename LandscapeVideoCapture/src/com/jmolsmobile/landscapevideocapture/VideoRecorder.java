@@ -71,6 +71,8 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	}
 
 	public void stopRecording(String message) {
+		if (!mRecording) return;
+
 		try {
 			mRecorder.stop();
 			mRecorderInterface.onRecordingSuccess();
