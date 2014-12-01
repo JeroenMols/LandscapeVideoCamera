@@ -7,10 +7,8 @@ import android.media.MediaRecorder;
  */
 public class CaptureConfiguration {
 
-	// TODO determine default values
-	// TODO remove default filesize and duration limitation
-
-	public static final int		UNLIMITED				= -1;
+	public static final int		NO_DURATION_LIMIT		= -1;
+	public static final int		NO_FILESIZE_LIMIT		= -1;
 
 	public static final int		BITRATE_HQ_2160P		= 40000000;
 	public static final int		BITRATE_MQ_2160P		= 28000000;
@@ -36,8 +34,8 @@ public class CaptureConfiguration {
 	private final int			CAPTURE_VIDEO_WIDTH		= 1280;
 	private final int			CAPTURE_VIDEO_HEIGHT	= 720;
 	private final int			BITRATE_PER_SECOND		= BITRATE_HQ_720P;
-	private final int			MAX_CAPTURE_DURATION	= UNLIMITED;
-	private final int			MAX_CAPTURE_FILESIZE	= UNLIMITED;
+	private final int			MAX_CAPTURE_DURATION	= NO_DURATION_LIMIT;
+	private final int			MAX_CAPTURE_FILESIZE	= NO_FILESIZE_LIMIT;
 
 	private static final int	OUTPUT_FORMAT			= MediaRecorder.OutputFormat.MPEG_4;
 	private static final int	AUDIO_SOURCE			= MediaRecorder.AudioSource.DEFAULT;
