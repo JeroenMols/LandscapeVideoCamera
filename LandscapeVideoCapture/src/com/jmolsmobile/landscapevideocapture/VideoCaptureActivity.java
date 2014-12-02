@@ -2,7 +2,10 @@ package com.jmolsmobile.landscapevideocapture;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
+import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -60,7 +63,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 				mVideoCaptureView.getPreviewSurfaceHolder());
 
 		if (mVideoRecorded) {
-			mVideoCaptureView.updateUIRecordingFinished(mVideoRecorder.getVideoThumbnail());
+			mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
 		} else {
 			mVideoCaptureView.updateUINotRecording();
 		}
@@ -106,7 +109,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 			Toast.makeText(this, message, Toast.LENGTH_LONG).show();
 		}
 
-		mVideoCaptureView.updateUIRecordingFinished(mVideoRecorder.getVideoThumbnail());
+		mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
 		releaseAllResources();
 	}
 
@@ -169,6 +172,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		}
 		// TODO: add checks to see if outputfile is writeable
 		return returnFile;
+	}
+
+	public Bitmap getVideoThumbnail() {
+		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoFile.getFullPath(),
+				Thumbnails.FULL_SCREEN_KIND);
+		if (thumbnail == null) {
+			CLog.d(CLog.ACTIVITY, "Failed to generate video preview");
+		}
+		return thumbnail;
 	}
 
 }

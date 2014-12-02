@@ -6,8 +6,8 @@
     <string name="capture_video">Capture video</string>
 
     <string name="status_nocapture">nothing captured yet</string>
-    <string name="status_capturesuccess">capture successful</string>
-    <string name="status_capturecancelled">capture cancelled</string>
-    <string name="status_capturefailed">capture failed</string>
+    <string name="status_capturesuccess">Capture successful: %s</string>
+    <string name="status_capturecancelled">Capture cancelled by user</string>
+    <string name="status_capturefailed">Capture failed</string>
 
 </resources>

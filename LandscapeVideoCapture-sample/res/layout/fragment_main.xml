@@ -1,26 +1,89 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.jmolsmobile.landscapevideocapture_sample.CaptureDemoFragment" >
 
-    <TextView
-        android:id="@+id/tv_status"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/fragment_interline_margin"
-        android:text="@string/status_nocapture"/>
-    
-    <Button
-        android:id="@+id/btn_capturevideo"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/tv_status"
-        android:text="@string/capture_video" />
+        android:layout_height="match_parent" >
 
-</RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/activity_vertical_margin" >
+
+            <ImageView
+                android:id="@+id/iv_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/fragment_interline_margin"
+                android:adjustViewBounds="true"
+                android:src="@drawable/thumbnail_placeholder" />
+
+            <ImageView
+                android:id="@+id/iv_status"
+                android:layout_width="36dp"
+                android:layout_height="56dp"
+                android:layout_below="@id/iv_thumbnail"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_info_black_48dp" />
+
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_status"
+                android:layout_alignTop="@id/iv_status"
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="16dp"
+                android:ellipsize="start"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:singleLine="false"
+                android:text="@string/status_nocapture" />
+
+            <ImageView
+                android:id="@+id/iv_resolution"
+                android:layout_width="36dp"
+                android:layout_height="56dp"
+                android:layout_below="@id/iv_status"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_image_aspect_ratio_black_48dp" />
+
+            <Spinner
+                android:id="@+id/sp_resolution"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_resolution"
+                android:layout_alignTop="@id/iv_resolution"
+                android:layout_marginLeft="72dp"
+                android:gravity="center_vertical" />
+
+            <ImageView
+                android:id="@+id/iv_quality"
+                android:layout_width="36dp"
+                android:layout_height="56dp"
+                android:layout_below="@id/iv_resolution"
+                android:layout_marginLeft="16dp"
+                android:src="@drawable/ic_high_quality_black_48dp" />
+
+            <Spinner
+                android:id="@+id/sp_quality"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/iv_quality"
+                android:layout_alignTop="@id/iv_quality"
+                android:layout_marginLeft="72dp" />
+
+            <Button
+                android:id="@+id/btn_capturevideo"
+                android:layout_width="175dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/iv_quality"
+                android:layout_marginLeft="72dp"
+                android:text="@string/capture_video" />
+        </RelativeLayout>
+    </ScrollView>
+
+</FrameLayout>

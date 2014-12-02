@@ -2,11 +2,8 @@ package com.jmolsmobile.landscapevideocapture.recorder;
 
 import java.io.IOException;
 
-import android.graphics.Bitmap;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
-import android.media.ThumbnailUtils;
-import android.provider.MediaStore.Video.Thumbnails;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -187,15 +184,6 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		}
 		releaseRecorderResources();
 		CLog.d(CLog.RECORDER, "Released all resources");
-	}
-
-	public Bitmap getVideoThumbnail() {
-		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(mVideoFile.getFullPath(),
-				Thumbnails.FULL_SCREEN_KIND);
-		if (thumbnail == null) {
-			CLog.d(CLog.RECORDER, "Failed to generate video preview");
-		}
-		return thumbnail;
 	}
 
 	@Override
