@@ -157,6 +157,11 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 			e.printStackTrace();
 			CLog.e(CLog.RECORDER, "MediaRecorder start failed - " + e.toString());
 			return false;
+		} catch (final RuntimeException e2) {
+			e2.printStackTrace();
+			CLog.e(CLog.RECORDER, "MediaRecorder start failed - " + e2.toString());
+			mRecorderInterface.onRecordingFailed("Unable to record video with given settings");
+			return false;
 		}
 	}
 

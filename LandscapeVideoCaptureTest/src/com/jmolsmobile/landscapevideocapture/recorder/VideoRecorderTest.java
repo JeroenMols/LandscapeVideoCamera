@@ -114,7 +114,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockRecorder, never()).start();
 	}
 
-	public void test_dontNotifyListenerWhenStartFails() throws Exception {
+	public void test_dontNotifyListenerWhenStartFailsInIllegalState() throws Exception {
 		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
 		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
 		doThrow(new IllegalStateException()).when(mockRecorder).start();
@@ -123,6 +123,17 @@ public class VideoRecorderTest extends MockitoTestCase {
 		spyRecorder.startRecording();
 
 		verify(mockInterface, never()).onRecordingStarted();
+	}
+
+	public void test_notifyListenerWhenStartFails() throws Exception {
+		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+		doThrow(new RuntimeException()).when(mockRecorder).start();
+
+		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+		spyRecorder.startRecording();
+
+		verify(mockInterface, times(1)).onRecordingFailed("Unable to record video with given settings");
 	}
 
 	public void test_dontNotifyListenerWhenNotStopped() throws Exception {
