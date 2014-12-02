@@ -2,6 +2,9 @@ package com.jmolsmobile.landscapevideocapture;
 
 import android.media.MediaRecorder;
 
+import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureResolution;
+
 /**
  * @author Jeroen Mols
  */
@@ -12,9 +15,9 @@ public class CaptureConfiguration {
 
 	private final int			PREVIEW_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
 	private final int			PREVIEW_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
-	private final int			CAPTURE_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
-	private final int			CAPTURE_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
-	private final int			BITRATE_PER_SECOND		= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
+	private int					mVideoWidth				= PredefinedCaptureConfigurations.WIDTH_720P;
+	private int					mVideoHeight			= PredefinedCaptureConfigurations.HEIGHT_720P;
+	private int					mBitrate				= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
 	private final int			MAX_CAPTURE_DURATION	= NO_DURATION_LIMIT;
 	private final int			MAX_CAPTURE_FILESIZE	= NO_FILESIZE_LIMIT;
 
@@ -25,6 +28,13 @@ public class CaptureConfiguration {
 	private static final int	VIDEO_ENCODER			= MediaRecorder.VideoEncoder.H264;
 
 	public CaptureConfiguration() {
+		// Default configuration
+	}
+
+	public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality) {
+		mVideoWidth = resolution.width;
+		mVideoHeight = resolution.height;
+		mBitrate = resolution.getBitrate(quality);
 	}
 
 	/**
@@ -45,21 +55,21 @@ public class CaptureConfiguration {
 	 * @return Width of the captured video in pixels
 	 */
 	public int getVideoWidth() {
-		return CAPTURE_VIDEO_WIDTH;
+		return mVideoWidth;
 	}
 
 	/**
 	 * @return Height of the captured video in pixels
 	 */
 	public int getVideoHeight() {
-		return CAPTURE_VIDEO_HEIGHT;
+		return mVideoHeight;
 	}
 
 	/**
 	 * @return Bitrate of the captured video in bits per second
 	 */
 	public int getVideoBitrate() {
-		return BITRATE_PER_SECOND;
+		return mBitrate;
 	}
 
 	/**
