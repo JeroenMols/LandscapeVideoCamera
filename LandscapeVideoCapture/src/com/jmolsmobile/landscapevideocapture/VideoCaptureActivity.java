@@ -21,16 +21,17 @@ import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
  */
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, VideoRecorderInterface {
 
-	public static final int			RESULT_ERROR			= 753245;
+	public static final int			RESULT_ERROR				= 753245;
 
-	public static final String		EXTRA_OUTPUT_FILENAME	= "com.jmolsmobile.extraoutputfilename";
-	public static final String		EXTRA_ERROR_MESSAGE		= "com.jmolsmobile.extraerrormessage";
+	public static final String		EXTRA_OUTPUT_FILENAME		= "com.jmolsmobile.extraoutputfilename";
+	public static final String		EXTRA_CAPTURE_CONFIGURATION	= "com.jmolsmobile.extracaptureconfiguration";
+	public static final String		EXTRA_ERROR_MESSAGE			= "com.jmolsmobile.extraerrormessage";
 
-	private static final String		SAVED_RECORDED_BOOLEAN	= "com.jmolsmobile.savedrecordedboolean";
-	protected static final String	SAVED_OUTPUT_FILENAME	= "com.jmolsmobile.savedoutputfilename";
+	private static final String		SAVED_RECORDED_BOOLEAN		= "com.jmolsmobile.savedrecordedboolean";
+	protected static final String	SAVED_OUTPUT_FILENAME		= "com.jmolsmobile.savedoutputfilename";
 
-	private boolean					mVideoRecorded			= false;
-	VideoFile						mVideoFile				= null;
+	private boolean					mVideoRecorded				= false;
+	VideoFile						mVideoFile					= null;
 	private CaptureConfiguration	mCaptureConfiguration;
 
 	private VideoCaptureView		mVideoCaptureView;
@@ -52,7 +53,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	}
 
 	private void initializeCaptureConfiguration(final Bundle savedInstanceState) {
-		mCaptureConfiguration = new CaptureConfiguration();
+		mCaptureConfiguration = generateCaptureConfiguration();
 		mVideoRecorded = generateVideoRecorded(savedInstanceState);
 		mVideoFile = generateOutputFile(savedInstanceState);
 	}
@@ -156,6 +157,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 		savedInstanceState.putBoolean(SAVED_RECORDED_BOOLEAN, mVideoRecorded);
 		savedInstanceState.putString(SAVED_OUTPUT_FILENAME, mVideoFile.getFullPath());
 		super.onSaveInstanceState(savedInstanceState);
+	}
+
+	protected CaptureConfiguration generateCaptureConfiguration() {
+		CaptureConfiguration returnConfiguration = this.getIntent().getParcelableExtra(EXTRA_CAPTURE_CONFIGURATION);
+		if (returnConfiguration == null) {
+			returnConfiguration = new CaptureConfiguration();
+			CLog.d(CLog.ACTIVITY, "No captureconfiguration passed - using default configuration");
+		}
+		return returnConfiguration;
 	}
 
 	private boolean generateVideoRecorded(final Bundle savedInstanceState) {

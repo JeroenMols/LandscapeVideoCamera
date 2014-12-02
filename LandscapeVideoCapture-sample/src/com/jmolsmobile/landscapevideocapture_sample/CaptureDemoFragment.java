@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureResolution;
 import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
 
 /**
@@ -26,6 +29,9 @@ public class CaptureDemoFragment extends Fragment {
 
 	private final String	KEY_STATUSMESSAGE	= "com.jmolsmobile.statusmessage";
 	private final String	KEY_FILENAME		= "com.jmolsmobile.outputfilename";
+
+	private final String[]	RESOLUTION_NAMES	= new String[] { "480p", "720p", "1080p" };
+	private final String[]	QUALITY_NAMES		= new String[] { "low", "medium", "high" };
 
 	private String			statusMessage		= null;
 	private String			filename			= null;
@@ -43,6 +49,9 @@ public class CaptureDemoFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
+				final CaptureConfiguration config = new CaptureConfiguration(getResolution(resolutionSp
+						.getSelectedItemPosition()), getQuality(qualitySp.getSelectedItemPosition()));
+				intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
 				startActivityForResult(intent, 101);
 			}
 		});
@@ -57,14 +66,13 @@ public class CaptureDemoFragment extends Fragment {
 		updateStatusAndThumbnail();
 
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_item,
-				new String[] { "360p", "540p", "720p", "1080p", "1440p", "2160p" });
+				android.R.layout.simple_spinner_item, RESOLUTION_NAMES);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		resolutionSp = (Spinner) rootView.findViewById(R.id.sp_resolution);
 		resolutionSp.setAdapter(adapter);
 
 		final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),
-				android.R.layout.simple_spinner_item, new String[] { "low", "medium", "high" });
+				android.R.layout.simple_spinner_item, QUALITY_NAMES);
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		qualitySp = (Spinner) rootView.findViewById(R.id.sp_quality);
 		qualitySp.setAdapter(adapter2);
@@ -109,5 +117,17 @@ public class CaptureDemoFragment extends Fragment {
 		} else {
 			thumbnailIv.setImageResource(R.drawable.thumbnail_placeholder);
 		}
+	}
+
+	private CaptureQuality getQuality(int position) {
+		final CaptureQuality[] quality = new CaptureQuality[] { CaptureQuality.LOW, CaptureQuality.MEDIUM,
+				CaptureQuality.HIGH };
+		return quality[position];
+	}
+
+	private CaptureResolution getResolution(int position) {
+		final CaptureResolution[] resolution = new CaptureResolution[] { CaptureResolution.RES_480P,
+				CaptureResolution.RES_720P };
+		return resolution[position];
 	}
 }
