@@ -32,14 +32,15 @@ import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
  */
 public class CaptureDemoFragment extends Fragment {
 
-	private final String	KEY_STATUSMESSAGE	= "com.jmolsmobile.statusmessage";
-	private final String	KEY_FILENAME		= "com.jmolsmobile.outputfilename";
+	private final String	KEY_STATUSMESSAGE		= "com.jmolsmobile.statusmessage";
+	private final String	KEY_ADVANCEDSETTINGS	= "com.jmolsmobile.advancedsettings";
+	private final String	KEY_FILENAME			= "com.jmolsmobile.outputfilename";
 
-	private final String[]	RESOLUTION_NAMES	= new String[] { "480p", "720p", "1080p" };
-	private final String[]	QUALITY_NAMES		= new String[] { "low", "medium", "high" };
+	private final String[]	RESOLUTION_NAMES		= new String[] { "480p", "720p", "1080p" };
+	private final String[]	QUALITY_NAMES			= new String[] { "low", "medium", "high" };
 
-	private String			statusMessage		= null;
-	private String			filename			= null;
+	private String			statusMessage			= null;
+	private String			filename				= null;
 
 	private ImageView		thumbnailIv;
 	private TextView		statusTv;
@@ -73,6 +74,7 @@ public class CaptureDemoFragment extends Fragment {
 		if (savedInstanceState != null) {
 			statusMessage = savedInstanceState.getString(KEY_STATUSMESSAGE);
 			filename = savedInstanceState.getString(KEY_FILENAME);
+			advancedRl.setVisibility(savedInstanceState.getInt(KEY_ADVANCEDSETTINGS));
 		}
 
 		updateStatusAndThumbnail();
@@ -98,6 +100,7 @@ public class CaptureDemoFragment extends Fragment {
 	public void onSaveInstanceState(Bundle outState) {
 		outState.putString(KEY_STATUSMESSAGE, statusMessage);
 		outState.putString(KEY_FILENAME, filename);
+		outState.putInt(KEY_ADVANCEDSETTINGS, advancedRl.getVisibility());
 		super.onSaveInstanceState(outState);
 	}
 
