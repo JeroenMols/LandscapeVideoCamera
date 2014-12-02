@@ -48,11 +48,7 @@ public class CaptureDemoFragment extends Fragment {
 		captureBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
-				final CaptureConfiguration config = new CaptureConfiguration(getResolution(resolutionSp
-						.getSelectedItemPosition()), getQuality(qualitySp.getSelectedItemPosition()));
-				intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
-				startActivityForResult(intent, 101);
+				startVideoCaptureActivity();
 			}
 		});
 
@@ -64,7 +60,11 @@ public class CaptureDemoFragment extends Fragment {
 		}
 
 		updateStatusAndThumbnail();
+		initializeSpinners(rootView);
+		return rootView;
+	}
 
+	private void initializeSpinners(final View rootView) {
 		final ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
 				android.R.layout.simple_spinner_item, RESOLUTION_NAMES);
 		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -76,8 +76,6 @@ public class CaptureDemoFragment extends Fragment {
 		adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		qualitySp = (Spinner) rootView.findViewById(R.id.sp_quality);
 		qualitySp.setAdapter(adapter2);
-
-		return rootView;
 	}
 
 	@Override
@@ -85,6 +83,15 @@ public class CaptureDemoFragment extends Fragment {
 		outState.putString(KEY_STATUSMESSAGE, statusMessage);
 		outState.putString(KEY_FILENAME, filename);
 		super.onSaveInstanceState(outState);
+	}
+
+	private void startVideoCaptureActivity() {
+		final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
+		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
+		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
+		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality);
+		intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
+		startActivityForResult(intent, 101);
 	}
 
 	@Override
@@ -130,4 +137,5 @@ public class CaptureDemoFragment extends Fragment {
 				CaptureResolution.RES_720P };
 		return resolution[position];
 	}
+
 }
