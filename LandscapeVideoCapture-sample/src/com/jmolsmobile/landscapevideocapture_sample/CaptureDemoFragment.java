@@ -8,12 +8,17 @@ import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -41,8 +46,14 @@ public class CaptureDemoFragment extends Fragment {
 	private Spinner			resolutionSp;
 	private Spinner			qualitySp;
 
+	private RelativeLayout	advancedRl;
+	private EditText		filenameEt;
+	private EditText		maxDurationEt;
+	private EditText		maxFilesizeEt;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		final Button captureBtn = (Button) rootView.findViewById(R.id.btn_capturevideo);
 		captureBtn.setOnClickListener(new OnClickListener() {
@@ -54,6 +65,11 @@ public class CaptureDemoFragment extends Fragment {
 
 		thumbnailIv = (ImageView) rootView.findViewById(R.id.iv_thumbnail);
 		statusTv = (TextView) rootView.findViewById(R.id.tv_status);
+		advancedRl = (RelativeLayout) rootView.findViewById(R.id.rl_advanced);
+		filenameEt = (EditText) rootView.findViewById(R.id.et_filename);
+		maxDurationEt = (EditText) rootView.findViewById(R.id.et_duration);
+		maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
+
 		if (savedInstanceState != null) {
 			statusMessage = savedInstanceState.getString(KEY_STATUSMESSAGE);
 			filename = savedInstanceState.getString(KEY_FILENAME);
@@ -85,12 +101,38 @@ public class CaptureDemoFragment extends Fragment {
 		super.onSaveInstanceState(outState);
 	}
 
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		inflater.inflate(R.menu.capture_demo, menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		advancedRl.setVisibility(advancedRl.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+		return true;
+	}
+
 	private void startVideoCaptureActivity() {
-		final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
 		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
 		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
-		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality);
+		int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
+		try {
+			fileDuration = Integer.valueOf(maxDurationEt.getEditableText().toString());
+		} catch (final Exception e) {
+			//NOP
+		}
+		int filesize = CaptureConfiguration.NO_FILESIZE_LIMIT;
+		try {
+			filesize = Integer.valueOf(maxFilesizeEt.getEditableText().toString());
+		} catch (final Exception e2) {
+			//NOP
+		}
+		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize);
+		final String filename = filenameEt.getEditableText().toString();
+
+		final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
 		intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
+		intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
 		startActivityForResult(intent, 101);
 	}
 
@@ -134,7 +176,7 @@ public class CaptureDemoFragment extends Fragment {
 
 	private CaptureResolution getResolution(int position) {
 		final CaptureResolution[] resolution = new CaptureResolution[] { CaptureResolution.RES_480P,
-				CaptureResolution.RES_720P };
+				CaptureResolution.RES_720P, CaptureResolution.RES_1080P };
 		return resolution[position];
 	}
 

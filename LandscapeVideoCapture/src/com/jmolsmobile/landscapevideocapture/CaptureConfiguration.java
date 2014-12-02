@@ -20,8 +20,8 @@ public class CaptureConfiguration implements Parcelable {
 	private int				mVideoWidth				= PredefinedCaptureConfigurations.WIDTH_720P;
 	private int				mVideoHeight			= PredefinedCaptureConfigurations.HEIGHT_720P;
 	private int				mBitrate				= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
-	private int				MAX_CAPTURE_DURATION	= NO_DURATION_LIMIT;
-	private int				MAX_CAPTURE_FILESIZE	= NO_FILESIZE_LIMIT;
+	private int				mMaxDurationMs			= NO_DURATION_LIMIT;
+	private int				mMaxFilesizeBytes		= NO_FILESIZE_LIMIT;
 
 	private int				OUTPUT_FORMAT			= MediaRecorder.OutputFormat.MPEG_4;
 	private int				AUDIO_SOURCE			= MediaRecorder.AudioSource.DEFAULT;
@@ -37,6 +37,13 @@ public class CaptureConfiguration implements Parcelable {
 		mVideoWidth = resolution.width;
 		mVideoHeight = resolution.height;
 		mBitrate = resolution.getBitrate(quality);
+	}
+
+	public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
+			int maxFilesizeMb) {
+		this(resolution, quality);
+		mMaxDurationMs = maxDurationSecs * 1000;
+		mMaxFilesizeBytes = maxFilesizeMb * 1024 * 1024;
 	}
 
 	/**
@@ -78,14 +85,14 @@ public class CaptureConfiguration implements Parcelable {
 	 * @return Maximum duration of the captured video in milliseconds
 	 */
 	public int getMaxCaptureDuration() {
-		return MAX_CAPTURE_DURATION;
+		return mMaxDurationMs;
 	}
 
 	/**
 	 * @return Maximum filesize of the captured video in bytes
 	 */
 	public int getMaxCaptureFileSize() {
-		return MAX_CAPTURE_FILESIZE;
+		return mMaxFilesizeBytes;
 	}
 
 	public int getOutputFormat() {
@@ -120,8 +127,8 @@ public class CaptureConfiguration implements Parcelable {
 		dest.writeInt(mVideoWidth);
 		dest.writeInt(mVideoHeight);
 		dest.writeInt(mBitrate);
-		dest.writeInt(MAX_CAPTURE_DURATION);
-		dest.writeInt(MAX_CAPTURE_FILESIZE);
+		dest.writeInt(mMaxDurationMs);
+		dest.writeInt(mMaxFilesizeBytes);
 
 		dest.writeInt(OUTPUT_FORMAT);
 		dest.writeInt(AUDIO_SOURCE);
@@ -150,8 +157,8 @@ public class CaptureConfiguration implements Parcelable {
 		mVideoWidth = in.readInt();
 		mVideoHeight = in.readInt();
 		mBitrate = in.readInt();
-		MAX_CAPTURE_DURATION = in.readInt();
-		MAX_CAPTURE_FILESIZE = in.readInt();
+		mMaxDurationMs = in.readInt();
+		mMaxFilesizeBytes = in.readInt();
 
 		OUTPUT_FORMAT = in.readInt();
 		AUDIO_SOURCE = in.readInt();

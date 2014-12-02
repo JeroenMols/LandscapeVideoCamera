@@ -8,9 +8,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             android:paddingBottom="@dimen/activity_vertical_margin" >
 
             <ImageView
@@ -21,69 +22,161 @@
                 android:adjustViewBounds="true"
                 android:src="@drawable/thumbnail_placeholder" />
 
-            <ImageView
-                android:id="@+id/iv_status"
-                android:layout_width="36dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/iv_thumbnail"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_info_black_48dp" />
-
-            <TextView
-                android:id="@+id/tv_status"
+            <RelativeLayout
+                android:id="@+id/rl_normal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_status"
-                android:layout_alignTop="@id/iv_status"
-                android:layout_marginLeft="72dp"
-                android:layout_marginRight="16dp"
-                android:ellipsize="start"
-                android:gravity="center_vertical"
-                android:maxLines="2"
-                android:singleLine="false"
-                android:text="@string/status_nocapture" />
+                android:layout_height="wrap_content" >
 
-            <ImageView
-                android:id="@+id/iv_resolution"
-                android:layout_width="36dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/iv_status"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_image_aspect_ratio_black_48dp" />
+                <ImageView
+                    android:id="@+id/iv_status"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_info_black_48dp" />
 
-            <Spinner
-                android:id="@+id/sp_resolution"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_resolution"
-                android:layout_alignTop="@id/iv_resolution"
-                android:layout_marginLeft="72dp"
-                android:gravity="center_vertical" />
+                <TextView
+                    android:id="@+id/tv_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_status"
+                    android:layout_alignTop="@id/iv_status"
+                    android:layout_marginLeft="72dp"
+                    android:layout_marginRight="16dp"
+                    android:textSize="14sp"
+                    android:ellipsize="start"
+                    android:gravity="center_vertical"
+                    android:maxLines="2"
+                    android:singleLine="false"
+                    android:text="@string/status_nocapture" />
 
-            <ImageView
-                android:id="@+id/iv_quality"
-                android:layout_width="36dp"
-                android:layout_height="56dp"
-                android:layout_below="@id/iv_resolution"
-                android:layout_marginLeft="16dp"
-                android:src="@drawable/ic_high_quality_black_48dp" />
+                <ImageView
+                    android:id="@+id/iv_resolution"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_status"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_image_aspect_ratio_black_48dp" />
 
-            <Spinner
-                android:id="@+id/sp_quality"
-                android:layout_width="175dp"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/iv_quality"
-                android:layout_alignTop="@id/iv_quality"
-                android:layout_marginLeft="72dp" />
+                <Spinner
+                    android:id="@+id/sp_resolution"
+                    android:layout_width="175dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_resolution"
+                    android:layout_alignTop="@id/iv_resolution"
+                    android:layout_marginLeft="72dp"
+                    android:gravity="center_vertical" />
+
+                <ImageView
+                    android:id="@+id/iv_quality"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_resolution"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_high_quality_black_48dp" />
+
+                <Spinner
+                    android:id="@+id/sp_quality"
+                    android:layout_width="175dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@id/iv_quality"
+                    android:layout_alignTop="@id/iv_quality"
+                    android:layout_marginLeft="72dp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_advanced"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" 
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/iv_filename"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_assignment_black_48dp" />
+
+                <EditText
+                    android:id="@+id/et_filename"
+                    android:layout_width="175dp"
+                    android:layout_height="36dp"
+                    android:hint="@string/filename_hint"
+                    android:textSize="14sp"
+                    android:gravity="bottom"
+                    android:layout_alignBottom="@id/iv_filename"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp" />
+
+                <ImageView
+                    android:id="@+id/iv_duration"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_filename"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_timer_black_48dp" />
+
+                <EditText
+                    android:id="@+id/et_duration"
+                    android:layout_width="175dp"
+                    android:layout_height="36dp"
+                    android:hint="@string/duration_hint"
+                    android:textSize="14sp"
+                    android:gravity="bottom"
+                    android:layout_alignBottom="@id/iv_duration"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp" />
+                
+                <TextView
+                    android:id="@+id/tv_duration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="@string/duration_unit"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:layout_alignBottom="@id/iv_duration"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/et_duration"
+                    android:layout_marginLeft="16dp" />
+
+                <ImageView
+                    android:id="@+id/iv_filesize"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_duration"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_sd_storage_black_48dp" />
+
+                <EditText
+                    android:id="@+id/et_filesize"
+                    android:layout_width="175dp"
+                    android:layout_height="36dp"
+                    android:hint="@string/filesize_hint"
+                    android:textSize="14sp"
+                    android:gravity="bottom"
+                    android:layout_alignBottom="@id/iv_filesize"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp" />
+
+                <TextView
+                    android:id="@+id/tv_filesize"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:text="@string/filesize_unit"
+                    android:textSize="14sp"
+                    android:gravity="center_vertical"
+                    android:layout_alignBottom="@id/iv_filesize"
+                    android:layout_marginBottom="10dp"
+                    android:layout_toRightOf="@id/et_filesize"
+                    android:layout_marginLeft="16dp" />
+            </RelativeLayout>
 
             <Button
                 android:id="@+id/btn_capturevideo"
                 android:layout_width="175dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/iv_quality"
                 android:layout_marginLeft="72dp"
                 android:text="@string/capture_video" />
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 
 </FrameLayout>

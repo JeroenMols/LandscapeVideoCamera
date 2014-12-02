@@ -10,4 +10,12 @@
     <string name="status_capturecancelled">Capture cancelled by user</string>
     <string name="status_capturefailed">Capture failed</string>
 
+    <string name="filename_hint">e.g. myVideo.mp4</string>
+    <string name="duration_hint">maximum duration</string>
+    <string name="duration_unit">sec</string>
+    <string name="filesize_hint">maximum filesize</string>
+    <string name="filesize_unit">Mb</string>
+    
+    <string name="advanced">advanced</string>
+
 </resources>
