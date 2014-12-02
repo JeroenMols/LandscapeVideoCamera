@@ -10,30 +10,11 @@ public class CaptureConfiguration {
 	public static final int		NO_DURATION_LIMIT		= -1;
 	public static final int		NO_FILESIZE_LIMIT		= -1;
 
-	public static final int		BITRATE_HQ_2160P		= 40000000;
-	public static final int		BITRATE_MQ_2160P		= 28000000;
-	public static final int		BITRATE_LQ_2160P		= 12000000;
-	public static final int		BITRATE_HQ_1440P		= 10000000;
-	public static final int		BITRATE_MQ_1440P		= 7000000;
-	public static final int		BITRATE_LQ_1440P		= 3000000;
-	public static final int		BITRATE_HQ_1080P		= 8000000;
-	public static final int		BITRATE_MQ_1080P		= 5600000;
-	public static final int		BITRATE_LQ_1080P		= 2400000;
-	public static final int		BITRATE_HQ_720P			= 5000000;
-	public static final int		BITRATE_MQ_720P			= 3500000;
-	public static final int		BITRATE_LQ_720P			= 1500000;
-	public static final int		BITRATE_HQ_480P			= 2500000;
-	public static final int		BITRATE_MQ_480P			= 1750000;
-	public static final int		BITRATE_LQ_480P			= 750000;
-	public static final int		BITRATE_HQ_360P			= 1000000;
-	public static final int		BITRATE_MQ_360P			= 700000;
-	public static final int		BITRATE_LQ_360P			= 300000;
-
-	private final int			PREVIEW_VIDEO_WIDTH		= 1280;
-	private final int			PREVIEW_VIDEO_HEIGHT	= 720;
-	private final int			CAPTURE_VIDEO_WIDTH		= 1280;
-	private final int			CAPTURE_VIDEO_HEIGHT	= 720;
-	private final int			BITRATE_PER_SECOND		= BITRATE_HQ_720P;
+	private final int			PREVIEW_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
+	private final int			PREVIEW_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
+	private final int			CAPTURE_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
+	private final int			CAPTURE_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
+	private final int			BITRATE_PER_SECOND		= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
 	private final int			MAX_CAPTURE_DURATION	= NO_DURATION_LIMIT;
 	private final int			MAX_CAPTURE_FILESIZE	= NO_FILESIZE_LIMIT;
 
