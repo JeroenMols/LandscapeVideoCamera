@@ -1,5 +1,8 @@
 package com.jmolsmobile.landscapevideocapture;
 
+/**
+ * @author Jeroen Mols
+ */
 public class PredefinedCaptureConfigurations {
 
 	public static final int	BITRATE_LQ_360P		= 300000;
@@ -12,7 +15,7 @@ public class PredefinedCaptureConfigurations {
 	public static final int	BITRATE_MQ_480P		= 1750000;
 	public static final int	BITRATE_HQ_480P		= 2500000;
 	public static final int	HEIGHT_480P			= 480;
-	public static final int	WIDTH_480P			= 854;
+	public static final int	WIDTH_480P			= 640;
 
 	public static final int	BITRATE_LQ_720P		= 1500000;
 	public static final int	BITRATE_MQ_720P		= 3500000;
