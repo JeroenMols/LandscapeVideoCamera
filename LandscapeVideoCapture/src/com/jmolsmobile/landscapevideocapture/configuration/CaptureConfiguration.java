@@ -1,11 +1,11 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.configuration;
 
 import android.media.MediaRecorder;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureQuality;
-import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureResolution;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
 /**
  * @author Jeroen Mols

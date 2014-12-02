@@ -22,10 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureQuality;
-import com.jmolsmobile.landscapevideocapture.PredefinedCaptureConfigurations.CaptureResolution;
 import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
+import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
 /**
  * A placeholder fragment containing a simple view.

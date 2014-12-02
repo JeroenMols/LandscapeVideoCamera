@@ -17,13 +17,13 @@ import android.media.MediaRecorder;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
-import com.jmolsmobile.landscapevideocapture.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
 @SuppressWarnings("deprecation")
 public class VideoRecorderTest extends MockitoTestCase {
