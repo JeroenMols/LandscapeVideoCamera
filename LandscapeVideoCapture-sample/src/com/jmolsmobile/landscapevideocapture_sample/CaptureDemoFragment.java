@@ -116,6 +116,16 @@ public class CaptureDemoFragment extends Fragment {
 	}
 
 	private void startVideoCaptureActivity() {
+		final CaptureConfiguration config = createCaptureConfiguration();
+		final String filename = filenameEt.getEditableText().toString();
+
+		final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
+		intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
+		intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
+		startActivityForResult(intent, 101);
+	}
+
+	private CaptureConfiguration createCaptureConfiguration() {
 		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
 		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
 		int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
@@ -131,12 +141,7 @@ public class CaptureDemoFragment extends Fragment {
 			//NOP
 		}
 		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize);
-		final String filename = filenameEt.getEditableText().toString();
-
-		final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
-		intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
-		intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
-		startActivityForResult(intent, 101);
+		return config;
 	}
 
 	@Override
