@@ -14,16 +14,12 @@ public class CapturePreview implements SurfaceHolder.Callback {
 
 	private boolean							mPreviewRunning	= false;
 	private final CapturePreviewInterface	mInterface;
-	private final int						mPreviewWidth;
-	private final int						mPreviewHeight;
 	public final CameraWrapper				mCameraWrapper;
 
 	public CapturePreview(CapturePreviewInterface capturePreviewInterface, CameraWrapper cameraWrapper,
-			SurfaceHolder holder, int width, int height) {
+			SurfaceHolder holder) {
 		mInterface = capturePreviewInterface;
 		mCameraWrapper = cameraWrapper;
-		mPreviewWidth = width;
-		mPreviewHeight = height;
 
 		initalizeSurfaceHolder(holder);
 	}
