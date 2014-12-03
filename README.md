@@ -83,3 +83,6 @@ This library provides a full and reusable custom camera, which:
          startActivityForResult(intent, RESULT_CODE);
 
   6. Check the resultcode (`RESULT_OK`, `RESULT_CANCELLED` or `VideoCaptureActivity.RESULT_ERROR`) and in case of success get the output filename in the intent extra `EXTRA_OUTPUT_FILENAME`.
+
+## Questions
+@molsjeroen
