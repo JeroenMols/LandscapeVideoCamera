@@ -22,7 +22,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 	@SuppressWarnings("deprecation")
 	public void test_shouldInitializeSurfaceHolder() throws Exception {
 		final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
-		final CapturePreview preview = new CapturePreview(null, mCameraWrapper, mockHolder, 0, 0);
+		final CapturePreview preview = new CapturePreview(null, mCameraWrapper, mockHolder);
 
 		verify(mockHolder, times(1)).addCallback(preview);
 		verify(mockHolder, times(1)).setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -30,7 +30,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 
 	public void test_shouldNotStopPreviewWhenPreviewNotRunning() throws Exception {
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
-		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
 
 		preview.releasePreviewResources();
 
@@ -39,7 +39,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 
 	public void test_shouldStopPreviewWhenPreviewRunning() throws Exception {
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
-		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
 		preview.setPreviewRunning(true);
 
 		preview.releasePreviewResources();
@@ -50,7 +50,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 	public void test_shouldNotThrowExceptionWhenStopPreviewFails() throws Exception {
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
 		doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
-		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
 		preview.setPreviewRunning(true);
 
 		try {
@@ -63,7 +63,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 	public void test_shouldStopPreviewOnStartPreviewAndPreviewRunning() throws Exception {
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
 		doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
-		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
 		preview.setPreviewRunning(true);
 
 		preview.surfaceChanged(null, 0, 0, 0);
@@ -117,7 +117,7 @@ public class CapturePreviewTest extends MockitoTestCase {
 
 	private void createCapturePreviewAndCallSurfaceChanged(final CapturePreviewInterface mockInterface,
 			final CameraWrapper mockWrapper) {
-		final CapturePreview preview = new CapturePreview(mockInterface, mockWrapper, mock(SurfaceHolder.class), 0, 0);
+		final CapturePreview preview = new CapturePreview(mockInterface, mockWrapper, mock(SurfaceHolder.class));
 		preview.surfaceChanged(null, 0, 0, 0);
 	}
 }
