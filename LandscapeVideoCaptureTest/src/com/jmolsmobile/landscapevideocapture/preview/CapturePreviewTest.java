@@ -80,6 +80,15 @@ public class CapturePreviewTest extends MockitoTestCase {
 		verify(mockInterface, times(1)).onCapturePreviewFailed();
 	}
 
+	public void test_shouldNotCallInterfaceWhenSettingAutofocusFails() throws Exception {
+		final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
+		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+		doThrow(new RuntimeException()).when(mockWrapper).enableAutoFocus();
+		createCapturePreviewAndCallSurfaceChanged(mockInterface, mockWrapper);
+
+		verify(mockInterface, never()).onCapturePreviewFailed();
+	}
+
 	public void test_shouldCallInterfaceWhenStartPreviewFails1() throws Exception {
 		final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
 		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
