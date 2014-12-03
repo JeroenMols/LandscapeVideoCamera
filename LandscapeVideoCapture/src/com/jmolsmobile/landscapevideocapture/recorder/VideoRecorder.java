@@ -52,9 +52,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 			return;
 		}
 
-		final int width = mCaptureConfiguration.getPreviewWidth();
-		final int height = mCaptureConfiguration.getPreviewHeight();
-		mVideoCapturePreview = new CapturePreview(this, mCameraWrapper, previewHolder, width, height);
+		mVideoCapturePreview = new CapturePreview(this, mCameraWrapper, previewHolder);
 	}
 
 	public void toggleRecording() {

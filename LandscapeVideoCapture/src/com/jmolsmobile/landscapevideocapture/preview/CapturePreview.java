@@ -14,16 +14,12 @@ public class CapturePreview implements SurfaceHolder.Callback {
 
 	private boolean							mPreviewRunning	= false;
 	private final CapturePreviewInterface	mInterface;
-	private final int						mPreviewWidth;
-	private final int						mPreviewHeight;
 	public final CameraWrapper				mCameraWrapper;
 
-	public CapturePreview(CapturePreviewInterface capturePreviewInterface, CameraWrapper cameraWrapper, SurfaceHolder holder,
-			int width, int height) {
+	public CapturePreview(CapturePreviewInterface capturePreviewInterface, CameraWrapper cameraWrapper,
+			SurfaceHolder holder) {
 		mInterface = capturePreviewInterface;
 		mCameraWrapper = cameraWrapper;
-		mPreviewWidth = width;
-		mPreviewHeight = height;
 
 		initalizeSurfaceHolder(holder);
 	}
@@ -50,12 +46,20 @@ public class CapturePreview implements SurfaceHolder.Callback {
 		}
 
 		try {
-			mCameraWrapper.configureForPreview(mPreviewWidth, mPreviewHeight);
+			mCameraWrapper.configureForPreview(width, height);
+			CLog.d(CLog.PREVIEW, "Configured camera for preview in surface of " + width + " by " + height);
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			CLog.d(CLog.PREVIEW, "Failed to show preview - invalid parameters set to camera preview");
 			mInterface.onCapturePreviewFailed();
 			return;
+		}
+
+		try {
+			mCameraWrapper.enableAutoFocus();
+		} catch (final RuntimeException e) {
+			e.printStackTrace();
+			CLog.d(CLog.PREVIEW, "AutoFocus not available for preview");
 		}
 
 		try {
