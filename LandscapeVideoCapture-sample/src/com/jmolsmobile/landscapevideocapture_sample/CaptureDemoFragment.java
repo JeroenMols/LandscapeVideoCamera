@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.support.v4.app.Fragment;
@@ -30,7 +31,7 @@ import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConf
 /**
  * A placeholder fragment containing a simple view.
  */
-public class CaptureDemoFragment extends Fragment {
+public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
 	private final String	KEY_STATUSMESSAGE		= "com.jmolsmobile.statusmessage";
 	private final String	KEY_ADVANCEDSETTINGS	= "com.jmolsmobile.advancedsettings";
@@ -57,14 +58,10 @@ public class CaptureDemoFragment extends Fragment {
 		setHasOptionsMenu(true);
 		final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 		final Button captureBtn = (Button) rootView.findViewById(R.id.btn_capturevideo);
-		captureBtn.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				startVideoCaptureActivity();
-			}
-		});
+		captureBtn.setOnClickListener(this);
 
 		thumbnailIv = (ImageView) rootView.findViewById(R.id.iv_thumbnail);
+		thumbnailIv.setOnClickListener(this);
 		statusTv = (TextView) rootView.findViewById(R.id.tv_status);
 		advancedRl = (RelativeLayout) rootView.findViewById(R.id.rl_advanced);
 		filenameEt = (EditText) rootView.findViewById(R.id.et_filename);
@@ -105,6 +102,15 @@ public class CaptureDemoFragment extends Fragment {
 	}
 
 	@Override
+	public void onClick(View v) {
+		if (v.getId() == R.id.btn_capturevideo) {
+			startVideoCaptureActivity();
+		} else if (v.getId() == R.id.iv_thumbnail) {
+			playVideo();
+		}
+	}
+
+	@Override
 	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 		inflater.inflate(R.menu.capture_demo, menu);
 	}
@@ -123,25 +129,6 @@ public class CaptureDemoFragment extends Fragment {
 		intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
 		intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
 		startActivityForResult(intent, 101);
-	}
-
-	private CaptureConfiguration createCaptureConfiguration() {
-		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
-		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
-		int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
-		try {
-			fileDuration = Integer.valueOf(maxDurationEt.getEditableText().toString());
-		} catch (final Exception e) {
-			//NOP
-		}
-		int filesize = CaptureConfiguration.NO_FILESIZE_LIMIT;
-		try {
-			filesize = Integer.valueOf(maxFilesizeEt.getEditableText().toString());
-		} catch (final Exception e2) {
-			//NOP
-		}
-		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize);
-		return config;
 	}
 
 	@Override
@@ -176,6 +163,25 @@ public class CaptureDemoFragment extends Fragment {
 		}
 	}
 
+	private CaptureConfiguration createCaptureConfiguration() {
+		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
+		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
+		int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
+		try {
+			fileDuration = Integer.valueOf(maxDurationEt.getEditableText().toString());
+		} catch (final Exception e) {
+			//NOP
+		}
+		int filesize = CaptureConfiguration.NO_FILESIZE_LIMIT;
+		try {
+			filesize = Integer.valueOf(maxFilesizeEt.getEditableText().toString());
+		} catch (final Exception e2) {
+			//NOP
+		}
+		final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize);
+		return config;
+	}
+
 	private CaptureQuality getQuality(int position) {
 		final CaptureQuality[] quality = new CaptureQuality[] { CaptureQuality.LOW, CaptureQuality.MEDIUM,
 				CaptureQuality.HIGH };
@@ -186,6 +192,14 @@ public class CaptureDemoFragment extends Fragment {
 		final CaptureResolution[] resolution = new CaptureResolution[] { CaptureResolution.RES_480P,
 				CaptureResolution.RES_720P, CaptureResolution.RES_1080P };
 		return resolution[position];
+	}
+
+	public void playVideo() {
+		if (filename == null) return;
+
+		final Intent videoIntent = new Intent(Intent.ACTION_VIEW);
+		videoIntent.setDataAndType(Uri.parse(filename), "video/*");
+		startActivity(videoIntent);
 	}
 
 }
