@@ -62,6 +62,7 @@ public class CameraWrapper {
 		final Parameters params = mCamera.getParameters();
 		params.setPreviewSize(width, height);
 		params.setPreviewFormat(ImageFormat.NV21);
+		params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 		mCamera.setParameters(params);
 	}
 
