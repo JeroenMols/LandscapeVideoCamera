@@ -23,6 +23,18 @@ This library provides a full and reusable code sample of a custom camera recordi
   <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_2.png" alt="Portrait" height="600"/>
 </p>
 
+<p align="center">
+  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_3.png" alt="Not recording" width="600"/>
+</p>
+
+<p align="center">
+  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_4.png" alt="Not recording" width="600"/>
+</p>
+
+<p align="center">
+  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_5.png" alt="Not recording" width="600"/>
+</p>
+
 
 
 ## How to use
