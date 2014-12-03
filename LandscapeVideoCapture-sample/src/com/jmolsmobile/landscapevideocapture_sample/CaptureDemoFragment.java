@@ -37,8 +37,8 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 	private final String	KEY_ADVANCEDSETTINGS	= "com.jmolsmobile.advancedsettings";
 	private final String	KEY_FILENAME			= "com.jmolsmobile.outputfilename";
 
-	private final String[]	RESOLUTION_NAMES		= new String[] { "480p", "720p", "1080p" };
-	private final String[]	QUALITY_NAMES			= new String[] { "low", "medium", "high" };
+	private final String[]	RESOLUTION_NAMES		= new String[] { "1080p", "720p", "480p" };
+	private final String[]	QUALITY_NAMES			= new String[] { "high", "medium", "low" };
 
 	private String			statusMessage			= null;
 	private String			filename				= null;
@@ -183,14 +183,14 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 	}
 
 	private CaptureQuality getQuality(int position) {
-		final CaptureQuality[] quality = new CaptureQuality[] { CaptureQuality.LOW, CaptureQuality.MEDIUM,
-				CaptureQuality.HIGH };
+		final CaptureQuality[] quality = new CaptureQuality[] { CaptureQuality.HIGH, CaptureQuality.MEDIUM,
+				CaptureQuality.LOW };
 		return quality[position];
 	}
 
 	private CaptureResolution getResolution(int position) {
-		final CaptureResolution[] resolution = new CaptureResolution[] { CaptureResolution.RES_480P,
-				CaptureResolution.RES_720P, CaptureResolution.RES_1080P };
+		final CaptureResolution[] resolution = new CaptureResolution[] { CaptureResolution.RES_1080P,
+				CaptureResolution.RES_720P, CaptureResolution.RES_480P };
 		return resolution[position];
 	}
 
