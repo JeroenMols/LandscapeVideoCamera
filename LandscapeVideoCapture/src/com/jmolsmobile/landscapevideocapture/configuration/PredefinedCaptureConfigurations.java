@@ -60,12 +60,12 @@ public class PredefinedCaptureConfigurations {
 		private final int	medBitrate;
 		private final int	highBitrate;
 
-		private CaptureResolution(int width, int height, int lowBitrate, int medBitrate, int highBitrate) {
+		private CaptureResolution(int width, int height, int highBitrate, int medBitrate, int lowBitrate) {
 			this.width = width;
 			this.height = height;
-			this.lowBitrate = lowBitrate;
-			this.medBitrate = medBitrate;
 			this.highBitrate = highBitrate;
+			this.medBitrate = medBitrate;
+			this.lowBitrate = lowBitrate;
 		}
 
 		public int getBitrate(CaptureQuality quality) {

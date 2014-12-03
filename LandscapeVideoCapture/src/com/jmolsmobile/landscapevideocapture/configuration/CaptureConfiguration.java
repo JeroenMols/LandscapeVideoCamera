@@ -12,22 +12,25 @@ import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConf
  */
 public class CaptureConfiguration implements Parcelable {
 
-	public static final int	NO_DURATION_LIMIT		= -1;
-	public static final int	NO_FILESIZE_LIMIT		= -1;
+	private static final int	MBYTE_TO_BYTE			= 1024 * 1024;
+	private static final int	MSEC_TO_SEC				= 1000;
 
-	private int				PREVIEW_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
-	private int				PREVIEW_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
-	private int				mVideoWidth				= PredefinedCaptureConfigurations.WIDTH_720P;
-	private int				mVideoHeight			= PredefinedCaptureConfigurations.HEIGHT_720P;
-	private int				mBitrate				= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
-	private int				mMaxDurationMs			= NO_DURATION_LIMIT;
-	private int				mMaxFilesizeBytes		= NO_FILESIZE_LIMIT;
+	public static final int		NO_DURATION_LIMIT		= -1;
+	public static final int		NO_FILESIZE_LIMIT		= -1;
 
-	private int				OUTPUT_FORMAT			= MediaRecorder.OutputFormat.MPEG_4;
-	private int				AUDIO_SOURCE			= MediaRecorder.AudioSource.DEFAULT;
-	private int				AUDIO_ENCODER			= MediaRecorder.AudioEncoder.AAC;
-	private int				VIDEO_SOURCE			= MediaRecorder.VideoSource.CAMERA;
-	private int				VIDEO_ENCODER			= MediaRecorder.VideoEncoder.H264;
+	private int					PREVIEW_VIDEO_WIDTH		= PredefinedCaptureConfigurations.WIDTH_720P;
+	private int					PREVIEW_VIDEO_HEIGHT	= PredefinedCaptureConfigurations.HEIGHT_720P;
+	private int					mVideoWidth				= PredefinedCaptureConfigurations.WIDTH_720P;
+	private int					mVideoHeight			= PredefinedCaptureConfigurations.HEIGHT_720P;
+	private int					mBitrate				= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
+	private int					mMaxDurationMs			= NO_DURATION_LIMIT;
+	private int					mMaxFilesizeBytes		= NO_FILESIZE_LIMIT;
+
+	private int					OUTPUT_FORMAT			= MediaRecorder.OutputFormat.MPEG_4;
+	private int					AUDIO_SOURCE			= MediaRecorder.AudioSource.DEFAULT;
+	private int					AUDIO_ENCODER			= MediaRecorder.AudioEncoder.AAC;
+	private int					VIDEO_SOURCE			= MediaRecorder.VideoSource.CAMERA;
+	private int					VIDEO_ENCODER			= MediaRecorder.VideoEncoder.H264;
 
 	public CaptureConfiguration() {
 		// Default configuration
@@ -42,8 +45,20 @@ public class CaptureConfiguration implements Parcelable {
 	public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
 			int maxFilesizeMb) {
 		this(resolution, quality);
-		mMaxDurationMs = maxDurationSecs * 1000;
-		mMaxFilesizeBytes = maxFilesizeMb * 1024 * 1024;
+		mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+		mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
+	}
+
+	public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate) {
+		mVideoWidth = videoWidth;
+		mVideoHeight = videoHeight;
+		mBitrate = bitrate;
+	}
+
+	public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb) {
+		this(videoWidth, videoHeight, bitrate);
+		mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+		mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
 	}
 
 	/**
