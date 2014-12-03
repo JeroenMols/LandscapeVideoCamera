@@ -9,8 +9,6 @@ There are a number of issues with the default Android intent to capture videos (
 2. The default intent does not return the URI of the recorded file if it was specified when launching the intent.
 3. The default intent doesn't care wheter users capture their video in portait mode or landscape.
 
-Note that this is still a work in progress and it still very much needs a code clean-up. :)
-
 ## Features
 
 This library provides a full and reusable code sample of a custom camera recording intent, which:
@@ -25,17 +23,7 @@ This library provides a full and reusable code sample of a custom camera recordi
   <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_2.png" alt="Portrait" height="600"/>
 </p>
 
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_3.png" alt="Not recording" width="600"/>
-</p>
 
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_4.png" alt="Not recording" width="600"/>
-</p>
-
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_5.png" alt="Not recording" width="600"/>
-</p>
 
 ## How to use
 
