@@ -31,6 +31,7 @@ import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
 import java.io.IOException;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -181,7 +182,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockInterface, times(1)).onRecordingStopped("test");
 	}
 
-	public void test_mediaRecorderShouldHaveMediaRecorderOptions() {
+	public void test_mediaRecorderShouldHaveMediaRecorderOptions() throws Exception {
 		final CaptureConfiguration config = new CaptureConfiguration();
 		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
 				mock(SurfaceHolder.class));
@@ -196,7 +197,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockRecorder, times(1)).setVideoEncoder(config.getVideoEncoder());
 	}
 
-	public void test_mediaRecorderShouldHaveConfigurationOptions() {
+	public void test_mediaRecorderShouldHaveConfigurationOptions() throws Exception {
 		final CaptureConfiguration config = new CaptureConfiguration();
 		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
 				mock(SurfaceHolder.class));
@@ -210,7 +211,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockRecorder, times(1)).setMaxFileSize(config.getMaxCaptureFileSize());
 	}
 
-	public void test_mediaRecorderShouldHaveOtherOptions() {
+	public void test_mediaRecorderShouldHaveOtherOptions() throws Exception {
 		final CaptureConfiguration config = new CaptureConfiguration();
 		final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
 		final Surface mockSurface = mock(Surface.class);
@@ -229,6 +230,22 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockRecorder, times(1)).setOutputFile(videoFile.getFullPath());
 		verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
 	}
+
+    public void test_continueInitialisationWhenSetMaxFilesizeFails() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+                mock(SurfaceHolder.class)));
+
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new IllegalArgumentException()).when(mockRecorder).setMaxFileSize(anyInt());
+
+        try {
+            spyRecorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
+            verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
+        } catch (RuntimeException e) {
+            fail("Crashed when setting max filesize");
+        }
+    }
 
 	public void test_dontStopRecordingWhenUnknownInfo() throws Exception {
 		final VideoRecorder spyRecorder = createSpyRecorder(null, null);
@@ -256,7 +273,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max duration reached");
 	}
 
-	public void test_notifyListenerWhenPreviewFails() {
+	public void test_notifyListenerWhenPreviewFails() throws Exception {
 		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
 		final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null,
 				mock(CameraWrapper.class), mock(SurfaceHolder.class));
