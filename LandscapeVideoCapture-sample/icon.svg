@@ -13,7 +13,7 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.5 r10040"
-   sodipodi:docname="ic_stay_primary_landscape_48px.svg"
+   sodipodi:docname="icon.svg"
    inkscape:export-filename="/Users/jmols/Documents/personal/projects/LandscapeVideoCapture/LandscapeVideoCapture-sample/icon-web.png"
    inkscape:export-xdpi="960"
    inkscape:export-ydpi="960">
@@ -25,7 +25,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -45,7 +45,7 @@
      id="namedview6"
      showgrid="false"
      inkscape:zoom="9.8333333"
-     inkscape:cx="29.77608"
+     inkscape:cx="11.57269"
      inkscape:cy="16.507205"
      inkscape:window-x="0"
      inkscape:window-y="0"
@@ -53,9 +53,11 @@
      inkscape:current-layer="svg2" />
   <path
      d="M2.02 14L2 34c0 2.21 1.79 4 4 4h36c2.21 0 4-1.79 4-4V14c0-2.21-1.79-4-4-4H6c-2.21 0-3.98 1.79-3.98 4zM38 14v20H10V14h28z"
-     id="path4" />
+     id="path4"
+     style="stroke:#ffffff;stroke-opacity:1;opacity:1;stroke-linejoin:miter;stroke-width:0.69999999999999996;stroke-miterlimit:4;stroke-dasharray:none;stroke-linecap:butt" />
   <path
      id="path3125"
      d="m 29.154611,22.759744 v -3.648305 c 0,-0.573305 -0.470339,-1.042373 -1.045197,-1.042373 H 15.567041 c -0.574859,0 -1.045198,0.469068 -1.045198,1.042373 v 10.423729 c 0,0.573305 0.470339,1.042373 1.045198,1.042373 h 12.542373 c 0.574858,0 1.045197,-0.469068 1.045197,-1.042373 v -3.648305 l 4.180791,4.169492 V 18.590253 l -4.180791,4.169491 z"
-     inkscape:connector-curvature="0" />
+     inkscape:connector-curvature="0"
+     style="stroke:#ffffff;stroke-opacity:1;stroke-width:0.69999999999999996;stroke-miterlimit:4;stroke-dasharray:none" />
 </svg>
