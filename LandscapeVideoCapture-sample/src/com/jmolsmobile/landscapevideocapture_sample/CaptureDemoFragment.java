@@ -130,11 +130,27 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-		advancedRl.setVisibility(advancedRl.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+        switch (item.getItemId()) {
+            case R.id.menu_advanced :
+                toggleAdvancedSettings();
+                break;
+            case R.id.menu_github:
+                openGitHub();
+                break;
+        }
 		return true;
 	}
 
-	private void startVideoCaptureActivity() {
+    private void toggleAdvancedSettings() {
+        advancedRl.setVisibility(advancedRl.getVisibility() == View.GONE ? View.VISIBLE : View.GONE);
+    }
+
+    private void openGitHub() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_url)));
+        startActivity(browserIntent);
+    }
+
+    private void startVideoCaptureActivity() {
 		final CaptureConfiguration config = createCaptureConfiguration();
 		final String filename = filenameEt.getEditableText().toString();
 
