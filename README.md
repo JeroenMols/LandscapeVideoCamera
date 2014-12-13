@@ -86,3 +86,7 @@ This library provides a full and reusable custom camera, which:
 
 ## Questions
 @molsjeroen
+
+
+## Thanks
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LandscapeVideoCamera-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/1209)
