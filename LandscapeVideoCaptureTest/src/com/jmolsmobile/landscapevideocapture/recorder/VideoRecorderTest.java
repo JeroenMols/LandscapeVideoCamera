@@ -247,6 +247,22 @@ public class VideoRecorderTest extends MockitoTestCase {
         }
     }
 
+    public void test_continueInitialisationWhenSetMaxFilesizeFails2() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+                mock(SurfaceHolder.class)));
+
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new RuntimeException()).when(mockRecorder).setMaxFileSize(anyInt());
+
+        try {
+            spyRecorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
+            verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
+        } catch (RuntimeException e) {
+            fail("Crashed when setting max filesize");
+        }
+    }
+
 	public void test_dontStopRecordingWhenUnknownInfo() throws Exception {
 		final VideoRecorder spyRecorder = createSpyRecorder(null, null);
 		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN, 0);

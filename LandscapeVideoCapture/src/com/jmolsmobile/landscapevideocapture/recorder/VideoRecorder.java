@@ -143,6 +143,8 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
             recorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
         } catch (IllegalArgumentException e) {
             CLog.e(CLog.RECORDER, "Failed to set max filesize - illegal argument: " + mCaptureConfiguration.getMaxCaptureFileSize());
+        } catch (RuntimeException e2) {
+            CLog.e(CLog.RECORDER, "Failed to set max filesize - runtime exception");
         }
 		recorder.setOnInfoListener(this);
 	}
