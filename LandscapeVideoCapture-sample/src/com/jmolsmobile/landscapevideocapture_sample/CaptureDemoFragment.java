@@ -184,7 +184,8 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 		}
 		statusTv.setText(statusMessage);
 
-		final Bitmap thumbnail = ThumbnailUtils.createVideoThumbnail(filename, Thumbnails.FULL_SCREEN_KIND);
+        final Bitmap thumbnail = getThumbnail();
+
 		if (thumbnail != null) {
 			thumbnailIv.setImageBitmap(thumbnail);
 		} else {
@@ -192,7 +193,12 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private CaptureConfiguration createCaptureConfiguration() {
+    private Bitmap getThumbnail() {
+        if (filename == null) return null;
+        return ThumbnailUtils.createVideoThumbnail(filename, Thumbnails.FULL_SCREEN_KIND);
+    }
+
+    private CaptureConfiguration createCaptureConfiguration() {
 		final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
 		final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
 		int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
