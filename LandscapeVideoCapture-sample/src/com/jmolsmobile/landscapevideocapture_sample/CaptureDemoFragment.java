@@ -17,6 +17,7 @@
 package com.jmolsmobile.landscapevideocapture_sample;
 
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
@@ -234,7 +235,11 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
 		final Intent videoIntent = new Intent(Intent.ACTION_VIEW);
 		videoIntent.setDataAndType(Uri.parse(filename), "video/*");
-		startActivity(videoIntent);
+        try {
+            startActivity(videoIntent);
+        } catch (ActivityNotFoundException e) {
+            // NOP
+        }
 	}
 
 }
