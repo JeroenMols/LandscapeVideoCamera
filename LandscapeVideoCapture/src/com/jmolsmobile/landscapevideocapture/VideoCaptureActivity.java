@@ -163,7 +163,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 	private void releaseAllResources() {
 		if (mVideoRecorder != null) {
 			mVideoRecorder.releaseAllResources();
-			mVideoRecorder = null;
 		}
 	}
 

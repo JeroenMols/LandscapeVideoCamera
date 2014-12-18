@@ -191,8 +191,10 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 	}
 
 	private void releaseRecorderResources() {
-		if (getMediaRecorder() != null) {
-			getMediaRecorder().release();
+        MediaRecorder recorder = getMediaRecorder();
+		if (recorder != null) {
+			recorder.release();
+            recorder = null;
 		}
 	}
 

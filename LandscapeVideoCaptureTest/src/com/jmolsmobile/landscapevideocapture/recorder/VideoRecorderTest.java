@@ -29,8 +29,11 @@ import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType
 import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
+import org.mockito.Mockito;
+
 import java.io.IOException;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -100,13 +103,6 @@ public class VideoRecorderTest extends MockitoTestCase {
 		spyRecorder.startRecording();
 
 		verify(mockInterface, times(1)).onRecordingStarted();
-	}
-
-	private VideoRecorder createSpyRecorder(final VideoRecorderInterface mockInterface, final MediaRecorder mockRecorder) {
-		final VideoRecorder spyRecorder = spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class),
-				mock(VideoFile.class), mock(CameraWrapper.class), mock(SurfaceHolder.class)));
-		doReturn(mockRecorder).when(spyRecorder).getMediaRecorder();
-		return spyRecorder;
 	}
 
 	public void test_dontStartRecordingWhenPreparationFails() throws Exception {
@@ -298,6 +294,20 @@ public class VideoRecorderTest extends MockitoTestCase {
 		verify(mockInterface, times(1)).onRecordingFailed("Unable to show camera preview");
 	}
 
+    public void test_shouldNotCrashAfterDoubleRelease() {
+        final VideoRecorder spyRecorder = Mockito.spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null,
+                mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        doNothing().when(spyRecorder).configureMediaRecorder(any(MediaRecorder.class), any(Camera.class));
+
+        spyRecorder.releaseAllResources();
+        try {
+            spyRecorder.releaseAllResources();
+        } catch (RuntimeException e) {
+            fail("Failed to call releaseAllResources twice");
+        }
+
+    }
+
 	private VideoRecorder createSpyRecorderForStopTests(final VideoRecorderInterface mockInterface,
 			final MediaRecorder recorder, final boolean isRecording) {
 		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
@@ -305,4 +315,11 @@ public class VideoRecorderTest extends MockitoTestCase {
 		doReturn(recorder).when(spyRecorder).getMediaRecorder();
 		return spyRecorder;
 	}
+
+    private VideoRecorder createSpyRecorder(final VideoRecorderInterface mockInterface, final MediaRecorder mockRecorder) {
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class),
+                mock(VideoFile.class), mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        doReturn(mockRecorder).when(spyRecorder).getMediaRecorder();
+        return spyRecorder;
+    }
 }
