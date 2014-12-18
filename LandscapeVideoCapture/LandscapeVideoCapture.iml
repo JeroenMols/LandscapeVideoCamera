@@ -3,7 +3,7 @@
   <component name="FacetManager">
     <facet type="android-gradle" name="Android-Gradle">
       <configuration>
-        <option name="GRADLE_PROJECT_PATH" value=":LandscapeVideoCapture-sample" />
+        <option name="GRADLE_PROJECT_PATH" value=":LandscapeVideoCapture" />
       </configuration>
     </facet>
     <facet type="android" name="Android">
@@ -16,6 +16,7 @@
         <option name="TEST_SOURCE_GEN_TASK_NAME" value="generateDebugTestSources" />
         <option name="ALLOW_USER_CONFIGURATION" value="false" />
         <option name="RES_FOLDERS_RELATIVE_PATH" value="file://$MODULE_DIR$/res" />
+        <option name="LIBRARY_PROJECT" value="true" />
       </configuration>
     </facet>
   </component>
@@ -78,8 +79,6 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 21 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="android-support-v4" level="project" />
-    <orderEntry type="module" module-name="LandscapeVideoCapture" exported="" />
   </component>
 </module>
 
