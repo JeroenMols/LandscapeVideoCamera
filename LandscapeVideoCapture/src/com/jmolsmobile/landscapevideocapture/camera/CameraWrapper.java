@@ -21,8 +21,10 @@ import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
+import android.os.Build;
 import android.view.SurfaceHolder;
 
+import com.jmolsmobile.landscapevideocapture.CLog;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 import java.io.IOException;
@@ -33,6 +35,7 @@ import java.util.List;
 public class CameraWrapper {
 
 	private Camera	mCamera	= null;
+    private Parameters mParameters = null;
 
 	public Camera getCamera() {
 		return mCamera;
@@ -52,14 +55,15 @@ public class CameraWrapper {
 
 	public void prepareCameraForRecording() throws PrepareCameraException {
 		try {
-			unlockCameraFromSystem();
+            storeCameraParametersBeforeUnlocking();
+            unlockCameraFromSystem();
 		} catch (final RuntimeException e) {
 			e.printStackTrace();
 			throw new PrepareCameraException();
 		}
 	}
 
-	public void releaseCamera() {
+    public void releaseCamera() {
 		if (getCamera() == null) return;
 		releaseCameraFromSystem();
 	}
@@ -74,16 +78,23 @@ public class CameraWrapper {
 		mCamera.setPreviewCallback(null);
 	}
 
+    public RecordingSize getSupportedRecordingSize(int width, int height) {
+        Camera.Size recordingSize = getOptimalSize(getSupportedVideoSizes(), width, height);
+        CLog.d(CLog.CAMERA, "Recording size: " + recordingSize.width + "x" + recordingSize.height);
+        return new RecordingSize(recordingSize.width, recordingSize.height);
+    }
+
 	public void configureForPreview(int viewWidth, int viewHeight) {
-		final Parameters params = mCamera.getParameters();
-		final Size previewSize = getOptimalPreviewSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
-		params.setPreviewSize(previewSize.width, previewSize.height);
-		params.setPreviewFormat(ImageFormat.NV21);
-		mCamera.setParameters(params);
+        final Parameters params = getCameraParametersFromSystem();
+        final Size previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
+        params.setPreviewSize(previewSize.width, previewSize.height);
+        params.setPreviewFormat(ImageFormat.NV21);
+        mCamera.setParameters(params);
+        CLog.d(CLog.CAMERA, "Preview size: " + previewSize.width + "x" + previewSize.height);
 	}
 
 	public void enableAutoFocus() {
-		final Parameters params = mCamera.getParameters();
+		final Parameters params = getCameraParametersFromSystem();
 		params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 		mCamera.setParameters(params);
 	}
@@ -100,6 +111,28 @@ public class CameraWrapper {
 		mCamera.release();
 	}
 
+    protected Parameters getCameraParametersFromSystem() {
+        return mCamera.getParameters();
+    }
+
+    protected List<Size> getSupportedVideoSizes() {
+        Parameters params = getCameraParametersAfterUnlocking();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            return params.getSupportedVideoSizes();
+        } else {
+            CLog.e(CLog.CAMERA, "Using supportedPreviewSizes iso supportedVideoSizes due to API restriction");
+            return params.getSupportedPreviewSizes();
+        }
+    }
+
+    protected void storeCameraParametersBeforeUnlocking() {
+        mParameters = getCameraParametersFromSystem();
+    }
+
+    private Parameters getCameraParametersAfterUnlocking() {
+        return mParameters;
+    }
+
 	/**
 	 * Copyright (C) 2013 The Android Open Source Project
 	 * 
@@ -115,7 +148,7 @@ public class CameraWrapper {
 	 * See the License for the specific language governing permissions and
 	 * limitations under the License.
 	 */
-	public Camera.Size getOptimalPreviewSize(List<Camera.Size> sizes, int w, int h) {
+	public Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
 		// Use a very small tolerance because we want an exact match.
 		final double ASPECT_TOLERANCE = 0.1;
 		final double targetRatio = (double) w / h;

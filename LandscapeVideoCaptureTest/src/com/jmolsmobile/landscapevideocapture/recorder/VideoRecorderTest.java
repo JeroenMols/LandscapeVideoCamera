@@ -27,6 +27,7 @@ import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.RecordingSize;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
 import org.mockito.Mockito;
@@ -180,7 +181,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
 	public void test_mediaRecorderShouldHaveMediaRecorderOptions() throws Exception {
 		final CaptureConfiguration config = new CaptureConfiguration();
-		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(),
 				mock(SurfaceHolder.class));
 
 		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
@@ -195,13 +196,15 @@ public class VideoRecorderTest extends MockitoTestCase {
 
 	public void test_mediaRecorderShouldHaveConfigurationOptions() throws Exception {
 		final CaptureConfiguration config = new CaptureConfiguration();
-		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+        CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        doReturn(new RecordingSize(777,888)).when(mockWrapper).getSupportedRecordingSize(anyInt(), anyInt());
+		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mockWrapper,
 				mock(SurfaceHolder.class));
 
 		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
 		recorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
 
-		verify(mockRecorder, times(1)).setVideoSize(config.getVideoWidth(), config.getVideoHeight());
+		verify(mockRecorder, times(1)).setVideoSize(777,888);
 		verify(mockRecorder, times(1)).setVideoEncodingBitRate(config.getVideoBitrate());
 		verify(mockRecorder, times(1)).setMaxDuration(config.getMaxCaptureDuration());
 		verify(mockRecorder, times(1)).setMaxFileSize(config.getMaxCaptureFileSize());
@@ -213,7 +216,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 		final Surface mockSurface = mock(Surface.class);
 		doReturn(mockSurface).when(mockHolder).getSurface();
 		final VideoFile videoFile = new VideoFile("sdcard/test.avi");
-		final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, mock(CameraWrapper.class),
+		final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, createMockCameraWrapperForInitialisation(),
 				mockHolder));
 		doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
 
@@ -229,7 +232,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     public void test_continueInitialisationWhenSetMaxFilesizeFails() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
-        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(),
                 mock(SurfaceHolder.class)));
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
@@ -245,7 +248,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     public void test_continueInitialisationWhenSetMaxFilesizeFails2() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
-        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(),
                 mock(SurfaceHolder.class)));
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
@@ -318,8 +321,14 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     private VideoRecorder createSpyRecorder(final VideoRecorderInterface mockInterface, final MediaRecorder mockRecorder) {
         final VideoRecorder spyRecorder = spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class),
-                mock(VideoFile.class), mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+                mock(VideoFile.class), createMockCameraWrapperForInitialisation(), mock(SurfaceHolder.class)));
         doReturn(mockRecorder).when(spyRecorder).getMediaRecorder();
         return spyRecorder;
+    }
+
+    private CameraWrapper createMockCameraWrapperForInitialisation() {
+        CameraWrapper mock = mock(CameraWrapper.class);
+        doReturn(new RecordingSize(320, 240)).when(mock).getSupportedRecordingSize(anyInt(), anyInt());
+        return mock;
     }
 }

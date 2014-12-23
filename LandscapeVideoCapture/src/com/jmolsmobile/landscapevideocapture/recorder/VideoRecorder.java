@@ -26,6 +26,7 @@ import com.jmolsmobile.landscapevideocapture.VideoFile;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
 import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.RecordingSize;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
@@ -132,7 +133,8 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 		recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
 		recorder.setOutputFile(mVideoFile.getFullPath());
 
-		recorder.setVideoSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
+        RecordingSize size = mCameraWrapper.getSupportedRecordingSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
+		recorder.setVideoSize(size.width, size.height);
 		recorder.setVideoEncodingBitRate(mCaptureConfiguration.getVideoBitrate());
 
 		recorder.setAudioEncoder(mCaptureConfiguration.getAudioEncoder());

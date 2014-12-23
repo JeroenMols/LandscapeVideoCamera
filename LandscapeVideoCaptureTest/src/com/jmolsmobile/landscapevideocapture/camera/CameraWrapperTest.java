@@ -21,6 +21,8 @@ import android.hardware.Camera;
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
+import java.util.ArrayList;
+
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -73,6 +75,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 	public void test_prepareCameraShouldCallUnlock() {
 		final CameraWrapper spyWrapper = spy(new CameraWrapper());
 		doNothing().when(spyWrapper).unlockCameraFromSystem();
+		doNothing().when(spyWrapper).storeCameraParametersBeforeUnlocking();
 
 		try {
 			spyWrapper.prepareCameraForRecording();
@@ -118,4 +121,28 @@ public class CameraWrapperTest extends MockitoTestCase {
 			assertEquals("Unable to use camera for recording", e.getMessage());
 		}
 	}
+
+    public void test_getSupportedRecordingSizeTooBig() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        ArrayList<Camera.Size> sizes = new ArrayList<>();
+        sizes.add(mock(Camera.class).new Size(640, 480));
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes();
+
+        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(1920, 1080);
+
+        assertEquals(supportedRecordingSize.width, 640);
+        assertEquals(supportedRecordingSize.height, 480);
+    }
+
+    public void test_getSupportedRecordingSizeTooSmall() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        ArrayList<Camera.Size> sizes = new ArrayList<>();
+        sizes.add(mock(Camera.class).new Size(640, 480));
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes();
+
+        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(320, 240);
+
+        assertEquals(supportedRecordingSize.width, 640);
+        assertEquals(supportedRecordingSize.height, 480);
+    }
 }
