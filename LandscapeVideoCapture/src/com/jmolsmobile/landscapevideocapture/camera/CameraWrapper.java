@@ -81,6 +81,10 @@ public class CameraWrapper {
 
     public RecordingSize getSupportedRecordingSize(int width, int height) {
         Camera.Size recordingSize = getOptimalSize(getSupportedVideoSizes(), width, height);
+        if (recordingSize == null) {
+            CLog.e(CLog.CAMERA, "Failed to find supported recording size - falling back to requested: " + width + "x" + height);
+            return new RecordingSize(width, height);
+        }
         CLog.d(CLog.CAMERA, "Recording size: " + recordingSize.width + "x" + recordingSize.height);
         return new RecordingSize(recordingSize.width, recordingSize.height);
     }
