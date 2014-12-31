@@ -17,6 +17,7 @@
 package com.jmolsmobile.landscapevideocapture.recorder;
 
 import android.hardware.Camera;
+import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -27,11 +28,13 @@ import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 import com.jmolsmobile.landscapevideocapture.camera.PrepareCameraException;
+import com.jmolsmobile.landscapevideocapture.camera.RecordingSize;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
 import org.mockito.Mockito;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -48,189 +51,193 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("deprecation")
 public class VideoRecorderTest extends MockitoTestCase {
 
-	public void test_openCameraWhenCreated() throws Exception {
-		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
-		new VideoRecorder(null, mock(CaptureConfiguration.class), null, mockWrapper, mock(SurfaceHolder.class));
-		verify(mockWrapper, times(1)).openCamera();
-	}
+    public void test_openCameraWhenCreated() throws Exception {
+        final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        new VideoRecorder(null, mock(CaptureConfiguration.class), null, mockWrapper, mock(SurfaceHolder.class));
+        verify(mockWrapper, times(1)).openCamera();
+    }
 
-	public void test_callListenerWhenOpenCameraFails() throws Exception {
-		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
-		doThrow(new OpenCameraException(OpenType.NOCAMERA)).when(mockWrapper).openCamera();
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		new VideoRecorder(mockInterface, null, null, mockWrapper, mock(SurfaceHolder.class));
-		verify(mockInterface, times(1)).onRecordingFailed(anyString());
-	}
+    public void test_callListenerWhenOpenCameraFails() throws Exception {
+        final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        doThrow(new OpenCameraException(OpenType.NOCAMERA)).when(mockWrapper).openCamera();
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        new VideoRecorder(mockInterface, null, null, mockWrapper, mock(SurfaceHolder.class));
+        verify(mockInterface, times(1)).onRecordingFailed(anyString());
+    }
 
-	public void test_startRecordingWhenNotStarted() throws Exception {
-		final VideoRecorder spyRecorder = spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null,
-				mock(CameraWrapper.class), mock(SurfaceHolder.class)));
-		doNothing().when(spyRecorder).startRecording();
+    public void test_startRecordingWhenNotStarted() throws Exception {
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        doNothing().when(spyRecorder).startRecording();
 
-		spyRecorder.toggleRecording();
+        spyRecorder.toggleRecording();
 
-		verify(spyRecorder, times(1)).startRecording();
-	}
+        verify(spyRecorder, times(1)).startRecording();
+    }
 
-	public void test_stopRecordingWhenStarted() throws Exception {
-		final VideoRecorder spyRecorder = spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null,
-				mock(CameraWrapper.class), mock(SurfaceHolder.class)));
-		doReturn(true).when(spyRecorder).isRecording();
-		doNothing().when(spyRecorder).stopRecording(anyString());
+    public void test_stopRecordingWhenStarted() throws Exception {
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        doReturn(true).when(spyRecorder).isRecording();
+        doNothing().when(spyRecorder).stopRecording(anyString());
 
-		spyRecorder.toggleRecording();
+        spyRecorder.toggleRecording();
 
-		verify(spyRecorder, times(1)).stopRecording(null);
-	}
+        verify(spyRecorder, times(1)).stopRecording(null);
+    }
 
-	public void test_notifyFailedWhenCameraDoesNotPrepare() throws Exception {
-		final CameraWrapper mockWrapper = mock(CameraWrapper.class);
-		doThrow(new PrepareCameraException()).when(mockWrapper).prepareCameraForRecording();
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null,
-				mockWrapper, mock(SurfaceHolder.class));
+    public void test_notifyFailedWhenCameraDoesNotPrepare() throws Exception {
+        final CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        doThrow(new PrepareCameraException()).when(mockWrapper).prepareCameraForRecording();
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null, mockWrapper, mock(SurfaceHolder.class));
 
-		recorder.startRecording();
+        recorder.startRecording();
 
-		verify(mockInterface, times(1)).onRecordingFailed("Unable to record video");
-	}
+        verify(mockInterface, times(1)).onRecordingFailed("Unable to record video");
+    }
 
-	public void test_notifyStartedWhenRecordingStarts() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+    public void test_notifyStartedWhenRecordingStarts() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
 
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-		spyRecorder.startRecording();
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+        spyRecorder.startRecording();
 
-		verify(mockInterface, times(1)).onRecordingStarted();
-	}
+        verify(mockInterface, times(1)).onRecordingStarted();
+    }
 
-	public void test_dontStartRecordingWhenPreparationFails() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		doThrow(new IllegalStateException()).when(mockRecorder).prepare();
+    public void test_dontStartRecordingWhenPreparationFails() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new IllegalStateException()).when(mockRecorder).prepare();
 
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-		spyRecorder.startRecording();
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+        spyRecorder.startRecording();
 
-		verify(mockRecorder, never()).start();
-	}
+        verify(mockRecorder, never()).start();
+    }
 
-	public void test_dontStartRecordingWhenPreparationFails2() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		doThrow(new IOException()).when(mockRecorder).prepare();
+    public void test_dontStartRecordingWhenPreparationFails2() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new IOException()).when(mockRecorder).prepare();
 
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-		spyRecorder.startRecording();
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+        spyRecorder.startRecording();
 
-		verify(mockRecorder, never()).start();
-	}
+        verify(mockRecorder, never()).start();
+    }
 
-	public void test_dontNotifyListenerWhenStartFailsInIllegalState() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		doThrow(new IllegalStateException()).when(mockRecorder).start();
+    public void test_dontNotifyListenerWhenStartFailsInIllegalState() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new IllegalStateException()).when(mockRecorder).start();
 
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-		spyRecorder.startRecording();
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+        spyRecorder.startRecording();
 
-		verify(mockInterface, never()).onRecordingStarted();
-	}
+        verify(mockInterface, never()).onRecordingStarted();
+    }
 
-	public void test_notifyListenerWhenStartFails() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		doThrow(new RuntimeException()).when(mockRecorder).start();
+    public void test_notifyListenerWhenStartFails() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        doThrow(new RuntimeException()).when(mockRecorder).start();
 
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-		spyRecorder.startRecording();
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
+        spyRecorder.startRecording();
 
-		verify(mockInterface, times(1)).onRecordingFailed("Unable to record video with given settings");
-	}
+        verify(mockInterface, times(1)).onRecordingFailed("Unable to record video with given settings");
+    }
 
-	public void test_dontNotifyListenerWhenNotStopped() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, false);
+    public void test_dontNotifyListenerWhenNotStopped() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, false);
 
-		spyRecorder.stopRecording(null);
+        spyRecorder.stopRecording(null);
 
-		verify(mockInterface, never()).onRecordingStopped(anyString());
-	}
+        verify(mockInterface, never()).onRecordingStopped(anyString());
+    }
 
-	public void test_notifyListenerWhenStoppedFailed() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, true);
+    public void test_notifyListenerWhenStoppedFailed() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, null, true);
 
-		spyRecorder.stopRecording("test");
+        spyRecorder.stopRecording("test");
 
-		verify(mockInterface, never()).onRecordingSuccess();
-		verify(mockInterface, times(1)).onRecordingStopped("test");
-	}
+        verify(mockInterface, never()).onRecordingSuccess();
+        verify(mockInterface, times(1)).onRecordingStopped("test");
+    }
 
-	public void test_notifyListenerWhenStoppedSuccess() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, mock(MediaRecorder.class), true);
+    public void test_notifyListenerWhenStoppedSuccess() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder spyRecorder = createSpyRecorderForStopTests(mockInterface, mock(MediaRecorder.class), true);
 
-		spyRecorder.stopRecording("test");
+        spyRecorder.stopRecording("test");
 
-		verify(mockInterface, times(1)).onRecordingSuccess();
-		verify(mockInterface, times(1)).onRecordingStopped("test");
-	}
+        verify(mockInterface, times(1)).onRecordingSuccess();
+        verify(mockInterface, times(1)).onRecordingStopped("test");
+    }
 
-	public void test_mediaRecorderShouldHaveMediaRecorderOptions() throws Exception {
-		final CaptureConfiguration config = new CaptureConfiguration();
-		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
-				mock(SurfaceHolder.class));
+    public void test_mediaRecorderShouldHaveMediaRecorderOptions() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        CamcorderProfile profile = getEmptyCamcorderProfile();
+        final VideoRecorder recorder =
+                new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForPrepare(profile), mock(SurfaceHolder.class));
 
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		recorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        recorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
 
-		verify(mockRecorder, times(1)).setOutputFormat(config.getOutputFormat());
-		verify(mockRecorder, times(1)).setAudioSource(config.getAudioSource());
-		verify(mockRecorder, times(1)).setVideoSource(config.getVideoSource());
-		verify(mockRecorder, times(1)).setAudioEncoder(config.getAudioEncoder());
-		verify(mockRecorder, times(1)).setVideoEncoder(config.getVideoEncoder());
-	}
+        verify(mockRecorder, times(1)).setAudioSource(config.getAudioSource());
+        verify(mockRecorder, times(1)).setVideoSource(config.getVideoSource());
+        assertEquals(profile.fileFormat, config.getOutputFormat());
+        assertEquals(profile.audioCodec, config.getAudioEncoder());
+        assertEquals(profile.videoCodec, config.getVideoEncoder());
+        verify(mockRecorder, times(1)).setProfile(profile);
+    }
 
-	public void test_mediaRecorderShouldHaveConfigurationOptions() throws Exception {
-		final CaptureConfiguration config = new CaptureConfiguration();
-		final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
-				mock(SurfaceHolder.class));
+    public void test_mediaRecorderShouldHaveConfigurationOptions() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        CamcorderProfile profile = getEmptyCamcorderProfile();
+        CameraWrapper mockWrapper = createMockCameraWrapperForPrepare(profile);
+        doReturn(new RecordingSize(777, 888)).when(mockWrapper).getSupportedRecordingSize(anyInt(), anyInt());
+        final VideoRecorder recorder = new VideoRecorder(null, config, mock(VideoFile.class), mockWrapper, mock(SurfaceHolder.class));
 
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		recorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        recorder.configureMediaRecorder(mockRecorder, mock(Camera.class));
 
-		verify(mockRecorder, times(1)).setVideoSize(config.getVideoWidth(), config.getVideoHeight());
-		verify(mockRecorder, times(1)).setVideoEncodingBitRate(config.getVideoBitrate());
-		verify(mockRecorder, times(1)).setMaxDuration(config.getMaxCaptureDuration());
-		verify(mockRecorder, times(1)).setMaxFileSize(config.getMaxCaptureFileSize());
-	}
+        assertEquals(profile.videoFrameWidth, 777);
+        assertEquals(profile.videoFrameHeight, 888);
+        assertEquals(profile.videoBitRate, config.getVideoBitrate());
+        assertEquals(profile.duration, config.getMaxCaptureDuration());
+        verify(mockRecorder, times(1)).setProfile(profile);
+        verify(mockRecorder, times(1)).setMaxFileSize(config.getMaxCaptureFileSize());
+    }
 
-	public void test_mediaRecorderShouldHaveOtherOptions() throws Exception {
-		final CaptureConfiguration config = new CaptureConfiguration();
-		final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
-		final Surface mockSurface = mock(Surface.class);
-		doReturn(mockSurface).when(mockHolder).getSurface();
-		final VideoFile videoFile = new VideoFile("sdcard/test.avi");
-		final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, mock(CameraWrapper.class),
-				mockHolder));
-		doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
+    public void test_mediaRecorderShouldHaveOtherOptions() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
+        final Surface mockSurface = mock(Surface.class);
+        doReturn(mockSurface).when(mockHolder).getSurface();
+        final VideoFile videoFile = new VideoFile("sdcard/test.avi");
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, createMockCameraWrapperForInitialisation(), mockHolder));
+        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
 
-		final MediaRecorder mockRecorder = mock(MediaRecorder.class);
-		final Camera mockCamera = mock(Camera.class);
-		spyRecorder.configureMediaRecorder(mockRecorder, mockCamera);
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        final Camera mockCamera = mock(Camera.class);
+        spyRecorder.configureMediaRecorder(mockRecorder, mockCamera);
 
-		verify(mockRecorder, times(1)).setCamera(mockCamera);
-		verify(mockRecorder, times(1)).setPreviewDisplay(mockSurface);
-		verify(mockRecorder, times(1)).setOutputFile(videoFile.getFullPath());
-		verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
-	}
+        verify(mockRecorder, times(1)).setCamera(mockCamera);
+        verify(mockRecorder, never()).setPreviewDisplay(any(Surface.class));
+        verify(mockRecorder, times(1)).setOutputFile(videoFile.getFullPath());
+        verify(mockRecorder, times(1)).setOnInfoListener(spyRecorder);
+    }
 
     public void test_continueInitialisationWhenSetMaxFilesizeFails() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
-        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
-                mock(SurfaceHolder.class)));
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(), mock(SurfaceHolder.class)));
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
         doThrow(new IllegalArgumentException()).when(mockRecorder).setMaxFileSize(anyInt());
@@ -245,8 +252,8 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     public void test_continueInitialisationWhenSetMaxFilesizeFails2() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
-        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, mock(VideoFile.class), mock(CameraWrapper.class),
-                mock(SurfaceHolder.class)));
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(), mock(SurfaceHolder.class)));
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
         doThrow(new RuntimeException()).when(mockRecorder).setMaxFileSize(anyInt());
@@ -259,44 +266,44 @@ public class VideoRecorderTest extends MockitoTestCase {
         }
     }
 
-	public void test_dontStopRecordingWhenUnknownInfo() throws Exception {
-		final VideoRecorder spyRecorder = createSpyRecorder(null, null);
-		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN, 0);
-		verify(spyRecorder, never()).stopRecording(anyString());
-	}
+    public void test_dontStopRecordingWhenUnknownInfo() throws Exception {
+        final VideoRecorder spyRecorder = createSpyRecorder(null, null);
+        spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_UNKNOWN, 0);
+        verify(spyRecorder, never()).stopRecording(anyString());
+    }
 
-	public void test_notifyListenerWhenMaxFileSize() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
-		doReturn(true).when(spyRecorder).isRecording();
+    public void test_notifyListenerWhenMaxFileSize() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+        doReturn(true).when(spyRecorder).isRecording();
 
-		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED, 0);
+        spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_FILESIZE_REACHED, 0);
 
-		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max file size reached");
-	}
+        verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max file size reached");
+    }
 
-	public void test_notifyListenerWhenMaxDuration() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
-		doReturn(true).when(spyRecorder).isRecording();
+    public void test_notifyListenerWhenMaxDuration() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+        doReturn(true).when(spyRecorder).isRecording();
 
-		spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED, 0);
+        spyRecorder.onInfo(null, MediaRecorder.MEDIA_RECORDER_INFO_MAX_DURATION_REACHED, 0);
 
-		verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max duration reached");
-	}
+        verify(mockInterface, times(1)).onRecordingStopped("Capture stopped - Max duration reached");
+    }
 
-	public void test_notifyListenerWhenPreviewFails() throws Exception {
-		final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
-		final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null,
-				mock(CameraWrapper.class), mock(SurfaceHolder.class));
-		recorder.onCapturePreviewFailed();
+    public void test_notifyListenerWhenPreviewFails() throws Exception {
+        final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
+        final VideoRecorder recorder =
+                new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class));
+        recorder.onCapturePreviewFailed();
 
-		verify(mockInterface, times(1)).onRecordingFailed("Unable to show camera preview");
-	}
+        verify(mockInterface, times(1)).onRecordingFailed("Unable to show camera preview");
+    }
 
     public void test_shouldNotCrashAfterDoubleRelease() {
-        final VideoRecorder spyRecorder = Mockito.spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null,
-                mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        final VideoRecorder spyRecorder =
+                Mockito.spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class)));
         doNothing().when(spyRecorder).configureMediaRecorder(any(MediaRecorder.class), any(Camera.class));
 
         spyRecorder.releaseAllResources();
@@ -308,18 +315,41 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     }
 
-	private VideoRecorder createSpyRecorderForStopTests(final VideoRecorderInterface mockInterface,
-			final MediaRecorder recorder, final boolean isRecording) {
-		final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
-		doReturn(isRecording).when(spyRecorder).isRecording();
-		doReturn(recorder).when(spyRecorder).getMediaRecorder();
-		return spyRecorder;
-	}
+    private VideoRecorder createSpyRecorderForStopTests(final VideoRecorderInterface mockInterface, final MediaRecorder recorder, final boolean isRecording) {
+        final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, null);
+        doReturn(isRecording).when(spyRecorder).isRecording();
+        doReturn(recorder).when(spyRecorder).getMediaRecorder();
+        return spyRecorder;
+    }
 
     private VideoRecorder createSpyRecorder(final VideoRecorderInterface mockInterface, final MediaRecorder mockRecorder) {
-        final VideoRecorder spyRecorder = spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class),
-                mock(VideoFile.class), mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), mock(VideoFile.class), createMockCameraWrapperForInitialisation(),
+                        mock(SurfaceHolder.class)));
         doReturn(mockRecorder).when(spyRecorder).getMediaRecorder();
         return spyRecorder;
+    }
+
+    private CameraWrapper createMockCameraWrapperForInitialisation() {
+        return createMockCameraWrapperForPrepare(getEmptyCamcorderProfile());
+    }
+
+    private CameraWrapper createMockCameraWrapperForPrepare(CamcorderProfile profile) {
+        CameraWrapper mock = mock(CameraWrapper.class);
+        doReturn(new RecordingSize(320, 240)).when(mock).getSupportedRecordingSize(anyInt(), anyInt());
+        doReturn(profile).when(mock).getBaseRecordingProfile();
+        return mock;
+    }
+
+    private CamcorderProfile getEmptyCamcorderProfile() {
+        try {
+            Constructor<CamcorderProfile> constructor =
+                    CamcorderProfile.class.getDeclaredConstructor(new Class[] {int.class, int.class, int.class, int.class, int.class, int.class, int.class,
+                                                                               int.class, int.class, int.class, int.class, int.class});
+            constructor.setAccessible(true);
+            return constructor.newInstance(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+        } catch (Exception e) {
+        }
+        return null;
     }
 }
