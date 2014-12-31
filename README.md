@@ -52,7 +52,7 @@ This library provides a full and reusable custom camera, which:
 
   1. Add the maven dependency to your project:
   
-          compile 'com.github.jmolsmobile:landscapevideocamera:1.0.6'
+          compile 'com.github.jmolsmobile:landscapevideocamera:1.0.7'
 
   2. Specify the VideoCaptureActivity in your manifest:
   
