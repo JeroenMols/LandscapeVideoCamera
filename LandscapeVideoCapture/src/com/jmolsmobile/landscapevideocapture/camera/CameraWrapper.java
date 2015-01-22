@@ -90,7 +90,12 @@ public class CameraWrapper {
     }
 
     public CamcorderProfile getBaseRecordingProfile() {
-        return CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
+            return CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
+            return CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+        else
+            return CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
     }
 
     public void configureForPreview(int viewWidth, int viewHeight) {
