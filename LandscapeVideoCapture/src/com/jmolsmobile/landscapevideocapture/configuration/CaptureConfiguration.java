@@ -26,7 +26,6 @@ import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConf
 public class CaptureConfiguration implements Parcelable {
 
 	private static final int	MBYTE_TO_BYTE		= 1024 * 1024;
-	private static final int	MSEC_TO_SEC			= 1000;
 
 	public static final int		NO_DURATION_LIMIT	= -1;
 	public static final int		NO_FILESIZE_LIMIT	= -1;
@@ -34,7 +33,7 @@ public class CaptureConfiguration implements Parcelable {
 	private int					mVideoWidth			= PredefinedCaptureConfigurations.WIDTH_720P;
 	private int					mVideoHeight		= PredefinedCaptureConfigurations.HEIGHT_720P;
 	private int					mBitrate			= PredefinedCaptureConfigurations.BITRATE_HQ_720P;
-	private int					mMaxDurationMs		= NO_DURATION_LIMIT;
+	private int					mMaxDuration		= NO_DURATION_LIMIT;
 	private int					mMaxFilesizeBytes	= NO_FILESIZE_LIMIT;
 
 	private int					OUTPUT_FORMAT		= MediaRecorder.OutputFormat.MPEG_4;
@@ -56,7 +55,7 @@ public class CaptureConfiguration implements Parcelable {
 	public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
 			int maxFilesizeMb) {
 		this(resolution, quality);
-		mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+		mMaxDuration = maxDurationSecs;
 		mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
 	}
 
@@ -68,7 +67,7 @@ public class CaptureConfiguration implements Parcelable {
 
 	public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb) {
 		this(videoWidth, videoHeight, bitrate);
-		mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+		mMaxDuration = maxDurationSecs;
 		mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
 	}
 
@@ -97,7 +96,7 @@ public class CaptureConfiguration implements Parcelable {
 	 * @return Maximum duration of the captured video in milliseconds
 	 */
 	public int getMaxCaptureDuration() {
-		return mMaxDurationMs;
+		return mMaxDuration;
 	}
 
 	/**
@@ -137,7 +136,7 @@ public class CaptureConfiguration implements Parcelable {
 		dest.writeInt(mVideoWidth);
 		dest.writeInt(mVideoHeight);
 		dest.writeInt(mBitrate);
-		dest.writeInt(mMaxDurationMs);
+		dest.writeInt(mMaxDuration);
 		dest.writeInt(mMaxFilesizeBytes);
 
 		dest.writeInt(OUTPUT_FORMAT);
@@ -165,7 +164,7 @@ public class CaptureConfiguration implements Parcelable {
 		mVideoWidth = in.readInt();
 		mVideoHeight = in.readInt();
 		mBitrate = in.readInt();
-		mMaxDurationMs = in.readInt();
+		mMaxDuration = in.readInt();
 		mMaxFilesizeBytes = in.readInt();
 
 		OUTPUT_FORMAT = in.readInt();
