@@ -9,7 +9,7 @@ dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 //    compile project(':LandscapeVideoCapture')
 
-    compile 'com.github.jeroenmols:landscapevideocamera:1.0.9'
+    compile 'com.github.jeroenmols:landscapevideocamera:1.1.0'
 }
 
 android {
@@ -25,6 +25,13 @@ android {
             renderscript.srcDirs = ['src']
             res.srcDirs = ['res']
             assets.srcDirs = ['assets']
+        }
+
+        defaultConfig {
+            minSdkVersion 10
+            targetSdkVersion 21
+            versionCode 9
+            versionName "1.1.0"
         }
 
         // Move the tests to tests/java, tests/res, etc...
