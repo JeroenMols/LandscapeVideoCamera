@@ -131,7 +131,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         CamcorderProfile baseProfile = mCameraWrapper.getBaseRecordingProfile();
         baseProfile.fileFormat = mCaptureConfiguration.getOutputFormat();
         baseProfile.duration = mCaptureConfiguration.getMaxCaptureDuration();
-
+        
         RecordingSize size = mCameraWrapper.getSupportedRecordingSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
         baseProfile.videoFrameWidth = size.width;
         baseProfile.videoFrameHeight = size.height;
@@ -141,6 +141,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         baseProfile.videoCodec = mCaptureConfiguration.getVideoEncoder();
 
         recorder.setProfile(baseProfile);
+        recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration()*1000);
         recorder.setOutputFile(mVideoFile.getFullPath());
 
         try {
