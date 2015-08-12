@@ -1,4 +1,10 @@
+.gradle
+/local.properties
+/.idea/workspace.xml
+/.idea/libraries
+.DS_Store
+build/
+/captures
+
 LandscapeVideoCapture-sample/crashlytics.properties
 LandscapeVideoCapture-sample/libs/crashlytics.jar
-gradlew
-gradlew.bat
