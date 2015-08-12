@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/LandscapeVideoCapture/LandscapeVideoCapture.iml" filepath="$PROJECT_DIR$/LandscapeVideoCapture/LandscapeVideoCapture.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LandscapeVideoCapture-sample/LandscapeVideoCapture-sample.iml" filepath="$PROJECT_DIR$/LandscapeVideoCapture-sample/LandscapeVideoCapture-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LandscapeVideoCaptureTest/LandscapeVideoCaptureTest.iml" filepath="$PROJECT_DIR$/LandscapeVideoCaptureTest/LandscapeVideoCaptureTest.iml" />
+      <module fileurl="file://$PROJECT_DIR$/landscape_video_camera.iml" filepath="$PROJECT_DIR$/landscape_video_camera.iml" />
+    </modules>
+  </component>
+</project>
