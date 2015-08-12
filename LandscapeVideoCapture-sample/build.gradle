@@ -2,13 +2,14 @@ apply plugin: 'android'
 
 repositories {
     mavenCentral()
+    maven { url "https://jitpack.io" }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
 //    compile project(':LandscapeVideoCapture')
 
-    compile 'com.github.jmolsmobile:landscapevideocamera:1.0.7'
+    compile 'com.github.jeroenmols:landscapevideocamera:1.0.9'
 }
 
 android {
