@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 Jeroen Mols
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -130,8 +130,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
         CamcorderProfile baseProfile = mCameraWrapper.getBaseRecordingProfile();
         baseProfile.fileFormat = mCaptureConfiguration.getOutputFormat();
-        baseProfile.duration = mCaptureConfiguration.getMaxCaptureDuration();
-        
+
         RecordingSize size = mCameraWrapper.getSupportedRecordingSize(mCaptureConfiguration.getVideoWidth(), mCaptureConfiguration.getVideoHeight());
         baseProfile.videoFrameWidth = size.width;
         baseProfile.videoFrameHeight = size.height;
@@ -141,7 +140,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         baseProfile.videoCodec = mCaptureConfiguration.getVideoEncoder();
 
         recorder.setProfile(baseProfile);
-        recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration()*1000);
+        recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
         recorder.setOutputFile(mVideoFile.getFullPath());
 
         try {

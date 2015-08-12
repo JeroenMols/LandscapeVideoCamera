@@ -44,7 +44,7 @@ public class CaptureConfigurationTest extends TestCase {
                 CaptureQuality.MEDIUM, 50, 10);
 
         checkConfiguration(config, CaptureResolution.RES_1080P.width, CaptureResolution.RES_1080P.height,
-                CaptureResolution.RES_1080P.getBitrate(CaptureQuality.MEDIUM), 50, 10 * 1024 * 1024);
+                CaptureResolution.RES_1080P.getBitrate(CaptureQuality.MEDIUM), 50 * 1000, 10 * 1024 * 1024);
     }
 
     public void test_configurationWithHeightWidthBitrate() throws Exception {
@@ -57,7 +57,7 @@ public class CaptureConfigurationTest extends TestCase {
     public void test_configurationWithHeightWidthBitrateSizeDuration() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration(200, 300, 5000000, 1, 100);
 
-        checkConfiguration(config, 200, 300, 5000000, 1, 100 * 1024 * 1024);
+        checkConfiguration(config, 200, 300, 5000000, 1 * 1000, 100 * 1024 * 1024);
     }
 
     private void checkConfiguration(final CaptureConfiguration config, int width, int height, int bitrate,

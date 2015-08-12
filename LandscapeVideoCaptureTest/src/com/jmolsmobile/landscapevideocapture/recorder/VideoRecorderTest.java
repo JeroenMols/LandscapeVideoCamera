@@ -210,7 +210,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         assertEquals(profile.videoFrameWidth, 777);
         assertEquals(profile.videoFrameHeight, 888);
         assertEquals(profile.videoBitRate, config.getVideoBitrate());
-        assertEquals(profile.duration, config.getMaxCaptureDuration());
+        verify(mockRecorder, times(1)).setMaxDuration(config.getMaxCaptureDuration());
         verify(mockRecorder, times(1)).setProfile(profile);
         verify(mockRecorder, times(1)).setMaxFileSize(config.getMaxCaptureFileSize());
     }
