@@ -1,4 +1,4 @@
-LandscapeVideoCapture
+LandscapeVideoCapture [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera)
 =====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
