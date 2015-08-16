@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/LandscapeVideoCapture" />
             <option value="$PROJECT_DIR$/LandscapeVideoCapture-sample" />
             <option value="$PROJECT_DIR$/LandscapeVideoCaptureTest" />
+            <option value="$PROJECT_DIR$/library" />
           </set>
         </option>
       </GradleProjectSettings>
