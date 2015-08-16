@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LandscapeVideoCapture-sample/LandscapeVideoCapture-sample.iml" filepath="$PROJECT_DIR$/LandscapeVideoCapture-sample/LandscapeVideoCapture-sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/example/example.iml" filepath="$PROJECT_DIR$/example/example.iml" />
       <module fileurl="file://$PROJECT_DIR$/landscape_video_camera.iml" filepath="$PROJECT_DIR$/landscape_video_camera.iml" />
       <module fileurl="file://$PROJECT_DIR$/library/library.iml" filepath="$PROJECT_DIR$/library/library.iml" />
     </modules>
