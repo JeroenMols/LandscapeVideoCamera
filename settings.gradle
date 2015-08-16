@@ -1,3 +1,2 @@
 include ':library'
-include ':LandscapeVideoCaptureTest'
 include ':LandscapeVideoCapture-sample'
