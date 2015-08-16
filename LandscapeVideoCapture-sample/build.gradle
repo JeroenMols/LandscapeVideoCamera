@@ -7,9 +7,9 @@ repositories {
 
 dependencies {
     compile fileTree(dir: 'libs', include: '*.jar')
-//    compile project(':LandscapeVideoCapture')
+    compile project(':library')
 
-    compile 'com.github.jeroenmols:landscapevideocamera:1.1.0'
+//    compile 'com.github.jeroenmols:landscapevideocamera:1.1.0'
 }
 
 android {

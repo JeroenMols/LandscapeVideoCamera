@@ -1,10 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.jmolsmobile.landscapevideocapture">
+    package="com.jmolsmobile.landscapevideocapture"
+    android:versionCode="1"
+    android:versionName="1.0" >
 
-    <application android:allowBackup="true"
-                 android:label="@string/app_name"
-        >
+    <uses-sdk
+        android:minSdkVersion="10"
+        android:targetSdkVersion="21" />
 
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name="com.jmolsmobile.landscapevideocapture.VideoCaptureActivity"
+            android:label="@string/app_name" >
+        </activity>
     </application>
 
 </manifest>

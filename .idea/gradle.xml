@@ -9,7 +9,6 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/LandscapeVideoCapture" />
             <option value="$PROJECT_DIR$/LandscapeVideoCapture-sample" />
             <option value="$PROJECT_DIR$/LandscapeVideoCaptureTest" />
             <option value="$PROJECT_DIR$/library" />
