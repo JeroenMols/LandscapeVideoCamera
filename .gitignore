@@ -6,5 +6,5 @@
 build/
 /captures
 
-LandscapeVideoCapture-sample/crashlytics.properties
-LandscapeVideoCapture-sample/libs/crashlytics.jar
+crashlytics.properties
+crashlytics.jar
