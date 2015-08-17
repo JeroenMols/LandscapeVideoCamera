@@ -8,6 +8,7 @@ android:
   components:
     - build-tools-22.0.1
     - android-22
+    - extra-android-m2repository
 
 before_script:
   # Create and start emulator
