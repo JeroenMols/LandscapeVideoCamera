@@ -12,7 +12,7 @@ android:
     - build-tools-22.0.1
     - android-22
     - extra-android-m2repository
-    - sys-img-armeabi-v7a-addon-google_apis-google-21
+    - sys-img-armeabi-v7a-android-21
 
 before_script:
   # Create and start emulator
