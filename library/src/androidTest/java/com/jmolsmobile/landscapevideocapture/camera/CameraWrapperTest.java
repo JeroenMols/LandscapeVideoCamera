@@ -121,9 +121,6 @@ public class CameraWrapperTest extends MockitoTestCase {
 			assertEquals("Unable to use camera for recording", e.getMessage());
 		}
 	}
-    public void test_mustFail() {
-        fail("test for travis");
-    }
 
     public void test_getSupportedRecordingSizeTooBig() {
         final CameraWrapper wrapper = spy(new CameraWrapper());
