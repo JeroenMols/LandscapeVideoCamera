@@ -35,93 +35,93 @@ import static org.mockito.Mockito.verify;
 @SuppressWarnings("deprecation")
 public class CameraWrapperTest extends MockitoTestCase {
 
-	public void test_openCameraSuccess() {
-		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		final Camera mockCamera = mock(Camera.class);
-		doReturn(mockCamera).when(spyWrapper).openCameraFromSystem();
+    public void test_openCameraSuccess() {
+        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final Camera mockCamera = mock(Camera.class);
+        doReturn(mockCamera).when(spyWrapper).openCameraFromSystem();
 
-		try {
-			spyWrapper.openCamera();
-			final Camera camera = spyWrapper.getCamera();
-			assertEquals(mockCamera, camera);
-		} catch (final OpenCameraException e) {
-			fail("Should not throw exception");
-		}
-	}
+        try {
+            spyWrapper.openCamera();
+            final Camera camera = spyWrapper.getCamera();
+            assertEquals(mockCamera, camera);
+        } catch (final OpenCameraException e) {
+            fail("Should not throw exception");
+        }
+    }
 
-	public void test_openCameraNoCamera() {
-		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		doReturn(null).when(spyWrapper).openCameraFromSystem();
+    public void test_openCameraNoCamera() {
+        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        doReturn(null).when(spyWrapper).openCameraFromSystem();
 
-		try {
-			spyWrapper.openCamera();
-			fail("Missing exception");
-		} catch (final OpenCameraException e) {
-			assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
-		}
-	}
+        try {
+            spyWrapper.openCamera();
+            fail("Missing exception");
+        } catch (final OpenCameraException e) {
+            assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
+        }
+    }
 
-	public void test_openCameraInUse() {
-		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		doThrow(new RuntimeException()).when(spyWrapper).openCameraFromSystem();
+    public void test_openCameraInUse() {
+        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        doThrow(new RuntimeException()).when(spyWrapper).openCameraFromSystem();
 
-		try {
-			spyWrapper.openCamera();
-			fail("Missing exception");
-		} catch (final OpenCameraException e) {
-			assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
-		}
-	}
+        try {
+            spyWrapper.openCamera();
+            fail("Missing exception");
+        } catch (final OpenCameraException e) {
+            assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
+        }
+    }
 
-	public void test_prepareCameraShouldCallUnlock() {
-		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		doNothing().when(spyWrapper).unlockCameraFromSystem();
-		doNothing().when(spyWrapper).storeCameraParametersBeforeUnlocking();
+    public void test_prepareCameraShouldCallUnlock() {
+        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        doNothing().when(spyWrapper).unlockCameraFromSystem();
+        doNothing().when(spyWrapper).storeCameraParametersBeforeUnlocking();
 
-		try {
-			spyWrapper.prepareCameraForRecording();
-			verify(spyWrapper, times(1)).unlockCameraFromSystem();
-		} catch (final PrepareCameraException e) {
-			fail("Should not throw exception");
-		}
-	}
+        try {
+            spyWrapper.prepareCameraForRecording();
+            verify(spyWrapper, times(1)).unlockCameraFromSystem();
+        } catch (final PrepareCameraException e) {
+            fail("Should not throw exception");
+        }
+    }
 
-	public void test_prepareCameraWhenRuntimeException() {
-		final CameraWrapper spyWrapper = spy(new CameraWrapper());
-		doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
+    public void test_prepareCameraWhenRuntimeException() {
+        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
 
-		try {
-			spyWrapper.prepareCameraForRecording();
-			fail("Missing exception");
-		} catch (final PrepareCameraException e) {
-			assertEquals("Unable to use camera for recording", e.getMessage());
-		}
-	}
+        try {
+            spyWrapper.prepareCameraForRecording();
+            fail("Missing exception");
+        } catch (final PrepareCameraException e) {
+            assertEquals("Unable to use camera for recording", e.getMessage());
+        }
+    }
 
-	public void test_releaseCameraWhenCameraNull() {
-		final CameraWrapper wrapper = new CameraWrapper();
-		wrapper.releaseCamera();
-	}
+    public void test_releaseCameraWhenCameraNull() {
+        final CameraWrapper wrapper = new CameraWrapper();
+        wrapper.releaseCamera();
+    }
 
-	public void test_releaseCameraWhenCameraNotNull() {
-		final CameraWrapper wrapper = spy(new CameraWrapper());
-		doNothing().when(wrapper).releaseCameraFromSystem();
-		doReturn(mock(Camera.class)).when(wrapper).getCamera();
-		wrapper.releaseCamera();
+    public void test_releaseCameraWhenCameraNotNull() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        doNothing().when(wrapper).releaseCameraFromSystem();
+        doReturn(mock(Camera.class)).when(wrapper).getCamera();
+        wrapper.releaseCamera();
 
-		verify(wrapper, times(1)).releaseCameraFromSystem();
-	}
+        verify(wrapper, times(1)).releaseCameraFromSystem();
+    }
 
-	public void test_prepareCameraWhenCameraNull() {
-		final CameraWrapper wrapper = new CameraWrapper();
+    public void test_prepareCameraWhenCameraNull() {
+        final CameraWrapper wrapper = new CameraWrapper();
 
-		try {
-			wrapper.prepareCameraForRecording();
-			fail("Missing exception");
-		} catch (final PrepareCameraException e) {
-			assertEquals("Unable to use camera for recording", e.getMessage());
-		}
-	}
+        try {
+            wrapper.prepareCameraForRecording();
+            fail("Missing exception");
+        } catch (final PrepareCameraException e) {
+            assertEquals("Unable to use camera for recording", e.getMessage());
+        }
+    }
 
     public void test_getSupportedRecordingSizeTooBig() {
         final CameraWrapper wrapper = spy(new CameraWrapper());
@@ -146,3 +146,4 @@ public class CameraWrapperTest extends MockitoTestCase {
         assertEquals(supportedRecordingSize.width, 640);
         assertEquals(supportedRecordingSize.height, 480);
     }
+}
