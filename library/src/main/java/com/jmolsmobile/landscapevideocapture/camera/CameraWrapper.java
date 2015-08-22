@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 Jeroen Mols
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.os.Build;
+import android.os.Build.VERSION;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
@@ -30,7 +31,6 @@ import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType
 
 import java.io.IOException;
 import java.util.List;
-
 
 @SuppressWarnings("deprecation")
 public class CameraWrapper {
@@ -80,7 +80,7 @@ public class CameraWrapper {
     }
 
     public RecordingSize getSupportedRecordingSize(int width, int height) {
-        Camera.Size recordingSize = getOptimalSize(getSupportedVideoSizes(), width, height);
+        Camera.Size recordingSize = getOptimalSize(getSupportedVideoSizes(VERSION.SDK_INT), width, height);
         if (recordingSize == null) {
             CLog.e(CLog.CAMERA, "Failed to find supported recording size - falling back to requested: " + width + "x" + height);
             return new RecordingSize(width, height);
@@ -129,9 +129,9 @@ public class CameraWrapper {
         return mCamera.getParameters();
     }
 
-    protected List<Size> getSupportedVideoSizes() {
+    protected List<Size> getSupportedVideoSizes(int currentSdkInt) {
         Parameters params = getCameraParametersAfterUnlocking();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (currentSdkInt >= Build.VERSION_CODES.HONEYCOMB) {
             return params.getSupportedVideoSizes();
         } else {
             CLog.e(CLog.CAMERA, "Using supportedPreviewSizes iso supportedVideoSizes due to API restriction");

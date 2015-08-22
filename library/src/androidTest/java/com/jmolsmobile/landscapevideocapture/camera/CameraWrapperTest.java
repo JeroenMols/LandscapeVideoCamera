@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 Jeroen Mols
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -23,6 +23,7 @@ import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType
 
 import java.util.ArrayList;
 
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -126,7 +127,7 @@ public class CameraWrapperTest extends MockitoTestCase {
         final CameraWrapper wrapper = spy(new CameraWrapper());
         ArrayList<Camera.Size> sizes = new ArrayList<>();
         sizes.add(mock(Camera.class).new Size(640, 480));
-        doReturn(sizes).when(wrapper).getSupportedVideoSizes();
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
 
         RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(1920, 1080);
 
@@ -138,11 +139,10 @@ public class CameraWrapperTest extends MockitoTestCase {
         final CameraWrapper wrapper = spy(new CameraWrapper());
         ArrayList<Camera.Size> sizes = new ArrayList<>();
         sizes.add(mock(Camera.class).new Size(640, 480));
-        doReturn(sizes).when(wrapper).getSupportedVideoSizes();
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
 
         RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(320, 240);
 
         assertEquals(supportedRecordingSize.width, 640);
         assertEquals(supportedRecordingSize.height, 480);
     }
-}
