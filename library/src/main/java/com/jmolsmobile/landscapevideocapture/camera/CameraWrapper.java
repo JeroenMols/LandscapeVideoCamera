@@ -92,12 +92,17 @@ public class CameraWrapper {
     }
 
     public CamcorderProfile getBaseRecordingProfile() {
-        if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P))
-            return CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
-        else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P))
-            return CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
-        else
-            return CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        CamcorderProfile returnProfile;
+        if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
+            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P)) {
+            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
+        } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
+            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
+        } else {
+            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        }
+        return returnProfile;
     }
 
     public void configureForPreview(int viewWidth, int viewHeight) {
