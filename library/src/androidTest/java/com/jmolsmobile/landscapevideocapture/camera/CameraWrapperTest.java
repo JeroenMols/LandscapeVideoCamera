@@ -16,12 +16,16 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
+import android.os.Build.VERSION_CODES;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
@@ -145,5 +149,41 @@ public class CameraWrapperTest extends MockitoTestCase {
 
         assertEquals(supportedRecordingSize.width, 640);
         assertEquals(supportedRecordingSize.height, 480);
+    }
+
+    public void test_getSupportedVideoSizesHoneyComb() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
+
+        assertEquals(640, supportedVideoSizes.get(0).width);
+        assertEquals(480, supportedVideoSizes.get(0).height);
+    }
+
+    public void test_getSupportedVideoSizesGingerbread() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.GINGERBREAD);
+
+        assertEquals(1280, supportedVideoSizes.get(0).width);
+        assertEquals(960, supportedVideoSizes.get(0).height);
+    }
+
+    @TargetApi(VERSION_CODES.HONEYCOMB)
+    private void configureMockCameraParameters(CameraWrapper wrapper, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
+        Camera.Parameters mockParameters = mock(Camera.Parameters.class);
+
+        ArrayList<Size> videoSizes = new ArrayList<>();
+        videoSizes.add(mock(Camera.class).new Size(videoWidth, videoHeight));
+        doReturn(videoSizes).when(mockParameters).getSupportedVideoSizes();
+
+        ArrayList<Size> previewSizes = new ArrayList<>();
+        previewSizes.add(mock(Camera.class).new Size(previewWidth, previewHeight));
+        doReturn(previewSizes).when(mockParameters).getSupportedPreviewSizes();
+
+        doReturn(mockParameters).when(wrapper).getCameraParametersFromSystem();
+        wrapper.storeCameraParametersBeforeUnlocking();
     }
 }
