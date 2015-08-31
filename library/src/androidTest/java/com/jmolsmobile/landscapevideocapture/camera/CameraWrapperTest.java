@@ -171,13 +171,27 @@ public class CameraWrapperTest extends MockitoTestCase {
         assertEquals(960, supportedVideoSizes.get(0).height);
     }
 
+    public void test_returnPreviewSizeWhenVideoSizeIsNull() {
+        final CameraWrapper wrapper = spy(new CameraWrapper());
+        configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
+
+        assertEquals(1280, supportedVideoSizes.get(0).width);
+        assertEquals(960, supportedVideoSizes.get(0).height);
+    }
+
     @TargetApi(VERSION_CODES.HONEYCOMB)
     private void configureMockCameraParameters(CameraWrapper wrapper, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
         Camera.Parameters mockParameters = mock(Camera.Parameters.class);
 
-        ArrayList<Size> videoSizes = new ArrayList<>();
-        videoSizes.add(mock(Camera.class).new Size(videoWidth, videoHeight));
-        doReturn(videoSizes).when(mockParameters).getSupportedVideoSizes();
+        if (videoWidth > 0 && videoHeight > 0) {
+            ArrayList<Size> videoSizes = new ArrayList<>();
+            videoSizes.add(mock(Camera.class).new Size(videoWidth, videoHeight));
+            doReturn(videoSizes).when(mockParameters).getSupportedVideoSizes();
+        } else {
+            doReturn(null).when(mockParameters).getSupportedVideoSizes();
+        }
 
         ArrayList<Size> previewSizes = new ArrayList<>();
         previewSizes.add(mock(Camera.class).new Size(previewWidth, previewHeight));

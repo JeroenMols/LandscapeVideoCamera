@@ -16,6 +16,7 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import android.annotation.TargetApi;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
@@ -24,6 +25,7 @@ import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
 import android.os.Build;
 import android.os.Build.VERSION;
+import android.os.Build.VERSION_CODES;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
@@ -129,14 +131,22 @@ public class CameraWrapper {
         return mCamera.getParameters();
     }
 
+    @TargetApi(VERSION_CODES.HONEYCOMB)
     protected List<Size> getSupportedVideoSizes(int currentSdkInt) {
         Parameters params = getCameraParametersAfterUnlocking();
-        if (currentSdkInt >= Build.VERSION_CODES.HONEYCOMB) {
-            return params.getSupportedVideoSizes();
-        } else {
+
+        List<Size> supportedVideoSizes;
+        if (currentSdkInt < Build.VERSION_CODES.HONEYCOMB) {
             CLog.e(CLog.CAMERA, "Using supportedPreviewSizes iso supportedVideoSizes due to API restriction");
-            return params.getSupportedPreviewSizes();
+            supportedVideoSizes = params.getSupportedPreviewSizes();
+        } else if (params.getSupportedVideoSizes() == null) {
+            CLog.e(CLog.CAMERA, "Using supportedPreviewSizes because supportedVideoSizes is null");
+            supportedVideoSizes = params.getSupportedPreviewSizes();
+        } else {
+            supportedVideoSizes = params.getSupportedVideoSizes();
         }
+
+        return supportedVideoSizes;
     }
 
     protected void storeCameraParametersBeforeUnlocking() {
