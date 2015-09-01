@@ -8,8 +8,8 @@ android {
         applicationId "com.jmolsmobile.landscapevideocapture_sample"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 9
-        versionName "1.1.0"
+        versionCode 10
+        versionName "1.1.1"
     }
     buildTypes {
         release {
