@@ -16,14 +16,21 @@
 
 package com.jmolsmobile.landscapevideocapture.configuration;
 
+import android.support.test.runner.AndroidJUnit4;
+
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
-import junit.framework.TestCase;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-public class CaptureConfigurationTest extends TestCase {
+import static org.junit.Assert.assertEquals;
 
-    public void test_defaultConfiguration() throws Exception {
+@RunWith(AndroidJUnit4.class)
+public class CaptureConfigurationTest {
+
+    @Test
+    public void defaultConfiguration() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
 
         checkConfiguration(config, CaptureResolution.RES_720P.width, CaptureResolution.RES_720P.height,
@@ -31,7 +38,8 @@ public class CaptureConfigurationTest extends TestCase {
                 CaptureConfiguration.NO_FILESIZE_LIMIT);
     }
 
-    public void test_predefinedConfiguration() throws Exception {
+    @Test
+    public void predefinedConfiguration() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration(CaptureResolution.RES_2160P, CaptureQuality.LOW);
 
         checkConfiguration(config, CaptureResolution.RES_2160P.width, CaptureResolution.RES_2160P.height,
@@ -39,7 +47,8 @@ public class CaptureConfigurationTest extends TestCase {
                 CaptureConfiguration.NO_FILESIZE_LIMIT);
     }
 
-    public void test_predefinedConfigurationWithSizeDuration() throws Exception {
+    @Test
+    public void predefinedConfigurationWithSizeDuration() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration(CaptureResolution.RES_1080P,
                 CaptureQuality.MEDIUM, 50, 10);
 
@@ -47,14 +56,16 @@ public class CaptureConfigurationTest extends TestCase {
                 CaptureResolution.RES_1080P.getBitrate(CaptureQuality.MEDIUM), 50 * 1000, 10 * 1024 * 1024);
     }
 
-    public void test_configurationWithHeightWidthBitrate() throws Exception {
+    @Test
+    public void configurationWithHeightWidthBitrate() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration(200, 300, 5000000);
 
         checkConfiguration(config, 200, 300, 5000000, CaptureConfiguration.NO_DURATION_LIMIT,
                 CaptureConfiguration.NO_FILESIZE_LIMIT);
     }
 
-    public void test_configurationWithHeightWidthBitrateSizeDuration() throws Exception {
+    @Test
+    public void configurationWithHeightWidthBitrateSizeDuration() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration(200, 300, 5000000, 1, 100);
 
         checkConfiguration(config, 200, 300, 5000000, 1 * 1000, 100 * 1024 * 1024);

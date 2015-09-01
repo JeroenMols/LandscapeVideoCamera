@@ -18,33 +18,44 @@ package com.jmolsmobile.landscapevideocapture;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.test.ActivityInstrumentationTestCase2;
+import android.support.test.rule.ActivityTestRule;
+import android.support.test.runner.AndroidJUnit4;
 
-public class VideoCaptureActivityTest extends ActivityInstrumentationTestCase2<VideoCaptureActivity> {
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 
-    public VideoCaptureActivityTest() {
-        super(VideoCaptureActivity.class);
-    }
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-    public void test_shouldReturnDefaultFilename() {
-        final VideoFile videoFile = getActivity().generateOutputFile(null);
+@RunWith(AndroidJUnit4.class)
+public class VideoCaptureActivityTest {
+
+    @Rule
+    public ActivityTestRule<VideoCaptureActivity> mActivityRule = new ActivityTestRule<>(VideoCaptureActivity.class);
+
+    @Test
+    public void shouldReturnDefaultFilename() {
+        final VideoFile videoFile = mActivityRule.getActivity().generateOutputFile(null);
         assertTrue(getFilename(videoFile).matches("video_[0-9]{8}_[0-9]{6}\\.mp4"));
     }
 
-    public void test_shouldReturnSpecifiedFilename() {
+    @Test
+    public void shouldReturnSpecifiedFilename() {
         final String expectedFilename = "video.mp4";
         setIntentWithFilename(expectedFilename);
-        final VideoFile videoFile = getActivity().generateOutputFile(null);
+        final VideoFile videoFile = mActivityRule.getActivity().generateOutputFile(null);
 
         assertEquals(getFilename(videoFile), expectedFilename);
     }
 
-    public void test_shouldReturnSavedFilename() {
+    @Test
+    public void shouldReturnSavedFilename() {
         final String expectedFilename = "saved.mp4";
         final Bundle savedBundle = new Bundle();
         savedBundle.putString(VideoCaptureActivity.SAVED_OUTPUT_FILENAME, expectedFilename);
         setIntentWithFilename("video.mp4");
-        final VideoFile videoFile = getActivity().generateOutputFile(savedBundle);
+        final VideoFile videoFile = mActivityRule.getActivity().generateOutputFile(savedBundle);
 
         assertEquals(getFilename(videoFile), expectedFilename);
     }
@@ -56,6 +67,6 @@ public class VideoCaptureActivityTest extends ActivityInstrumentationTestCase2<V
     private void setIntentWithFilename(final String expectedFilename) {
         final Intent fileNameIntent = new Intent();
         fileNameIntent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, expectedFilename);
-        getActivity().setIntent(fileNameIntent);
+        mActivityRule.getActivity().setIntent(fileNameIntent);
     }
 }

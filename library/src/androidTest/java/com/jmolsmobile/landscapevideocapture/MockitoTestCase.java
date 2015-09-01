@@ -16,14 +16,15 @@
 
 package com.jmolsmobile.landscapevideocapture;
 
-import android.test.InstrumentationTestCase;
+import android.support.test.InstrumentationRegistry;
 
-public class MockitoTestCase extends InstrumentationTestCase {
+import org.junit.Before;
 
-    @Override
-    protected void setUp() throws Exception {
-        System.setProperty("dexmaker.dexcache", getInstrumentation().getTargetContext().getCacheDir().getPath());
-        super.setUp();
+public class MockitoTestCase {
+
+    @Before
+    public void setUpMockito() throws Exception {
+        System.setProperty("dexmaker.dexcache", InstrumentationRegistry.getTargetContext().getCacheDir().getPath());
     }
 
 }

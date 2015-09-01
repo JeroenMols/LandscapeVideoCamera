@@ -16,13 +16,18 @@
 
 package com.jmolsmobile.landscapevideocapture.preview;
 
+import android.support.test.runner.AndroidJUnit4;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
 import java.io.IOException;
 
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doThrow;
@@ -31,12 +36,14 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+@RunWith(AndroidJUnit4.class)
 public class CapturePreviewTest extends MockitoTestCase {
 
     private final CameraWrapper mCameraWrapper = null;
 
     @SuppressWarnings("deprecation")
-    public void test_shouldInitializeSurfaceHolder() throws Exception {
+    @Test
+    public void shouldInitializeSurfaceHolder() throws Exception {
         final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
         final CapturePreview preview = new CapturePreview(null, mCameraWrapper, mockHolder);
 
@@ -44,7 +51,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockHolder, times(1)).setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
     }
 
-    public void test_shouldNotStopPreviewWhenPreviewNotRunning() throws Exception {
+    @Test
+    public void shouldNotStopPreviewWhenPreviewNotRunning() throws Exception {
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
 
@@ -53,7 +61,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockWrapper, never()).stopPreview();
     }
 
-    public void test_shouldStopPreviewWhenPreviewRunning() throws Exception {
+    @Test
+    public void shouldStopPreviewWhenPreviewRunning() throws Exception {
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
         preview.setPreviewRunning(true);
@@ -63,7 +72,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockWrapper, times(1)).stopPreview();
     }
 
-    public void test_shouldNotThrowExceptionWhenStopPreviewFails() throws Exception {
+    @Test
+    public void shouldNotThrowExceptionWhenStopPreviewFails() throws Exception {
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
         final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
@@ -76,7 +86,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         }
     }
 
-    public void test_shouldStopPreviewOnStartPreviewAndPreviewRunning() throws Exception {
+    @Test
+    public void shouldStopPreviewOnStartPreviewAndPreviewRunning() throws Exception {
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new RuntimeException()).when(mockWrapper).stopPreview();
         final CapturePreview preview = new CapturePreview(null, mockWrapper, mock(SurfaceHolder.class));
@@ -87,7 +98,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockWrapper, times(1)).configureForPreview(anyInt(), anyInt());
     }
 
-    public void test_shouldCallInterfaceWhenSettingParametersFails() throws Exception {
+    @Test
+    public void shouldCallInterfaceWhenSettingParametersFails() throws Exception {
         final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new RuntimeException()).when(mockWrapper).configureForPreview(anyInt(), anyInt());
@@ -96,7 +108,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockInterface, times(1)).onCapturePreviewFailed();
     }
 
-    public void test_shouldNotCallInterfaceWhenSettingAutofocusFails() throws Exception {
+    @Test
+    public void shouldNotCallInterfaceWhenSettingAutofocusFails() throws Exception {
         final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new RuntimeException()).when(mockWrapper).enableAutoFocus();
@@ -105,7 +118,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockInterface, never()).onCapturePreviewFailed();
     }
 
-    public void test_shouldCallInterfaceWhenStartPreviewFails1() throws Exception {
+    @Test
+    public void shouldCallInterfaceWhenStartPreviewFails1() throws Exception {
         final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new IOException()).when(mockWrapper).startPreview(any(SurfaceHolder.class));
@@ -114,7 +128,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockInterface, times(1)).onCapturePreviewFailed();
     }
 
-    public void test_shouldCallInterfaceWhenStartPreviewFails2() throws Exception {
+    @Test
+    public void shouldCallInterfaceWhenStartPreviewFails2() throws Exception {
         final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         doThrow(new RuntimeException()).when(mockWrapper).startPreview(any(SurfaceHolder.class));
@@ -123,7 +138,8 @@ public class CapturePreviewTest extends MockitoTestCase {
         verify(mockInterface, times(1)).onCapturePreviewFailed();
     }
 
-    public void test_shouldNotCallInterfaceWhenNoExceptions() throws Exception {
+    @Test
+    public void shouldNotCallInterfaceWhenNoExceptions() throws Exception {
         final CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);
         createCapturePreviewAndCallSurfaceChanged(mockInterface, mockWrapper);
