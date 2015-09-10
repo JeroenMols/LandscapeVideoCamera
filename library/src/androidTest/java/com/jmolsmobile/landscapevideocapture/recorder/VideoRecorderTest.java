@@ -96,6 +96,15 @@ public class VideoRecorderTest extends MockitoTestCase {
         verify(spyRecorder, times(1)).stopRecording(null);
     }
 
+    @Test(expected = AlreadyUsedException.class)
+    public void throwExceptionAfterReleaseAllResources() throws Exception {
+        final VideoRecorder spyRecorder =
+                spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class)));
+        spyRecorder.releaseAllResources();
+
+        spyRecorder.toggleRecording();
+    }
+
     @Test
     public void notifyFailedWhenCameraDoesNotPrepare() throws Exception {
         final CameraWrapper mockWrapper = mock(CameraWrapper.class);

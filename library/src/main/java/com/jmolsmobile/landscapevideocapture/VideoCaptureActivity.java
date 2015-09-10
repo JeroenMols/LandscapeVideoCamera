@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
 import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
@@ -101,7 +102,11 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     @Override
     public void onRecordButtonClicked() {
-        mVideoRecorder.toggleRecording();
+        try {
+            mVideoRecorder.toggleRecording();
+        } catch (AlreadyUsedException e) {
+            CLog.d(CLog.ACTIVITY, "Cannot toggle recording after cleaning up all resources");
+        }
     }
 
     @Override

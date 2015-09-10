@@ -70,7 +70,11 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mVideoCapturePreview = new CapturePreview(this, mCameraWrapper, previewHolder);
     }
 
-    public void toggleRecording() {
+    public void toggleRecording() throws AlreadyUsedException {
+        if (mCameraWrapper == null) {
+            throw new AlreadyUsedException();
+        }
+
         if (isRecording()) {
             stopRecording(null);
         } else {
