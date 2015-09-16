@@ -29,7 +29,12 @@ dependencies {
     androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
 }
 
+coveralls {
+    sourceDirs = files('library/src/main/java').flatten()
+    jacocoReportPath = "${buildDir}/reports/coverage/debug/report.xml"
+}
+
 tasks.coveralls {
-    dependsOn 'check'
+    dependsOn 'connectedAndroidTest'
     onlyIf { System.env.'CI' }
 }
