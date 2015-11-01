@@ -2,7 +2,7 @@ language: android
 
 env:
   matrix:
-    - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-23  ANDROID_ABI=x86_64
 
 notifications:
   email:
@@ -13,6 +13,7 @@ android:
     - build-tools-22.0.1
     - android-22
     - extra-android-m2repository
+    - sys-img-x86_64-android-23
 
 before_script:
   # Create and start emulator
