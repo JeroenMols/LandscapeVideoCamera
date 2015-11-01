@@ -2,7 +2,7 @@ language: android
 
 env:
   matrix:
-    - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a
+    - ANDROID_TARGET=android-19  ANDROID_ABI=armeabi-v7a
 
 notifications:
   email:
@@ -11,7 +11,7 @@ notifications:
 android:
   components:
     - build-tools-23.0.2
-    - android-23
+    - android-19
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-23
 
