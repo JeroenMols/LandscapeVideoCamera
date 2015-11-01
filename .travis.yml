@@ -3,7 +3,6 @@ language: android
 env:
   matrix:
     - ANDROID_TARGET=android-23  ANDROID_ABI=armeabi-v7a
-    - ADB_INSTALL_TIMEOUT=10
 
 notifications:
   email:
