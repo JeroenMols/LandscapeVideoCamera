@@ -6,24 +6,24 @@ env:
 
 notifications:
   email:
-   - jmols.mobile@gmail.com
+    - jmols.mobile@gmail.com
 
 android:
   components:
     - build-tools-23.0.0
     - android-23
-    - android-22
     - extra-android-m2repository
+    
+    - android-22
     - sys-img-armeabi-v7a-android-22
 
 before_script:
-  # Create and start emulator
   - echo no | android create avd --force -n test -t $ANDROID_TARGET --abi $ANDROID_ABI
   - emulator -avd test -no-skin -no-audio -no-window &
   - android-wait-for-emulator
   - adb shell input keyevent 82 &
 
 script:
-    - echo "Travis branch is $TRAVIS_BRANCH"
-    - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
-    - ./gradlew connectedAndroidTest coveralls
+  - echo "Travis branch is $TRAVIS_BRANCH"
+  - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
+  - ./gradlew connectedAndroidTest coveralls
