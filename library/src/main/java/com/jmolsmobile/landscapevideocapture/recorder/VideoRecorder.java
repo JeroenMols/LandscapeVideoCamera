@@ -23,6 +23,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.Utils;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException;
@@ -146,6 +147,9 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         recorder.setProfile(baseProfile);
         recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
         recorder.setOutputFile(mVideoFile.getFullPath());
+
+        int orientation = Utils.getOrientationDegree(mCameraWrapper.getRotation());
+        recorder.setOrientationHint(orientation);
 
         try {
             recorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
