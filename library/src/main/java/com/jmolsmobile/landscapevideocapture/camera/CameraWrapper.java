@@ -26,9 +26,12 @@ import android.media.CamcorderProfile;
 import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
+import android.util.Log;
+import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.Utils;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 import java.io.IOException;
@@ -39,6 +42,11 @@ public class CameraWrapper {
 
     private Camera     mCamera     = null;
     private Parameters mParameters = null;
+    private int        mRotation   = Surface.ROTATION_90;
+
+    public CameraWrapper(int rotation) {
+        mRotation = rotation;
+    }
 
     public Camera getCamera() {
         return mCamera;
@@ -111,6 +119,7 @@ public class CameraWrapper {
         params.setPreviewSize(previewSize.width, previewSize.height);
         params.setPreviewFormat(ImageFormat.NV21);
         mCamera.setParameters(params);
+        mCamera.setDisplayOrientation(Utils.getOrientationDegree(mRotation));
         CLog.d(CLog.CAMERA, "Preview size: " + previewSize.width + "x" + previewSize.height);
     }
 
@@ -160,6 +169,10 @@ public class CameraWrapper {
 
     private Parameters getCameraParametersAfterUnlocking() {
         return mParameters;
+    }
+
+    public int getRotation() {
+        return mRotation;
     }
 
     /**
