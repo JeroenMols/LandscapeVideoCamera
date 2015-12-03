@@ -40,6 +40,10 @@ public class CameraWrapper {
     private Camera     mCamera     = null;
     private Parameters mParameters = null;
 
+    public CameraWrapper(int displayOrientation) {
+
+    }
+
     public Camera getCamera() {
         return mCamera;
     }

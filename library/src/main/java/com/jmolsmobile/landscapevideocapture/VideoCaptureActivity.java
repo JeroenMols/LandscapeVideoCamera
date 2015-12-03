@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
@@ -75,7 +76,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     private void initializeRecordingUI() {
-        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(),
+        Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(display.getRotation()),
                 mVideoCaptureView.getPreviewSurfaceHolder());
         mVideoCaptureView.setRecordingButtonInterface(this);
 
@@ -193,7 +195,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     protected VideoFile generateOutputFile(Bundle savedInstanceState) {
-        VideoFile returnFile = null;
+        VideoFile returnFile;
         if (savedInstanceState != null) {
             returnFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
         } else {

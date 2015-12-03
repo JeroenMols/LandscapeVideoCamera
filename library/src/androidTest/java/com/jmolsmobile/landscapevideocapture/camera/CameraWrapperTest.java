@@ -21,6 +21,7 @@ import android.hardware.Camera;
 import android.hardware.Camera.Size;
 import android.os.Build.VERSION_CODES;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.Surface;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
@@ -47,8 +48,13 @@ import static org.mockito.Mockito.verify;
 public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
+    public void initializeWithDisplayOrientation() {
+        new CameraWrapper(Surface.ROTATION_90);
+    }
+
+    @Test
     public void openCameraSuccess() {
-        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         final Camera mockCamera = mock(Camera.class);
         doReturn(mockCamera).when(spyWrapper).openCameraFromSystem();
 
@@ -63,7 +69,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void openCameraNoCamera() {
-        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doReturn(null).when(spyWrapper).openCameraFromSystem();
 
         try {
@@ -76,7 +82,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void openCameraInUse() {
-        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doThrow(new RuntimeException()).when(spyWrapper).openCameraFromSystem();
 
         try {
@@ -89,7 +95,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void prepareCameraShouldCallUnlock() {
-        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doNothing().when(spyWrapper).unlockCameraFromSystem();
         doNothing().when(spyWrapper).storeCameraParametersBeforeUnlocking();
 
@@ -103,7 +109,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void prepareCameraWhenRuntimeException() {
-        final CameraWrapper spyWrapper = spy(new CameraWrapper());
+        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
 
         try {
@@ -116,13 +122,13 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void releaseCameraWhenCameraNull() {
-        final CameraWrapper wrapper = new CameraWrapper();
+        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
         wrapper.releaseCamera();
     }
 
     @Test
     public void releaseCameraWhenCameraNotNull() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doNothing().when(wrapper).releaseCameraFromSystem();
         doReturn(mock(Camera.class)).when(wrapper).getCamera();
         wrapper.releaseCamera();
@@ -132,7 +138,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void prepareCameraWhenCameraNull() {
-        final CameraWrapper wrapper = new CameraWrapper();
+        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
 
         try {
             wrapper.prepareCameraForRecording();
@@ -144,7 +150,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedRecordingSizeTooBig() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         ArrayList<Camera.Size> sizes = new ArrayList<>();
         sizes.add(mock(Camera.class).new Size(640, 480));
         doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
@@ -157,7 +163,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedRecordingSizeTooSmall() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         ArrayList<Camera.Size> sizes = new ArrayList<>();
         sizes.add(mock(Camera.class).new Size(640, 480));
         doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
@@ -170,7 +176,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedVideoSizesHoneyComb() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
@@ -181,7 +187,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedVideoSizesGingerbread() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.GINGERBREAD);
@@ -192,7 +198,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void returnPreviewSizeWhenVideoSizeIsNull() {
-        final CameraWrapper wrapper = spy(new CameraWrapper());
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
