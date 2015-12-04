@@ -75,10 +75,10 @@ This library provides a full and reusable custom camera, which:
   
   5. Create a CaptureConfiguration - object with the desired parameters. (optional)
 
-         Capture configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality);
-         Capture configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb);
-         Capture configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
-         Capture configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
+         CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality);
+         CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb);
+         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
+         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
   
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
   
