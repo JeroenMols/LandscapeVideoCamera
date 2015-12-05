@@ -18,6 +18,7 @@ package com.jmolsmobile.landscapevideocapture.camera;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Build.VERSION_CODES;
 import android.support.test.runner.AndroidJUnit4;
@@ -34,6 +35,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doReturn;
@@ -207,8 +209,44 @@ public class CameraWrapperTest extends MockitoTestCase {
         assertEquals(960, supportedVideoSizes.get(0).height);
     }
 
+    @Test
+    public void getDisplayOrientation0() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
+
+        assertEquals(0, cameraWrapper.getDisplayOrientation());
+    }
+
+    @Test
+    public void getDisplayOrientation90() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
+
+        assertEquals(90, cameraWrapper.getDisplayOrientation());
+    }
+
+    @Test
+    public void setCorrectFocusMode() throws Exception {
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
+        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
+        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
+
+        wrapper.enableAutoFocus();
+
+        verify(mockParameters, times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+    }
+
+    @Test
+    public void applyFocusModeToCamera() throws Exception {
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
+        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
+        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
+
+        wrapper.enableAutoFocus();
+
+        verify(wrapper, times(1)).updateCameraParametersFromSystem(mockParameters);
+    }
+
     @TargetApi(VERSION_CODES.HONEYCOMB)
-    private void configureMockCameraParameters(CameraWrapper wrapper, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
+    private Parameters configureMockCameraParameters(CameraWrapper wrapper, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
         Camera.Parameters mockParameters = mock(Camera.Parameters.class);
 
         if (videoWidth > 0 && videoHeight > 0) {
@@ -225,19 +263,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
         doReturn(mockParameters).when(wrapper).getCameraParametersFromSystem();
         wrapper.storeCameraParametersBeforeUnlocking();
-    }
 
-    @Test
-    public void getDisplayOrientation0() throws Exception {
-        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
-
-        assertEquals(0, cameraWrapper.getDisplayOrientation());
-    }
-
-    @Test
-    public void getDisplayOrientation90() throws Exception {
-        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
-
-        assertEquals(90, cameraWrapper.getDisplayOrientation());
+        return mockParameters;
     }
 }

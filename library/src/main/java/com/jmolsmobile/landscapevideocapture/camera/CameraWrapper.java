@@ -122,7 +122,7 @@ public class CameraWrapper {
     public void enableAutoFocus() {
         final Parameters params = getCameraParametersFromSystem();
         params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-        mCamera.setParameters(params);
+        updateCameraParametersFromSystem(params);
     }
 
     public int getDisplayOrientation() {
@@ -143,6 +143,10 @@ public class CameraWrapper {
 
     protected Parameters getCameraParametersFromSystem() {
         return mCamera.getParameters();
+    }
+
+    protected void updateCameraParametersFromSystem(Parameters params) {
+        mCamera.setParameters(params);
     }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)
