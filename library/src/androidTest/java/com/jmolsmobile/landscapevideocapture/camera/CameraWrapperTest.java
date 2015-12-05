@@ -17,6 +17,7 @@
 package com.jmolsmobile.landscapevideocapture.camera;
 
 import android.annotation.TargetApi;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
@@ -210,20 +211,6 @@ public class CameraWrapperTest extends MockitoTestCase {
     }
 
     @Test
-    public void getDisplayOrientation0() throws Exception {
-        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
-
-        assertEquals(0, cameraWrapper.getDisplayOrientation());
-    }
-
-    @Test
-    public void getDisplayOrientation90() throws Exception {
-        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
-
-        assertEquals(90, cameraWrapper.getDisplayOrientation());
-    }
-
-    @Test
     public void setCorrectFocusMode() throws Exception {
         final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
         doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
@@ -243,6 +230,31 @@ public class CameraWrapperTest extends MockitoTestCase {
         wrapper.enableAutoFocus();
 
         verify(wrapper, times(1)).updateCameraParametersFromSystem(mockParameters);
+    }
+
+    @Test
+    public void setPreviewFormatWhenConfiguringCamera() throws Exception {
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
+        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
+        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockParameters, times(1)).setPreviewFormat(ImageFormat.NV21);
+    }
+
+    @Test
+    public void getDisplayOrientation0() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
+
+        assertEquals(0, cameraWrapper.getDisplayOrientation());
+    }
+
+    @Test
+    public void getDisplayOrientation90() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
+
+        assertEquals(90, cameraWrapper.getDisplayOrientation());
     }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)

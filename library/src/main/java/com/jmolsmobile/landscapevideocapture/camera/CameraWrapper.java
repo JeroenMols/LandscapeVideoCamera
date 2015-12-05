@@ -115,7 +115,7 @@ public class CameraWrapper {
         final Size previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
         params.setPreviewSize(previewSize.width, previewSize.height);
         params.setPreviewFormat(ImageFormat.NV21);
-        mCamera.setParameters(params);
+        updateCameraParametersFromSystem(params);
         CLog.d(CLog.CAMERA, "Preview size: " + previewSize.width + "x" + previewSize.height);
     }
 
