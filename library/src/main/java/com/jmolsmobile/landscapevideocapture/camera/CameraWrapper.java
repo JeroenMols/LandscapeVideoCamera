@@ -37,11 +37,12 @@ import java.util.List;
 @SuppressWarnings("deprecation")
 public class CameraWrapper {
 
+    private final int mDisplayRotation;
     private Camera     mCamera     = null;
     private Parameters mParameters = null;
 
-    public CameraWrapper(int displayOrientation) {
-
+    public CameraWrapper(int displayRotation) {
+        mDisplayRotation = displayRotation;
     }
 
     public Camera getCamera() {
@@ -122,6 +123,10 @@ public class CameraWrapper {
         final Parameters params = getCameraParametersFromSystem();
         params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
         mCamera.setParameters(params);
+    }
+
+    public int getDisplayOrientation() {
+        return mDisplayRotation * 90;
     }
 
     protected Camera openCameraFromSystem() {
@@ -222,5 +227,4 @@ public class CameraWrapper {
         }
         return optimalSize;
     }
-
 }

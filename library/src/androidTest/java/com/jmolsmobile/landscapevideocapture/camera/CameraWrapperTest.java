@@ -226,4 +226,18 @@ public class CameraWrapperTest extends MockitoTestCase {
         doReturn(mockParameters).when(wrapper).getCameraParametersFromSystem();
         wrapper.storeCameraParametersBeforeUnlocking();
     }
+
+    @Test
+    public void getDisplayOrientation0() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
+
+        assertEquals(0, cameraWrapper.getDisplayOrientation());
+    }
+
+    @Test
+    public void getDisplayOrientation90() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
+
+        assertEquals(90, cameraWrapper.getDisplayOrientation());
+    }
 }
