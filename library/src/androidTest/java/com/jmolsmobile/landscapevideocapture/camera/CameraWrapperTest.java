@@ -17,6 +17,7 @@
 package com.jmolsmobile.landscapevideocapture.camera;
 
 import android.annotation.TargetApi;
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
@@ -35,6 +36,7 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -249,30 +251,33 @@ public class CameraWrapperTest extends MockitoTestCase {
         verify(mockCamera, times(1)).updateNativeCameraParameters(mockParameters);
     }
 
-//    @Test
-//    public void setPreviewFormatWhenConfiguringCamera() throws Exception {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
-//        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
-//
-//        wrapper.configureForPreview(800, 600);
-//
-//        verify(mockParameters, times(1)).setPreviewFormat(ImageFormat.NV21);
-//    }
-//
-//    @Test
-//    public void setPreviewSizeWhenConfiguringCamera() throws Exception {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
-//        CameraSize optimalSize = new CameraSize(300, 700);
-//        doReturn(optimalSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
-//        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
-//
-//        wrapper.configureForPreview(800, 600);
-//
-//        verify(mockParameters, times(1)).setPreviewSize(optimalSize.getWidth(), optimalSize.getHeight());
-//    }
-//
+    @Test
+    public void setPreviewFormatWhenConfiguringCamera() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParameters = mock(Parameters.class);
+        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        doReturn(mock(CameraSize.class)).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockParameters, times(1)).setPreviewFormat(ImageFormat.NV21);
+    }
+
+    @Test
+    public void setPreviewSizeWhenConfiguringCamera() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParameters = mock(Parameters.class);
+        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        CameraSize optimalSize = new CameraSize(300, 700);
+        doReturn(optimalSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockParameters, times(1)).setPreviewSize(optimalSize.getWidth(), optimalSize.getHeight());
+    }
+
 //    @Test
 //    public void getDisplayOrientation0() throws Exception {
 //        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
