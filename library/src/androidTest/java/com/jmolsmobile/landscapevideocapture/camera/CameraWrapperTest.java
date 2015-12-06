@@ -111,22 +111,22 @@ public class CameraWrapperTest extends MockitoTestCase {
         }
     }
 
-//    @Test
-//    public void releaseCameraWhenCameraNull() {
-//        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
-//        wrapper.releaseCamera();
-//    }
-//
-//    @Test
-//    public void releaseCameraWhenCameraNotNull() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(wrapper).releaseCameraFromSystem();
-//        doReturn(mock(Camera.class)).when(wrapper).getCamera();
-//        wrapper.releaseCamera();
-//
-//        verify(wrapper, times(1)).releaseCameraFromSystem();
-//    }
-//
+    @Test
+    public void releaseCameraWhenCameraNull() {
+        final CameraWrapper wrapper = new CameraWrapper(new NativeCamera(), Surface.ROTATION_0);
+        wrapper.releaseCamera();
+    }
+
+    @Test
+    public void releaseCameraWhenCameraNotNull() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        doReturn(mock(Camera.class)).when(mockCamera).getNativeCamera();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+        wrapper.releaseCamera();
+
+        verify(mockCamera, times(1)).releaseNativeCamera();
+    }
+
 //    @Test
 //    public void prepareCameraWhenCameraNull() {
 //        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
