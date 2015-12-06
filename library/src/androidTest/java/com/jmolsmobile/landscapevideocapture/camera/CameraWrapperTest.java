@@ -244,6 +244,19 @@ public class CameraWrapperTest extends MockitoTestCase {
     }
 
     @Test
+    public void setPreviewSizeWhenConfiguringCamera() throws Exception {
+        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
+        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
+        Size mockSize = mock(Size.class);
+        doReturn(mockSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockParameters, times(1)).setPreviewSize(anyInt(), anyInt());
+    }
+
+    @Test
     public void getDisplayOrientation0() throws Exception {
         CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
 
