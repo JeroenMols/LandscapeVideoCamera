@@ -16,7 +16,10 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.hardware.Camera.Size;
+import android.os.Build.VERSION_CODES;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Surface;
 
@@ -26,11 +29,16 @@ import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -154,65 +162,68 @@ public class CameraWrapperTest extends MockitoTestCase {
         }
     }
 
-//    @Test
-//    public void getSupportedRecordingSizeTooBig() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        ArrayList<Camera.Size> sizes = new ArrayList<>();
-//        sizes.add(mock(Camera.class).new Size(640, 480));
-//        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
-//
-//        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(1920, 1080);
-//
-//        assertEquals(supportedRecordingSize.width, 640);
-//        assertEquals(supportedRecordingSize.height, 480);
-//    }
-//
-//    @Test
-//    public void getSupportedRecordingSizeTooSmall() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        ArrayList<Camera.Size> sizes = new ArrayList<>();
-//        sizes.add(mock(Camera.class).new Size(640, 480));
-//        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
-//
-//        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(320, 240);
-//
-//        assertEquals(supportedRecordingSize.width, 640);
-//        assertEquals(supportedRecordingSize.height, 480);
-//    }
-//
-//    @Test
-//    public void getSupportedVideoSizesHoneyComb() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
-//
-//        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
-//
-//        assertEquals(640, supportedVideoSizes.get(0).width);
-//        assertEquals(480, supportedVideoSizes.get(0).height);
-//    }
-//
-//    @Test
-//    public void getSupportedVideoSizesGingerbread() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        configureMockCameraParameters(wrapper, 640, 480, 1280, 960);
-//
-//        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.GINGERBREAD);
-//
-//        assertEquals(1280, supportedVideoSizes.get(0).width);
-//        assertEquals(960, supportedVideoSizes.get(0).height);
-//    }
-//
-//    @Test
-//    public void returnPreviewSizeWhenVideoSizeIsNull() {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
-//
-//        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
-//
-//        assertEquals(1280, supportedVideoSizes.get(0).width);
-//        assertEquals(960, supportedVideoSizes.get(0).height);
-//    }
-//
+    @Test
+    public void getSupportedRecordingSizeTooBig() {
+        final CameraWrapper wrapper = spy(new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0));
+        ArrayList<Size> sizes = new ArrayList<>();
+        sizes.add(mock(Camera.class).new Size(640, 480));
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
+
+        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(1920, 1080);
+
+        assertEquals(supportedRecordingSize.width, 640);
+        assertEquals(supportedRecordingSize.height, 480);
+    }
+
+    @Test
+    public void getSupportedRecordingSizeTooSmall() {
+        final CameraWrapper wrapper = spy(new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0));
+        ArrayList<Camera.Size> sizes = new ArrayList<>();
+        sizes.add(mock(Camera.class).new Size(640, 480));
+        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
+
+        RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(320, 240);
+
+        assertEquals(supportedRecordingSize.width, 640);
+        assertEquals(supportedRecordingSize.height, 480);
+    }
+
+    @Test
+    public void getSupportedVideoSizesHoneyComb() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        configureMockCameraParameters(mockCamera, 640, 480, 1280, 960);
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
+
+        assertEquals(640, supportedVideoSizes.get(0).width);
+        assertEquals(480, supportedVideoSizes.get(0).height);
+    }
+
+    @Test
+    public void getSupportedVideoSizesGingerbread() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        configureMockCameraParameters(mockCamera, 640, 480, 1280, 960);
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.GINGERBREAD);
+
+        assertEquals(1280, supportedVideoSizes.get(0).width);
+        assertEquals(960, supportedVideoSizes.get(0).height);
+    }
+
+    @Test
+    public void returnPreviewSizeWhenVideoSizeIsNull() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        configureMockCameraParameters(mockCamera, 0, 0, 1280, 960);
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+
+        List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
+
+        assertEquals(1280, supportedVideoSizes.get(0).width);
+        assertEquals(960, supportedVideoSizes.get(0).height);
+    }
+
 //    @Test
 //    public void setCorrectFocusMode() throws Exception {
 //        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
@@ -223,7 +234,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 //
 //        verify(mockParameters, times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
 //    }
-//
+
 //    @Test
 //    public void applyFocusModeToCamera() throws Exception {
 //        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
@@ -272,26 +283,25 @@ public class CameraWrapperTest extends MockitoTestCase {
 //
 //        assertEquals(90, cameraWrapper.getDisplayOrientation());
 //    }
-//
-//    @TargetApi(VERSION_CODES.HONEYCOMB)
-//    private Parameters configureMockCameraParameters(CameraWrapper wrapper, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
-//        Camera.Parameters mockParameters = mock(Camera.Parameters.class);
-//
-//        if (videoWidth > 0 && videoHeight > 0) {
-//            ArrayList<Size> videoSizes = new ArrayList<>();
-//            videoSizes.add(mock(Camera.class).new Size(videoWidth, videoHeight));
-//            doReturn(videoSizes).when(mockParameters).getSupportedVideoSizes();
-//        } else {
-//            doReturn(null).when(mockParameters).getSupportedVideoSizes();
-//        }
-//
-//        ArrayList<Size> previewSizes = new ArrayList<>();
-//        previewSizes.add(mock(Camera.class).new Size(previewWidth, previewHeight));
-//        doReturn(previewSizes).when(mockParameters).getSupportedPreviewSizes();
-//
-//        doReturn(mockParameters).when(wrapper).getCameraParametersFromSystem();
-//        wrapper.storeCameraParametersBeforeUnlocking();
-//
-//        return mockParameters;
-//    }
+
+    @TargetApi(VERSION_CODES.HONEYCOMB)
+    private Camera.Parameters configureMockCameraParameters(NativeCamera camera, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
+        Camera.Parameters mockParameters = mock(Camera.Parameters.class);
+
+        if (videoWidth > 0 && videoHeight > 0) {
+            ArrayList<Size> videoSizes = new ArrayList<>();
+            videoSizes.add(mock(Camera.class).new Size(videoWidth, videoHeight));
+            doReturn(videoSizes).when(mockParameters).getSupportedVideoSizes();
+        } else {
+            doReturn(null).when(mockParameters).getSupportedVideoSizes();
+        }
+
+        ArrayList<Size> previewSizes = new ArrayList<>();
+        previewSizes.add(mock(Camera.class).new Size(previewWidth, previewHeight));
+        doReturn(previewSizes).when(mockParameters).getSupportedPreviewSizes();
+
+        doReturn(mockParameters).when(camera).getNativeCameraParameters();
+
+        return mockParameters;
+    }
 }

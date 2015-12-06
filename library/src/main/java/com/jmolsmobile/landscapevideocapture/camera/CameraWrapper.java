@@ -62,7 +62,6 @@ public class CameraWrapper {
 
     public void prepareCameraForRecording() throws PrepareCameraException {
         try {
-            storeCameraParametersBeforeUnlocking();
             mNativeCamera.unlockNativeCamera();
         } catch (final RuntimeException e) {
             e.printStackTrace();
@@ -130,7 +129,7 @@ public class CameraWrapper {
 
     @TargetApi(VERSION_CODES.HONEYCOMB)
     protected List<Size> getSupportedVideoSizes(int currentSdkInt) {
-        Parameters params = getCameraParametersAfterUnlocking();
+        Parameters params = mNativeCamera.getNativeCameraParameters();
 
         List<Size> supportedVideoSizes;
         if (currentSdkInt < Build.VERSION_CODES.HONEYCOMB) {
@@ -144,14 +143,6 @@ public class CameraWrapper {
         }
 
         return supportedVideoSizes;
-    }
-
-    protected void storeCameraParametersBeforeUnlocking() {
-        mParameters = mNativeCamera.getNativeCameraParameters();
-    }
-
-    private Parameters getCameraParametersAfterUnlocking() {
-        return mParameters;
     }
 
     /**
