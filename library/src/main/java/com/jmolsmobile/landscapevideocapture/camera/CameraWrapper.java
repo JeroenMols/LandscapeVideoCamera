@@ -87,13 +87,13 @@ public class CameraWrapper {
     }
 
     public RecordingSize getSupportedRecordingSize(int width, int height) {
-        Camera.Size recordingSize = getOptimalSize(getSupportedVideoSizes(VERSION.SDK_INT), width, height);
+        CameraSize recordingSize = getOptimalSize(getSupportedVideoSizes(VERSION.SDK_INT), width, height);
         if (recordingSize == null) {
             CLog.e(CLog.CAMERA, "Failed to find supported recording size - falling back to requested: " + width + "x" + height);
             return new RecordingSize(width, height);
         }
-        CLog.d(CLog.CAMERA, "Recording size: " + recordingSize.width + "x" + recordingSize.height);
-        return new RecordingSize(recordingSize.width, recordingSize.height);
+        CLog.d(CLog.CAMERA, "Recording size: " + recordingSize.getWidth() + "x" + recordingSize.getHeight());
+        return new RecordingSize(recordingSize.getWidth(), recordingSize.getHeight());
     }
 
     public CamcorderProfile getBaseRecordingProfile() {
@@ -112,11 +112,11 @@ public class CameraWrapper {
 
     public void configureForPreview(int viewWidth, int viewHeight) {
         final Parameters params = getCameraParametersFromSystem();
-        final Size previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
-        params.setPreviewSize(previewSize.width, previewSize.height);
+        final CameraSize previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
+        params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
         params.setPreviewFormat(ImageFormat.NV21);
         updateCameraParametersFromSystem(params);
-        CLog.d(CLog.CAMERA, "Preview size: " + previewSize.width + "x" + previewSize.height);
+        CLog.d(CLog.CAMERA, "Preview size: " + previewSize.getWidth() + "x" + previewSize.getHeight());
     }
 
     public void enableAutoFocus() {
@@ -190,7 +190,7 @@ public class CameraWrapper {
      * See the License for the specific language governing permissions and
      * limitations under the License.
      */
-    public Camera.Size getOptimalSize(List<Camera.Size> sizes, int w, int h) {
+    public CameraSize getOptimalSize(List<Camera.Size> sizes, int w, int h) {
         // Use a very small tolerance because we want an exact match.
         final double ASPECT_TOLERANCE = 0.1;
         final double targetRatio = (double) w / h;
@@ -229,6 +229,6 @@ public class CameraWrapper {
                 }
             }
         }
-        return optimalSize;
+        return new CameraSize(optimalSize.width, optimalSize.height);
     }
 }
