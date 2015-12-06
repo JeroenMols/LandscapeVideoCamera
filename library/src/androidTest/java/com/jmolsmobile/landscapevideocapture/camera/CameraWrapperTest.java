@@ -18,6 +18,7 @@ package com.jmolsmobile.landscapevideocapture.camera;
 
 import android.annotation.TargetApi;
 import android.hardware.Camera;
+import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.os.Build.VERSION_CODES;
 import android.support.test.runner.AndroidJUnit4;
@@ -224,28 +225,30 @@ public class CameraWrapperTest extends MockitoTestCase {
         assertEquals(960, supportedVideoSizes.get(0).height);
     }
 
-//    @Test
-//    public void setCorrectFocusMode() throws Exception {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
-//        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
-//
-//        wrapper.enableAutoFocus();
-//
-//        verify(mockParameters, times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-//    }
+    @Test
+    public void setCorrectFocusMode() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParameters = mock(Parameters.class);
+        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
-//    @Test
-//    public void applyFocusModeToCamera() throws Exception {
-//        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(wrapper).updateCameraParametersFromSystem(any(Parameters.class));
-//        Parameters mockParameters = configureMockCameraParameters(wrapper, 0, 0, 1280, 960);
-//
-//        wrapper.enableAutoFocus();
-//
-//        verify(wrapper, times(1)).updateCameraParametersFromSystem(mockParameters);
-//    }
-//
+        wrapper.enableAutoFocus();
+
+        verify(mockParameters, times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+    }
+
+    @Test
+    public void applyFocusModeToCamera() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParameters = mock(Parameters.class);
+        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        wrapper.enableAutoFocus();
+
+        verify(mockCamera, times(1)).updateNativeCameraParameters(mockParameters);
+    }
+
 //    @Test
 //    public void setPreviewFormatWhenConfiguringCamera() throws Exception {
 //        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
