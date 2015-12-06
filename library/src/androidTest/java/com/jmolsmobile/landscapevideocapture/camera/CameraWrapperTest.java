@@ -278,19 +278,19 @@ public class CameraWrapperTest extends MockitoTestCase {
         verify(mockParameters, times(1)).setPreviewSize(optimalSize.getWidth(), optimalSize.getHeight());
     }
 
-//    @Test
-//    public void getDisplayOrientation0() throws Exception {
-//        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_0);
-//
-//        assertEquals(0, cameraWrapper.getDisplayOrientation());
-//    }
-//
-//    @Test
-//    public void getDisplayOrientation90() throws Exception {
-//        CameraWrapper cameraWrapper = new CameraWrapper(Surface.ROTATION_90);
-//
-//        assertEquals(90, cameraWrapper.getDisplayOrientation());
-//    }
+    @Test
+    public void getDisplayOrientation0() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0);
+
+        assertEquals(0, cameraWrapper.getDisplayOrientation());
+    }
+
+    @Test
+    public void getDisplayOrientation90() throws Exception {
+        CameraWrapper cameraWrapper = new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_90);
+
+        assertEquals(90, cameraWrapper.getDisplayOrientation());
+    }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)
     private Camera.Parameters configureMockCameraParameters(NativeCamera camera, int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
