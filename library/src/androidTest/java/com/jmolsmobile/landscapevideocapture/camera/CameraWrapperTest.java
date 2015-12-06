@@ -256,8 +256,7 @@ public class CameraWrapperTest extends MockitoTestCase {
         NativeCamera mockCamera = mock(NativeCamera.class);
         Parameters mockParameters = mock(Parameters.class);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
-        doReturn(mock(CameraSize.class)).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 0, 0);
 
         wrapper.configureForPreview(800, 600);
 
@@ -269,13 +268,23 @@ public class CameraWrapperTest extends MockitoTestCase {
         NativeCamera mockCamera = mock(NativeCamera.class);
         Parameters mockParameters = mock(Parameters.class);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
-        CameraSize optimalSize = new CameraSize(300, 700);
-        doReturn(optimalSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 300, 700);
 
         wrapper.configureForPreview(800, 600);
 
-        verify(mockParameters, times(1)).setPreviewSize(optimalSize.getWidth(), optimalSize.getHeight());
+        verify(mockParameters, times(1)).setPreviewSize(300, 700);
+    }
+
+    @Test
+    public void updateParametersWhenConfiguringCamera() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParameters = mock(Parameters.class);
+        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 0, 0);
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockCamera, times(1)).updateNativeCameraParameters(mockParameters);
     }
 
     @Test
@@ -311,5 +320,12 @@ public class CameraWrapperTest extends MockitoTestCase {
         doReturn(mockParameters).when(camera).getNativeCameraParameters();
 
         return mockParameters;
+    }
+
+    private CameraWrapper createSpyWrapperWithOptimalSize(NativeCamera mockCamera, int optimalWidth, int optimalHeight) {
+        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        CameraSize optimalSize = new CameraSize(optimalWidth, optimalHeight);
+        doReturn(optimalSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
+        return wrapper;
     }
 }
