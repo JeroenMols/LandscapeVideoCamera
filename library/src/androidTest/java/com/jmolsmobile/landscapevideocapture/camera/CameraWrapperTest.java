@@ -84,33 +84,33 @@ public class CameraWrapperTest extends MockitoTestCase {
         }
     }
 
-//    @Test
-//    public void prepareCameraShouldCallUnlock() {
-//        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doNothing().when(spyWrapper).unlockCameraFromSystem();
-//        doNothing().when(spyWrapper).storeCameraParametersBeforeUnlocking();
-//
-//        try {
-//            spyWrapper.prepareCameraForRecording();
-//            verify(spyWrapper, times(1)).unlockCameraFromSystem();
-//        } catch (final PrepareCameraException e) {
-//            fail("Should not throw exception");
-//        }
-//    }
-//
-//    @Test
-//    public void prepareCameraWhenRuntimeException() {
-//        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doThrow(new RuntimeException()).when(spyWrapper).unlockCameraFromSystem();
-//
-//        try {
-//            spyWrapper.prepareCameraForRecording();
-//            fail("Missing exception");
-//        } catch (final PrepareCameraException e) {
-//            assertEquals("Unable to use camera for recording", e.getMessage());
-//        }
-//    }
-//
+    @Test
+    public void prepareCameraShouldCallUnlock() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.prepareCameraForRecording();
+            verify(mockCamera, times(1)).unlockNativeCamera();
+        } catch (final PrepareCameraException e) {
+            fail("Should not throw exception");
+        }
+    }
+
+    @Test
+    public void prepareCameraWhenRuntimeException() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        doThrow(new RuntimeException()).when(mockCamera).unlockNativeCamera();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.prepareCameraForRecording();
+            fail("Missing exception");
+        } catch (final PrepareCameraException e) {
+            assertEquals("Unable to use camera for recording", e.getMessage());
+        }
+    }
+
 //    @Test
 //    public void releaseCameraWhenCameraNull() {
 //        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
