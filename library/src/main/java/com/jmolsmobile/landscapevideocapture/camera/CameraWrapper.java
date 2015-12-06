@@ -19,7 +19,6 @@ package com.jmolsmobile.landscapevideocapture.camera;
 import android.annotation.TargetApi;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
-import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.hardware.Camera.Size;
 import android.media.CamcorderProfile;
@@ -38,33 +37,33 @@ import java.util.List;
 public class CameraWrapper {
 
     private final int mDisplayRotation;
-    private Camera     mCamera     = null;
-    private Parameters mParameters = null;
+    private NativeCamera mNativeCamera = null;
+    private Parameters   mParameters   = null;
 
-    public CameraWrapper(int displayRotation) {
+    public CameraWrapper(NativeCamera nativeCamera, int displayRotation) {
+        mNativeCamera = nativeCamera;
         mDisplayRotation = displayRotation;
     }
 
     public Camera getCamera() {
-        return mCamera;
+        return mNativeCamera.getNativeCamera();
     }
 
     public void openCamera() throws OpenCameraException {
-        mCamera = null;
         try {
-            mCamera = openCameraFromSystem();
+            mNativeCamera.openNativeCamera();
         } catch (final RuntimeException e) {
             e.printStackTrace();
             throw new OpenCameraException(OpenType.INUSE);
         }
 
-        if (mCamera == null) throw new OpenCameraException(OpenType.NOCAMERA);
+        if (mNativeCamera == null) throw new OpenCameraException(OpenType.NOCAMERA);
     }
 
     public void prepareCameraForRecording() throws PrepareCameraException {
         try {
             storeCameraParametersBeforeUnlocking();
-            unlockCameraFromSystem();
+            mNativeCamera.unlockNativeCamera();
         } catch (final RuntimeException e) {
             e.printStackTrace();
             throw new PrepareCameraException();
@@ -73,17 +72,17 @@ public class CameraWrapper {
 
     public void releaseCamera() {
         if (getCamera() == null) return;
-        releaseCameraFromSystem();
+        mNativeCamera.releaseNativeCamera();
     }
 
     public void startPreview(final SurfaceHolder holder) throws IOException {
-        mCamera.setPreviewDisplay(holder);
-        mCamera.startPreview();
+        mNativeCamera.setNativePreviewDisplay(holder);
+        mNativeCamera.startNativePreview();
     }
 
     public void stopPreview() throws Exception {
-        mCamera.stopPreview();
-        mCamera.setPreviewCallback(null);
+        mNativeCamera.stopNativePreview();
+        mNativeCamera.clearNativePreviewCallback();
     }
 
     public RecordingSize getSupportedRecordingSize(int width, int height) {
@@ -111,42 +110,22 @@ public class CameraWrapper {
     }
 
     public void configureForPreview(int viewWidth, int viewHeight) {
-        final Parameters params = getCameraParametersFromSystem();
+        final Parameters params = mNativeCamera.getNativeCameraParameters();
         final CameraSize previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
         params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
         params.setPreviewFormat(ImageFormat.NV21);
-        updateCameraParametersFromSystem(params);
+        mNativeCamera.updateNativeCameraParameters(params);
         CLog.d(CLog.CAMERA, "Preview size: " + previewSize.getWidth() + "x" + previewSize.getHeight());
     }
 
     public void enableAutoFocus() {
-        final Parameters params = getCameraParametersFromSystem();
+        final Parameters params = mNativeCamera.getNativeCameraParameters();
         params.setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
-        updateCameraParametersFromSystem(params);
+        mNativeCamera.updateNativeCameraParameters(params);
     }
 
     public int getDisplayOrientation() {
         return mDisplayRotation * 90;
-    }
-
-    protected Camera openCameraFromSystem() {
-        return Camera.open(CameraInfo.CAMERA_FACING_BACK);
-    }
-
-    protected void unlockCameraFromSystem() {
-        mCamera.unlock();
-    }
-
-    protected void releaseCameraFromSystem() {
-        mCamera.release();
-    }
-
-    protected Parameters getCameraParametersFromSystem() {
-        return mCamera.getParameters();
-    }
-
-    protected void updateCameraParametersFromSystem(Parameters params) {
-        mCamera.setParameters(params);
     }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)
@@ -168,7 +147,7 @@ public class CameraWrapper {
     }
 
     protected void storeCameraParametersBeforeUnlocking() {
-        mParameters = getCameraParametersFromSystem();
+        mParameters = mNativeCamera.getNativeCameraParameters();
     }
 
     private Parameters getCameraParametersAfterUnlocking() {

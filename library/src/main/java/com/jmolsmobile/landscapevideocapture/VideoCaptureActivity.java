@@ -28,6 +28,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.NativeCamera;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
@@ -77,7 +78,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private void initializeRecordingUI() {
         Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(display.getRotation()),
+        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(new NativeCamera(), display.getRotation()),
                 mVideoCaptureView.getPreviewSurfaceHolder());
         mVideoCaptureView.setRecordingButtonInterface(this);
 
