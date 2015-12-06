@@ -16,15 +16,20 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import android.hardware.Camera;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.Surface;
 
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -41,6 +46,7 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void openCameraSuccess() {
         NativeCamera mockCamera = mock(NativeCamera.class);
+        doReturn(mock(Camera.class)).when(mockCamera).getNativeCamera();
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         try {
@@ -50,33 +56,34 @@ public class CameraWrapperTest extends MockitoTestCase {
             fail("Should not throw exception");
         }
     }
-//
-//    @Test
-//    public void openCameraNoCamera() {
-//        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doReturn(null).when(spyWrapper).openCameraFromSystem();
-//
-//        try {
-//            spyWrapper.openCamera();
-//            fail("Missing exception");
-//        } catch (final OpenCameraException e) {
-//            assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
-//        }
-//    }
-//
-//    @Test
-//    public void openCameraInUse() {
-//        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));
-//        doThrow(new RuntimeException()).when(spyWrapper).openCameraFromSystem();
-//
-//        try {
-//            spyWrapper.openCamera();
-//            fail("Missing exception");
-//        } catch (final OpenCameraException e) {
-//            assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
-//        }
-//    }
-//
+
+    @Test
+    public void openCameraNoCamera() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.openCamera();
+            fail("Missing exception");
+        } catch (final OpenCameraException e) {
+            assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
+        }
+    }
+
+    @Test
+    public void openCameraInUse() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        doThrow(new RuntimeException()).when(mockCamera).openNativeCamera();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.openCamera();
+            fail("Missing exception");
+        } catch (final OpenCameraException e) {
+            assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
+        }
+    }
+
 //    @Test
 //    public void prepareCameraShouldCallUnlock() {
 //        final CameraWrapper spyWrapper = spy(new CameraWrapper(Surface.ROTATION_0));

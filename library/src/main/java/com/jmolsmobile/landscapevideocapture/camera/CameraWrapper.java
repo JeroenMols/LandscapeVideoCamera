@@ -57,7 +57,7 @@ public class CameraWrapper {
             throw new OpenCameraException(OpenType.INUSE);
         }
 
-        if (mNativeCamera == null) throw new OpenCameraException(OpenType.NOCAMERA);
+        if (mNativeCamera.getNativeCamera() == null) throw new OpenCameraException(OpenType.NOCAMERA);
     }
 
     public void prepareCameraForRecording() throws PrepareCameraException {
