@@ -113,7 +113,7 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void releaseCameraWhenCameraNull() {
-        final CameraWrapper wrapper = new CameraWrapper(new NativeCamera(), Surface.ROTATION_0);
+        final CameraWrapper wrapper = new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0);
         wrapper.releaseCamera();
     }
 
@@ -127,18 +127,33 @@ public class CameraWrapperTest extends MockitoTestCase {
         verify(mockCamera, times(1)).releaseNativeCamera();
     }
 
-//    @Test
-//    public void prepareCameraWhenCameraNull() {
-//        final CameraWrapper wrapper = new CameraWrapper(Surface.ROTATION_0);
-//
-//        try {
-//            wrapper.prepareCameraForRecording();
-//            fail("Missing exception");
-//        } catch (final PrepareCameraException e) {
-//            assertEquals("Unable to use camera for recording", e.getMessage());
-//        }
-//    }
-//
+    @Test
+    public void prepareCameraWhenCameraNull() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        doThrow(new NullPointerException()).when(mockCamera).unlockNativeCamera();
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.prepareCameraForRecording();
+            fail("Missing exception");
+        } catch (final PrepareCameraException e) {
+            assertEquals("Unable to use camera for recording", e.getMessage());
+        }
+    }
+
+    @Test
+    public void prepareCameraWhenCameraNotNull() {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        try {
+            wrapper.prepareCameraForRecording();
+            verify(mockCamera, times(1)).unlockNativeCamera();
+        } catch (final PrepareCameraException e) {
+            fail("Should not throw exception");
+        }
+    }
+
 //    @Test
 //    public void getSupportedRecordingSizeTooBig() {
 //        final CameraWrapper wrapper = spy(new CameraWrapper(Surface.ROTATION_0));
