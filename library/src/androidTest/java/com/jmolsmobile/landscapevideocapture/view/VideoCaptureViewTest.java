@@ -39,6 +39,7 @@ import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class VideoCaptureViewTest extends MockitoTestCase {
@@ -51,6 +52,20 @@ public class VideoCaptureViewTest extends MockitoTestCase {
     public void initializeClass() {
         Context targetContext = InstrumentationRegistry.getTargetContext();
         new VideoCaptureView(targetContext);
+    }
+
+    @UiThreadTest
+    @Test
+    public void initializeClassFromXml() {
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        new VideoCaptureView(targetContext, null);
+    }
+
+    @UiThreadTest
+    @Test
+    public void initializeClassFromXmlWithStyle() {
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        new VideoCaptureView(targetContext, null, 0);
     }
 
     @UiThreadTest
@@ -72,7 +87,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
     @UiThreadTest
     @Test
     public void recordBtnShouldNotifyListener() {
-        final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+        final RecordingButtonInterface mockBtnInterface = mock(RecordingButtonInterface.class);
         performClickOnButton(R.id.videocapture_recordbtn_iv, mockBtnInterface);
         Mockito.verify(mockBtnInterface, Mockito.times(1)).onRecordButtonClicked();
     }
@@ -80,7 +95,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
     @UiThreadTest
     @Test
     public void acceptBtnShouldNotifyListener() {
-        final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+        final RecordingButtonInterface mockBtnInterface = mock(RecordingButtonInterface.class);
         performClickOnButton(R.id.videocapture_acceptbtn_iv, mockBtnInterface);
         Mockito.verify(mockBtnInterface, Mockito.times(1)).onAcceptButtonClicked();
     }
@@ -88,7 +103,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
     @UiThreadTest
     @Test
     public void declineBtnShouldNotifyListener() {
-        final RecordingButtonInterface mockBtnInterface = Mockito.mock(RecordingButtonInterface.class);
+        final RecordingButtonInterface mockBtnInterface = mock(RecordingButtonInterface.class);
         performClickOnButton(R.id.videocapture_declinebtn_iv, mockBtnInterface);
         Mockito.verify(mockBtnInterface, Mockito.times(1)).onDeclineButtonClicked();
     }
