@@ -85,6 +85,13 @@ public class CaptureConfigurationTest {
                 config.getMaxCaptureDuration(), config.getMaxCaptureFileSize());
     }
 
+    @Test
+    public void describeContentsShouldBe0() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration(200, 300, 5000000, 1, 100);
+
+        assertEquals(0, config.describeContents());
+    }
+
     private void checkConfiguration(final CaptureConfiguration config, int width, int height, int bitrate,
                                     int duration, int filesize) {
         assertEquals(config.getVideoWidth(), width);
