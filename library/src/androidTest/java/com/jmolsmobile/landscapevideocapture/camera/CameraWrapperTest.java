@@ -36,11 +36,9 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -166,10 +164,8 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedRecordingSizeTooBig() {
-        final CameraWrapper wrapper = spy(new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0));
-        ArrayList<Size> sizes = new ArrayList<>();
-        sizes.add(mock(Camera.class).new Size(640, 480));
-        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
+        NativeCamera mockCamera = createCameraWithMockParameters(640, 480, 0, 0);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(1920, 1080);
 
@@ -179,10 +175,8 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedRecordingSizeTooSmall() {
-        final CameraWrapper wrapper = spy(new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0));
-        ArrayList<Camera.Size> sizes = new ArrayList<>();
-        sizes.add(mock(Camera.class).new Size(640, 480));
-        doReturn(sizes).when(wrapper).getSupportedVideoSizes(anyInt());
+        NativeCamera mockCamera = createCameraWithMockParameters(640, 480, 0, 0);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         RecordingSize supportedRecordingSize = wrapper.getSupportedRecordingSize(320, 240);
 
@@ -225,26 +219,22 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void setCorrectFocusMode() throws Exception {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = mock(Parameters.class);
-        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 0, 0);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         wrapper.enableAutoFocus();
 
-        verify(mockParameters, times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+        verify(mockCamera.getNativeCameraParameters(), times(1)).setFocusMode(Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
     }
 
     @Test
     public void applyFocusModeToCamera() throws Exception {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = mock(Parameters.class);
-        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 0, 0);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         wrapper.enableAutoFocus();
 
-        verify(mockCamera, times(1)).updateNativeCameraParameters(mockParameters);
+        verify(mockCamera, times(1)).updateNativeCameraParameters(mockCamera.getNativeCameraParameters());
     }
 
     @Test
