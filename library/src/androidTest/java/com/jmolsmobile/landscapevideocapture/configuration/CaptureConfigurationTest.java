@@ -16,6 +16,7 @@
 
 package com.jmolsmobile.landscapevideocapture.configuration;
 
+import android.os.Bundle;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
@@ -69,6 +70,18 @@ public class CaptureConfigurationTest {
         final CaptureConfiguration config = new CaptureConfiguration(200, 300, 5000000, 1, 100);
 
         checkConfiguration(config, 200, 300, 5000000, 1 * 1000, 100 * 1024 * 1024);
+    }
+
+    @Test
+    public void captureConfigurationCanBeParcelized() throws Exception {
+        CaptureConfiguration config = new CaptureConfiguration(CaptureResolution.RES_360P, CaptureQuality.MEDIUM);
+        Bundle args = new Bundle();
+        args.putParcelable("test", config);
+
+        CaptureConfiguration restoredConfiguration = args.getParcelable("test");
+
+        checkConfiguration(restoredConfiguration, config.getVideoWidth(), config.getVideoHeight(), config.getVideoBitrate(),
+                config.getMaxCaptureDuration(), config.getMaxCaptureFileSize());
     }
 
     private void checkConfiguration(final CaptureConfiguration config, int width, int height, int bitrate,
