@@ -266,6 +266,25 @@ public class VideoRecorderTest extends MockitoTestCase {
     }
 
     @Test
+    public void mediaRecorderShouldHaveRotationCorrection() throws Exception {
+        final CaptureConfiguration config = new CaptureConfiguration();
+        final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
+        final Surface mockSurface = mock(Surface.class);
+        doReturn(mockSurface).when(mockHolder).getSurface();
+        final VideoFile videoFile = new VideoFile("sdcard/test.avi");
+        CameraWrapper mockWrapper = createMockCameraWrapperForInitialisation();
+        doReturn(90).when(mockWrapper).getRotationCorrection();
+        final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, mockWrapper, mockHolder));
+        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
+
+        final MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        final Camera mockCamera = mock(Camera.class);
+        spyRecorder.configureMediaRecorder(mockRecorder, mockCamera);
+
+        verify(mockRecorder, times(1)).setOrientationHint(90);
+    }
+
+    @Test
     public void continueInitialisationWhenSetMaxFilesizeFails() throws Exception {
         final CaptureConfiguration config = new CaptureConfiguration();
         final VideoRecorder spyRecorder =
