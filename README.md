@@ -58,7 +58,7 @@ This library provides a full and reusable custom camera, which:
 
   2. Add a dependency on the library:
 
-          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.2'
+          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.3'
 
   3. Specify the VideoCaptureActivity in your manifest:
   
