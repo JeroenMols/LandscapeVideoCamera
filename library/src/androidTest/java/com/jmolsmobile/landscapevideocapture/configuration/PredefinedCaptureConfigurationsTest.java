@@ -1,4 +1,4 @@
-package com.jmolsmobile.landscapevideocapture;
+package com.jmolsmobile.landscapevideocapture.configuration;
 
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.SmallTest;
@@ -11,10 +11,10 @@ import org.junit.runner.RunWith;
  */
 @RunWith(AndroidJUnit4.class)
 @SmallTest
-public class ClogTest {
+public class PredefinedCaptureConfigurationsTest {
 
     @Test
     public void instantiateClassForCodeCoverage() throws Exception {
-        new CLog();
+        new PredefinedCaptureConfigurations();
     }
 }
