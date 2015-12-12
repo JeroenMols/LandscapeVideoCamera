@@ -119,7 +119,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
             return false;
         }
 
-        mRecorder = new MediaRecorder();
+        setMediaRecorder(new MediaRecorder());
         configureMediaRecorder(getMediaRecorder(), mCameraWrapper.getCamera());
 
         CLog.d(CLog.RECORDER, "MediaRecorder successfully initialized");
@@ -195,6 +195,10 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         return mRecording;
     }
 
+    protected void setMediaRecorder(MediaRecorder recorder) {
+        mRecorder = recorder;
+    }
+
     protected MediaRecorder getMediaRecorder() {
         return mRecorder;
     }
@@ -203,7 +207,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         MediaRecorder recorder = getMediaRecorder();
         if (recorder != null) {
             recorder.release();
-            recorder = null;
+            setMediaRecorder(null);
         }
     }
 

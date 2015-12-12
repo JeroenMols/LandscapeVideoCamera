@@ -369,7 +369,28 @@ public class VideoRecorderTest extends MockitoTestCase {
         } catch (RuntimeException e) {
             fail("Failed to call releaseAllResources twice");
         }
+    }
 
+    @Test
+    public void shouldReleaseAllResources() throws Exception {
+        VideoRecorder videoRecorder = new VideoRecorder(null, null, null, mock(CameraWrapper.class), mock(SurfaceHolder.class));
+        MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        videoRecorder.setMediaRecorder(mockRecorder);
+
+        videoRecorder.releaseAllResources();
+
+        verify(mockRecorder, times(1)).release();
+    }
+
+    @Test
+    public void shouldNullMediaRecorderReleaseAllResources() throws Exception {
+        VideoRecorder videoRecorder = new VideoRecorder(null, null, null, mock(CameraWrapper.class), mock(SurfaceHolder.class));
+        MediaRecorder mockRecorder = mock(MediaRecorder.class);
+        videoRecorder.setMediaRecorder(mockRecorder);
+
+        videoRecorder.releaseAllResources();
+
+        assertEquals(videoRecorder.getMediaRecorder(), null);
     }
 
     private VideoRecorder createSpyRecorderForStopTests(final VideoRecorderInterface mockInterface, final MediaRecorder recorder, final boolean isRecording) {
