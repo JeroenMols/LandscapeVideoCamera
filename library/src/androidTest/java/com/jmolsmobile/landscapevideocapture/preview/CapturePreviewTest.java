@@ -35,6 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 @RunWith(AndroidJUnit4.class)
 public class CapturePreviewTest extends MockitoTestCase {
@@ -145,6 +146,34 @@ public class CapturePreviewTest extends MockitoTestCase {
         createCapturePreviewAndCallSurfaceChanged(mockInterface, mockWrapper);
 
         verify(mockInterface, never()).onCapturePreviewFailed();
+    }
+
+    @Test
+    public void doNothingOnSurfaceCreated() throws Exception {
+        CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
+        CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        SurfaceHolder mockHolder = mock(SurfaceHolder.class);
+        CapturePreview preview = new CapturePreview(mockInterface, mockWrapper, mock(SurfaceHolder.class));
+
+        preview.surfaceCreated(mockHolder);
+
+        verifyNoMoreInteractions(mockInterface);
+        verifyNoMoreInteractions(mockWrapper);
+        verifyNoMoreInteractions(mockHolder);
+    }
+
+    @Test
+    public void doNotingOnSurfaceDestroyed() throws Exception {
+        CapturePreviewInterface mockInterface = mock(CapturePreviewInterface.class);
+        CameraWrapper mockWrapper = mock(CameraWrapper.class);
+        SurfaceHolder mockHolder = mock(SurfaceHolder.class);
+        CapturePreview preview = new CapturePreview(mockInterface, mockWrapper, mock(SurfaceHolder.class));
+
+        preview.surfaceDestroyed(mockHolder);
+
+        verifyNoMoreInteractions(mockInterface);
+        verifyNoMoreInteractions(mockWrapper);
+        verifyNoMoreInteractions(mockHolder);
     }
 
     private void createCapturePreviewAndCallSurfaceChanged(final CapturePreviewInterface mockInterface,
