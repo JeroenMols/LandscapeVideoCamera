@@ -249,38 +249,32 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void setPreviewFormatWhenConfiguringCamera() throws Exception {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParameters(0, 0, 800, 600);
-        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 800, 600);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
-        verify(mockParameters, times(1)).setPreviewFormat(ImageFormat.NV21);
+        verify(mockCamera.getNativeCameraParameters(), times(1)).setPreviewFormat(ImageFormat.NV21);
     }
 
     @Test
     public void setPreviewSizeWhenConfiguringCamera() throws Exception {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParameters(0, 0, 300, 700);
-        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 300, 700);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
-        verify(mockParameters, times(1)).setPreviewSize(300, 700);
+        verify(mockCamera.getNativeCameraParameters(), times(1)).setPreviewSize(300, 700);
     }
 
     @Test
     public void updateParametersWhenConfiguringCamera() throws Exception {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParameters(0, 0, 800, 600);
-        doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 800, 600);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
-        verify(mockCamera, times(1)).updateNativeCameraParameters(mockParameters);
+        verify(mockCamera, times(1)).updateNativeCameraParameters(mockCamera.getNativeCameraParameters());
     }
 
     @Test
