@@ -192,9 +192,8 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedVideoSizesHoneyComb() {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        configureMockCameraParameters(mockCamera, 640, 480, 1280, 960);
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        NativeCamera mockCamera = createCameraWithMockParameters(640, 480, 1280, 960);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
 
@@ -204,9 +203,8 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void getSupportedVideoSizesGingerbread() {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        configureMockCameraParameters(mockCamera, 640, 480, 1280, 960);
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        NativeCamera mockCamera = createCameraWithMockParameters(640, 480, 1280, 960);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.GINGERBREAD);
 
@@ -216,9 +214,8 @@ public class CameraWrapperTest extends MockitoTestCase {
 
     @Test
     public void returnPreviewSizeWhenVideoSizeIsNull() {
-        NativeCamera mockCamera = mock(NativeCamera.class);
-        configureMockCameraParameters(mockCamera, 0, 0, 1280, 960);
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 1280, 960);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         List<Size> supportedVideoSizes = wrapper.getSupportedVideoSizes(VERSION_CODES.HONEYCOMB);
 
@@ -253,7 +250,7 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void setPreviewFormatWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParametersWithPreviewSize(800, 600);
+        Parameters mockParameters = createMockParameters(0, 0, 800, 600);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
@@ -265,7 +262,7 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void setPreviewSizeWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParametersWithPreviewSize(300, 700);
+        Parameters mockParameters = createMockParameters(0, 0, 300, 700);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
@@ -277,7 +274,7 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void updateParametersWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = createMockParametersWithPreviewSize(800, 600);
+        Parameters mockParameters = createMockParameters(0, 0, 800, 600);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
@@ -321,17 +318,33 @@ public class CameraWrapperTest extends MockitoTestCase {
         return mockParameters;
     }
 
-    private Camera.Parameters createMockParametersWithPreviewSize(int width, int height) {
+    private NativeCamera createCameraWithMockParameters(int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        Parameters mockParams = createMockParameters(videoWidth, videoHeight, previewWidth, previewHeight);
+        doReturn(mockParams).when(mockCamera).getNativeCameraParameters();
+        return mockCamera;
+    }
+
+    @TargetApi(VERSION_CODES.HONEYCOMB)
+    private Camera.Parameters createMockParameters(int videoWidth, int videoHeight, int previewWidth, int previewHeight) {
+        Parameters mockParams = mock(Parameters.class);
+        doReturn(createMockSize(videoWidth, videoHeight)).when(mockParams).getSupportedVideoSizes();
+        doReturn(createMockSize(previewWidth, previewHeight)).when(mockParams).getSupportedPreviewSizes();
+        return mockParams;
+    }
+
+    private List<Camera.Size> createMockSize(int width, int height) {
+        if (width <= 0 && height <= 0) {
+            return null;
+        }
+
         Size mockSize = mock(Size.class);
         mockSize.width = width;
         mockSize.height = height;
 
-        List<Camera.Size> previewSizes = new ArrayList<>();
-        previewSizes.add(mockSize);
+        List<Camera.Size> sizes = new ArrayList<>();
+        sizes.add(mockSize);
 
-        Parameters mockParams = mock(Parameters.class);
-        doReturn(previewSizes).when(mockParams).getSupportedPreviewSizes();
-
-        return mockParams;
+        return sizes;
     }
 }
