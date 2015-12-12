@@ -86,10 +86,13 @@ public class PredefinedCaptureConfigurations {
             switch (quality) {
                 case HIGH:
                     bitrate = highBitrate;
+                    break;
                 case MEDIUM:
                     bitrate = medBitrate;
+                    break;
                 case LOW:
                     bitrate = lowBitrate;
+                    break;
             }
             return bitrate;
         }
