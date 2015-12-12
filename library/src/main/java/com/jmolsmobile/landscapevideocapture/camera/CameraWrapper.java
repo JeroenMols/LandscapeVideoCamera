@@ -124,11 +124,7 @@ public class CameraWrapper {
         final Parameters params = mNativeCamera.getNativeCameraParameters();
         final CameraSize previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
 
-        if (getRotationCorrection() % 180 == 0) {
-            params.setPreviewSize(previewSize.getHeight(), previewSize.getWidth());
-        } else {
-            params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
-        }
+        params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
         params.setPreviewFormat(ImageFormat.NV21);
         mNativeCamera.updateNativeCameraParameters(params);
         mNativeCamera.setDisplayOrientation(getRotationCorrection());

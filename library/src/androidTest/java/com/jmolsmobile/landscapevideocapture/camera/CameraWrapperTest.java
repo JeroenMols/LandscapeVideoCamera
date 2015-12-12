@@ -254,16 +254,6 @@ public class CameraWrapperTest extends MockitoTestCase {
 
         wrapper.configureForPreview(800, 600);
 
-        verify(mockCamera.getNativeCameraParameters(), times(1)).setPreviewSize(700, 300);
-    }
-
-    @Test
-    public void setPreviewSizeDisplay90() throws Exception {
-        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 300, 700);
-        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_90);
-
-        wrapper.configureForPreview(800, 600);
-
         verify(mockCamera.getNativeCameraParameters(), times(1)).setPreviewSize(300, 700);
     }
 

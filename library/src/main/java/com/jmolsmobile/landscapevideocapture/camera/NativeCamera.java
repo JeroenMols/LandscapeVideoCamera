@@ -16,7 +16,8 @@ import java.io.IOException;
 public class
 NativeCamera {
 
-    private Camera camera = null;
+    private Camera     camera = null;
+    private Parameters params = null;
 
     public Camera getNativeCamera() {
         return camera;
@@ -51,10 +52,14 @@ NativeCamera {
     }
 
     public Parameters getNativeCameraParameters() {
-        return camera.getParameters();
+        if (params == null) {
+            params = camera.getParameters();
+        }
+        return params;
     }
 
     public void updateNativeCameraParameters(Parameters params) {
+        this.params = params;
         camera.setParameters(params);
     }
 
