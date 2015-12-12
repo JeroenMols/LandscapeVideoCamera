@@ -36,7 +36,6 @@ import java.util.List;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.fail;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
@@ -254,9 +253,9 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void setPreviewFormatWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = mock(Parameters.class);
+        Parameters mockParameters = createMockParametersWithPreviewSize(800, 600);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
-        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 0, 0);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
@@ -266,9 +265,9 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void setPreviewSizeWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = mock(Parameters.class);
+        Parameters mockParameters = createMockParametersWithPreviewSize(300, 700);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
-        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 300, 700);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
@@ -278,9 +277,9 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void updateParametersWhenConfiguringCamera() throws Exception {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        Parameters mockParameters = mock(Parameters.class);
+        Parameters mockParameters = createMockParametersWithPreviewSize(800, 600);
         doReturn(mockParameters).when(mockCamera).getNativeCameraParameters();
-        final CameraWrapper wrapper = createSpyWrapperWithOptimalSize(mockCamera, 0, 0);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, 0);
 
         wrapper.configureForPreview(800, 600);
 
@@ -322,10 +321,17 @@ public class CameraWrapperTest extends MockitoTestCase {
         return mockParameters;
     }
 
-    private CameraWrapper createSpyWrapperWithOptimalSize(NativeCamera mockCamera, int optimalWidth, int optimalHeight) {
-        final CameraWrapper wrapper = spy(new CameraWrapper(mockCamera, Surface.ROTATION_0));
-        CameraSize optimalSize = new CameraSize(optimalWidth, optimalHeight);
-        doReturn(optimalSize).when(wrapper).getOptimalSize(any(List.class), anyInt(), anyInt());
-        return wrapper;
+    private Camera.Parameters createMockParametersWithPreviewSize(int width, int height) {
+        Size mockSize = mock(Size.class);
+        mockSize.width = width;
+        mockSize.height = height;
+
+        List<Camera.Size> previewSizes = new ArrayList<>();
+        previewSizes.add(mockSize);
+
+        Parameters mockParams = mock(Parameters.class);
+        doReturn(previewSizes).when(mockParams).getSupportedPreviewSizes();
+
+        return mockParams;
     }
 }
