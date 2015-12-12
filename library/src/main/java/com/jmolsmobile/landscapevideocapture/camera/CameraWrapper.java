@@ -97,15 +97,27 @@ public class CameraWrapper {
     public CamcorderProfile getBaseRecordingProfile() {
         CamcorderProfile returnProfile;
         if (VERSION.SDK_INT < VERSION_CODES.HONEYCOMB) {
-            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+            returnProfile = getDefaultRecordingProfile();
         } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_720P)) {
             returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_720P);
         } else if (CamcorderProfile.hasProfile(CamcorderProfile.QUALITY_480P)) {
             returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_480P);
         } else {
-            returnProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+            returnProfile = getDefaultRecordingProfile();
         }
         return returnProfile;
+    }
+
+    private CamcorderProfile getDefaultRecordingProfile() {
+        CamcorderProfile highProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_HIGH);
+        if (highProfile != null) {
+            return highProfile;
+        }
+        CamcorderProfile lowProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_LOW);
+        if (lowProfile != null) {
+            return lowProfile;
+        }
+        throw new RuntimeException("No quality level found");
     }
 
     public void configureForPreview(int viewWidth, int viewHeight) {
