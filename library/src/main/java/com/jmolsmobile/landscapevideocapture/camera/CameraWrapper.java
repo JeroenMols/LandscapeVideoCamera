@@ -111,10 +111,15 @@ public class CameraWrapper {
     public void configureForPreview(int viewWidth, int viewHeight) {
         final Parameters params = mNativeCamera.getNativeCameraParameters();
         final CameraSize previewSize = getOptimalSize(params.getSupportedPreviewSizes(), viewWidth, viewHeight);
-        params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
+
+        if (getRotationCorrection() % 180 == 0) {
+            params.setPreviewSize(previewSize.getHeight(), previewSize.getWidth());
+        } else {
+            params.setPreviewSize(previewSize.getWidth(), previewSize.getHeight());
+        }
         params.setPreviewFormat(ImageFormat.NV21);
         mNativeCamera.updateNativeCameraParameters(params);
-        mNativeCamera.setDisplayOrientation(getDisplayOrientation());
+        mNativeCamera.setDisplayOrientation(getRotationCorrection());
         CLog.d(CLog.CAMERA, "Preview size: " + previewSize.getWidth() + "x" + previewSize.getHeight());
     }
 
@@ -124,8 +129,9 @@ public class CameraWrapper {
         mNativeCamera.updateNativeCameraParameters(params);
     }
 
-    public int getDisplayOrientation() {
-        return mDisplayRotation * 90;
+    public int getRotationCorrection() {
+        int displayRotation = mDisplayRotation * 90;
+        return (mNativeCamera.getCameraOrientation() - displayRotation + 360) % 360;
     }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)

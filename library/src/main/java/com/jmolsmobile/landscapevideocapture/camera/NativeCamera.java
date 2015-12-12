@@ -13,7 +13,8 @@ import java.io.IOException;
  * <p/>
  * Created by Jeroen Mols on 06/12/15.
  */
-public class NativeCamera {
+public class
+NativeCamera {
 
     private Camera camera = null;
 
@@ -59,5 +60,25 @@ public class NativeCamera {
 
     public void setDisplayOrientation(int degrees) {
         camera.setDisplayOrientation(degrees);
+    }
+
+    public int getCameraOrientation() {
+        CameraInfo camInfo = new CameraInfo();
+        Camera.getCameraInfo(getBackFacingCameraId(), camInfo);
+        return camInfo.orientation;
+    }
+
+    private int getBackFacingCameraId() {
+        int cameraId = -1;
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            CameraInfo info = new CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_BACK) {
+                cameraId = i;
+                break;
+            }
+        }
+        return cameraId;
     }
 }

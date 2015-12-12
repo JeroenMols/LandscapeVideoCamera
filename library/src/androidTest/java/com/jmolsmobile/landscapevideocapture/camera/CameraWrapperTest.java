@@ -248,9 +248,19 @@ public class CameraWrapperTest extends MockitoTestCase {
     }
 
     @Test
-    public void setPreviewSizeWhenConfiguringCamera() throws Exception {
+    public void setPreviewSize() throws Exception {
         NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 300, 700);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        wrapper.configureForPreview(800, 600);
+
+        verify(mockCamera.getNativeCameraParameters(), times(1)).setPreviewSize(700, 300);
+    }
+
+    @Test
+    public void setPreviewSizeDisplay90() throws Exception {
+        NativeCamera mockCamera = createCameraWithMockParameters(0, 0, 300, 700);
+        final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_90);
 
         wrapper.configureForPreview(800, 600);
 
@@ -268,17 +278,26 @@ public class CameraWrapperTest extends MockitoTestCase {
     }
 
     @Test
-    public void getDisplayOrientation0() throws Exception {
+    public void getRotationCorrectionDisplay0() throws Exception {
         CameraWrapper cameraWrapper = new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_0);
 
-        assertEquals(0, cameraWrapper.getDisplayOrientation());
+        assertEquals(0, cameraWrapper.getRotationCorrection());
     }
 
     @Test
-    public void getDisplayOrientation90() throws Exception {
+    public void getRotationCorrectionDisplay90() throws Exception {
         CameraWrapper cameraWrapper = new CameraWrapper(mock(NativeCamera.class), Surface.ROTATION_90);
 
-        assertEquals(90, cameraWrapper.getDisplayOrientation());
+        assertEquals(270, cameraWrapper.getRotationCorrection());
+    }
+
+    @Test
+    public void getRotationCorrectionCamera90() throws Exception {
+        NativeCamera mockCamera = mock(NativeCamera.class);
+        doReturn(90).when(mockCamera).getCameraOrientation();
+        CameraWrapper cameraWrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
+
+        assertEquals(90, cameraWrapper.getRotationCorrection());
     }
 
     @Test
