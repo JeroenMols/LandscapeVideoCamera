@@ -27,3 +27,9 @@ script:
   - echo "Travis branch is $TRAVIS_BRANCH"
   - echo "Travis branch is in pull request $TRAVIS_PULL+REQUEST"
   - ./gradlew connectedAndroidTest coveralls
+
+before_install:
+  - pip install codecov
+  
+after_success:
+  - codecov
