@@ -29,7 +29,7 @@ script:
   - ./gradlew connectedAndroidTest coveralls
 
 before_install:
-  - pip install codecov
+  - pip install --user codecov
   
 after_success:
   - codecov
