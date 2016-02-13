@@ -1,4 +1,4 @@
-LandscapeVideoCapture [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)
+LandscapeVideoCapture [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera)
 =====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
