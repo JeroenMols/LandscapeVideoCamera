@@ -1,4 +1,6 @@
-LandscapeVideoCamera [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera)
+LandscapeVideoCamera 
+
+[![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera)
 =====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
@@ -6,6 +8,11 @@ Highly flexible Android Camera which offers granular control over the video qual
 <a href="https://play.google.com/store/apps/details?id=com.jmolsmobile.landscapevideocapture_sample">
   <img alt="Get it on Google Play"
        src="https://developer.android.com/images/brand/en_generic_rgb_wo_60.png" />
+</a>
+
+<a href="https://play.google.com/store/apps/details?id=com.jmolsmobile.landscapevideocapture_sample&utm_source=global_co&utm_medium=prtnr&utm_content=Mar2515&utm_campaign=PartBadge&pcampaignid=MKT-AC-global-none-all-co-pr-py-PartBadges-Oct1515-1">
+  <img alt="Get it on Google Play" width="200"
+        src="https://play.google.com/intl/en_us/badges/images/apps/en-play-badge.png" />
 </a>
 
 There are a number of issues with the default Android intent to capture videos (`MediaStore.ACTION_VIDEO_CAPTURE`) which led me to create this library project:
