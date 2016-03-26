@@ -55,46 +55,46 @@ This library provides a full and reusable custom camera, which:
 ## How to use
 
   1. Add the Jitpack repository to your project:
-
+```groovy
           repositories {
               maven { url "https://jitpack.io" }
           }
-
+```
   2. Add a dependency on the library:
-
+```groovy
           compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.3'
-
+```
   3. Specify the VideoCaptureActivity in your manifest:
-
+```xml
          <activity
              android:name="com.jmolsmobile.landscapevideocapture.VideoCaptureActivity"
              android:screenOrientation="sensor" >
          </activity>
-
+```
   4. Request the following permissions in your manifest:
-
+```xml
          <uses-permission android:name="android.permission.RECORD_AUDIO" />
          <uses-permission android:name="android.permission.CAMERA" />
          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+```
   5. Create a CaptureConfiguration - object with the desired parameters. (optional)
-
+```java
          CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality);
          CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
-
+```
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
 
   Note 2: Subclass the CaptureConfiguration class to set more advanced configurations. (codecs, audio bitrate,...)
 
   6. Launch the `VideoCaptureActivity` for result, add the CaptureConfiguration as an parcelable extra `EXTRA_CAPTURE_CONFIGURATION` and optionally add a String extra `EXTRA_OUTPUT_FILENAME`.
-
+```java
          final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
          intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
          intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
          startActivityForResult(intent, RESULT_CODE);
-
+```
   7. Check the resultcode (`RESULT_OK`, `RESULT_CANCELLED` or `VideoCaptureActivity.RESULT_ERROR`) and in case of success get the output filename in the intent extra `EXTRA_OUTPUT_FILENAME`.
 
 ## Questions
