@@ -12,7 +12,11 @@ There are a number of issues with the default Android intent to capture videos (
 
 1. The default intent only accepts integer quality parameters of 0 (MMS quality) or 1 (highest available quality), using the intent extra `MediaStore.EXTRA_VIDEO_QUALITY`.
 2. The default intent does not return the URI of the recorded file if it was specified when launching the intent.
-3. The default intent doesn't care wheter users capture their video in portait mode or landscape.
+3. The default intent doesn't care whether users capture their video in portrait mode or landscape.
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/JeroenMols/LandscapeVideoCamera/master/screenshots/preview.gif" alt="LandscapeVideoCamera in action" height="450"/>
+</p>
 
 ## Features
 
@@ -61,29 +65,29 @@ This library provides a full and reusable custom camera, which:
           compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.3'
 
   3. Specify the VideoCaptureActivity in your manifest:
-  
+
          <activity
              android:name="com.jmolsmobile.landscapevideocapture.VideoCaptureActivity"
              android:screenOrientation="sensor" >
          </activity>
 
-  4. Request the following permissions in your manifest: 
+  4. Request the following permissions in your manifest:
 
          <uses-permission android:name="android.permission.RECORD_AUDIO" />
          <uses-permission android:name="android.permission.CAMERA" />
          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-  
+
   5. Create a CaptureConfiguration - object with the desired parameters. (optional)
 
          CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality);
          CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
-  
+
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
-  
+
   Note 2: Subclass the CaptureConfiguration class to set more advanced configurations. (codecs, audio bitrate,...)
-  
+
   6. Launch the `VideoCaptureActivity` for result, add the CaptureConfiguration as an parcelable extra `EXTRA_CAPTURE_CONFIGURATION` and optionally add a String extra `EXTRA_OUTPUT_FILENAME`.
 
          final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
