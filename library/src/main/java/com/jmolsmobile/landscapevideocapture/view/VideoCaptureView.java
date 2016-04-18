@@ -18,6 +18,8 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -26,19 +28,24 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
+import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.R;
 import com.jmolsmobile.landscapevideocapture.R.id;
 
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
-	private ImageView					mDeclineBtnIv;
-	private ImageView					mAcceptBtnIv;
-	private ImageView					mRecordBtnIv;
-	private SurfaceView					mSurfaceView;
-	private ImageView					mThumbnailIv;
+    private ImageView mDeclineBtnIv;
+    private ImageView mAcceptBtnIv;
+    private ImageView mRecordBtnIv;
+    private SurfaceView mSurfaceView;
+    private ImageView mThumbnailIv;
+    private TextView mTimerTv;
+    private Handler customHandler = new Handler();
+    private long startTime = 0L;
 
-	private RecordingButtonInterface	mRecordingInterface;
+    private RecordingButtonInterface mRecordingInterface;
+    private boolean mShowTimer;
 
 	public VideoCaptureView(Context context) {
 		super(context);
@@ -66,9 +73,11 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mAcceptBtnIv.setOnClickListener(this);
 		mDeclineBtnIv.setOnClickListener(this);
 
-		mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
-		mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
-	}
+        mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
+        mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
+
+        mTimerTv = (TextView) videoCapture.findViewById(id.videocapture_timer_tv);
+    }
 
 	public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
 		this.mRecordingInterface = mBtnInterface;
@@ -87,27 +96,46 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mSurfaceView.setVisibility(View.VISIBLE);
 	}
 
-	public void updateUIRecordingOngoing() {
-		mRecordBtnIv.setSelected(true);
-		mRecordBtnIv.setVisibility(View.VISIBLE);
-		mAcceptBtnIv.setVisibility(View.GONE);
-		mDeclineBtnIv.setVisibility(View.GONE);
-		mThumbnailIv.setVisibility(View.GONE);
-		mSurfaceView.setVisibility(View.VISIBLE);
-	}
+    private Runnable updateTimerThread = new Runnable() {
+        public void run() {
+            long timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+            int seconds = (int) (timeInMilliseconds / 1000);
+            int minutes = seconds / 60;
+            seconds = seconds % 60;
+            mTimerTv.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+            customHandler.postDelayed(this, 1000);
+        }
+    };
 
-	public void updateUIRecordingFinished(Bitmap videoThumbnail) {
-		mRecordBtnIv.setVisibility(View.INVISIBLE);
-		mAcceptBtnIv.setVisibility(View.VISIBLE);
-		mDeclineBtnIv.setVisibility(View.VISIBLE);
-		mThumbnailIv.setVisibility(View.VISIBLE);
-		mSurfaceView.setVisibility(View.GONE);
-		final Bitmap thumbnail = videoThumbnail;
-		if (thumbnail != null) {
-			mThumbnailIv.setScaleType(ScaleType.CENTER_CROP);
-			mThumbnailIv.setImageBitmap(videoThumbnail);
-		}
-	}
+
+    public void updateUIRecordingOngoing() {
+        mRecordBtnIv.setSelected(true);
+        mRecordBtnIv.setVisibility(View.VISIBLE);
+        mAcceptBtnIv.setVisibility(View.GONE);
+        mDeclineBtnIv.setVisibility(View.GONE);
+        mThumbnailIv.setVisibility(View.GONE);
+        mSurfaceView.setVisibility(View.VISIBLE);
+        if(mShowTimer) {
+            mTimerTv.setVisibility(View.VISIBLE);
+            startTime = SystemClock.uptimeMillis();
+            customHandler.postDelayed(updateTimerThread, 1000);
+        }
+    }
+
+    public void updateUIRecordingFinished(Bitmap videoThumbnail) {
+        mRecordBtnIv.setVisibility(View.INVISIBLE);
+        mAcceptBtnIv.setVisibility(View.VISIBLE);
+        mDeclineBtnIv.setVisibility(View.VISIBLE);
+        mThumbnailIv.setVisibility(View.VISIBLE);
+        mSurfaceView.setVisibility(View.GONE);
+        final Bitmap thumbnail = videoThumbnail;
+        if (thumbnail != null) {
+            mThumbnailIv.setScaleType(ScaleType.CENTER_CROP);
+            mThumbnailIv.setImageBitmap(videoThumbnail);
+        }
+        customHandler.removeCallbacks(updateTimerThread);
+
+    }
 
 	@Override
 	public void onClick(View v) {
@@ -123,4 +151,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
 	}
 
+    public void showTimer(boolean showTimer) {
+        this.mShowTimer = showTimer;
+    }
 }

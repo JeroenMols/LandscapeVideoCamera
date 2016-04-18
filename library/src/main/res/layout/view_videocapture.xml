@@ -15,23 +15,39 @@
   ~ limitations under the License.
   -->
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/videocapture_container_rl"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:keepScreenOn="true" >
+<RelativeLayout android:id="@+id/videocapture_container_rl"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                android:keepScreenOn="true">
 
     <SurfaceView
         android:id="@+id/videocapture_preview_sv"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
+
+    <TextView
+        android:id="@+id/videocapture_timer_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:shadowColor="@android:color/white"
+        android:shadowRadius="10"
+        android:textSize="25sp"
+        android:visibility="gone"
+        tools:text="02:22"
+        tools:visibility="visible"
+        />
 
     <ImageView
         android:id="@+id/videocapture_preview_iv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/videocapture_recordbtn_iv"
@@ -41,7 +57,7 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="-20dp"
         android:background="@drawable/states_btn_capture"
-        android:clickable="true" />
+        android:clickable="true"/>
 
     <ImageView
         android:id="@+id/videocapture_acceptbtn_iv"
@@ -54,7 +70,7 @@
         android:clickable="true"
         android:padding="8dp"
         android:src="@drawable/btn_accept"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
     <ImageView
         android:id="@+id/videocapture_declinebtn_iv"
@@ -68,6 +84,6 @@
         android:clickable="true"
         android:padding="8dp"
         android:src="@drawable/btn_decline"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </RelativeLayout>
