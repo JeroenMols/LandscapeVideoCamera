@@ -1,12 +1,12 @@
 /**
  * Copyright 2014 Jeroen Mols
- *
+ * <p/>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p/>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p/>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -102,11 +102,10 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
             int seconds = (int) (timeInMilliseconds / 1000);
             int minutes = seconds / 60;
             seconds = seconds % 60;
-            mTimerTv.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+            updateRecordingTime(seconds, minutes);
             customHandler.postDelayed(this, 1000);
         }
     };
-
 
     public void updateUIRecordingOngoing() {
         mRecordBtnIv.setSelected(true);
@@ -115,9 +114,10 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mDeclineBtnIv.setVisibility(View.GONE);
         mThumbnailIv.setVisibility(View.GONE);
         mSurfaceView.setVisibility(View.VISIBLE);
-        if(mShowTimer) {
+        if (mShowTimer) {
             mTimerTv.setVisibility(View.VISIBLE);
             startTime = SystemClock.uptimeMillis();
+            updateRecordingTime(0, 0);
             customHandler.postDelayed(updateTimerThread, 1000);
         }
     }
@@ -153,5 +153,9 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     public void showTimer(boolean showTimer) {
         this.mShowTimer = showTimer;
+    }
+
+    private void updateRecordingTime(int seconds, int minutes) {
+        mTimerTv.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
     }
 }

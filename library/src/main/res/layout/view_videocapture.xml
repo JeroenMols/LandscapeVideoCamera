@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright 2014 Jeroen Mols
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
@@ -34,14 +33,17 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:shadowColor="@android:color/white"
-        android:shadowRadius="10"
-        android:textSize="25sp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/videocapture_timebackground"
+        android:paddingBottom="8dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:paddingTop="8dp"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
         android:visibility="gone"
         tools:text="02:22"
-        tools:visibility="visible"
-        />
+        tools:visibility="visible" />
 
     <ImageView
         android:id="@+id/videocapture_preview_iv"
