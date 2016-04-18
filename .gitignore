@@ -10,4 +10,4 @@ crashlytics.properties
 crashlytics.jar
 
 *.iml
-.idea
+.idea/*
