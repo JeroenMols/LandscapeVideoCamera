@@ -103,7 +103,8 @@
                 android:id="@+id/rl_advanced"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" 
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <ImageView
                     android:id="@+id/iv_filename"
@@ -184,6 +185,24 @@
                     android:layout_marginBottom="10dp"
                     android:layout_toRightOf="@id/et_filesize"
                     android:layout_marginLeft="16dp" />
+
+                <CheckBox
+                    android:id="@+id/cb_showtimer"
+                    android:layout_width="175dp"
+                    android:layout_height="36dp"
+                    android:gravity="center_vertical"
+                    android:layout_alignBottom="@+id/iv_showtimer"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp"
+                    android:text="@string/show_timer"/>
+
+                <ImageView
+                    android:id="@+id/iv_showtimer"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_filesize"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_timelapse_black_48dp" />
             </RelativeLayout>
 
             <Button

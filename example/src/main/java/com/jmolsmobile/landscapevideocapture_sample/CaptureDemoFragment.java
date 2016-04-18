@@ -36,6 +36,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -70,6 +71,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private EditText       filenameEt;
     private EditText       maxDurationEt;
     private EditText       maxFilesizeEt;
+    private CheckBox       showTimerCb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,6 +87,8 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         filenameEt = (EditText) rootView.findViewById(R.id.et_filename);
         maxDurationEt = (EditText) rootView.findViewById(R.id.et_duration);
         maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
+        showTimerCb = (CheckBox) rootView.findViewById(R.id.cb_showtimer);
+
 
         if (savedInstanceState != null) {
             statusMessage = savedInstanceState.getString(KEY_STATUSMESSAGE);
@@ -226,7 +230,8 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         } catch (final Exception e2) {
             //NOP
         }
-        final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize);
+        boolean showTimer = showTimerCb.isChecked();
+        final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize, showTimer);
         return config;
     }
 

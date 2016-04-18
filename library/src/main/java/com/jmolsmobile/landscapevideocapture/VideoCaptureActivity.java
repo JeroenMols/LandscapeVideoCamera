@@ -43,6 +43,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     public static final String EXTRA_OUTPUT_FILENAME       = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
     public static final String EXTRA_ERROR_MESSAGE         = "com.jmolsmobile.extraerrormessage";
+    public static final String EXTRA_SHOW_TIMER            = "com.jmolsmobile.extrashowtimer";
 
     private static final   String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
     protected static final String SAVED_OUTPUT_FILENAME  = "com.jmolsmobile.savedoutputfilename";
@@ -81,12 +82,14 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(new NativeCamera(), display.getRotation()),
                 mVideoCaptureView.getPreviewSurfaceHolder());
         mVideoCaptureView.setRecordingButtonInterface(this);
-
+        boolean showTimer = this.getIntent().getBooleanExtra(EXTRA_SHOW_TIMER, false);
+        mVideoCaptureView.showTimer(showTimer);
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
         } else {
             mVideoCaptureView.updateUINotRecording();
         }
+        mVideoCaptureView.showTimer(mCaptureConfiguration.getShowTimer());
     }
 
     @Override
