@@ -89,6 +89,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         } else {
             mVideoCaptureView.updateUINotRecording();
         }
+        mVideoCaptureView.showTimer(mCaptureConfiguration.getShowTimer());
     }
 
     @Override

@@ -36,6 +36,7 @@ public class CaptureConfiguration implements Parcelable {
     private int mBitrate          = PredefinedCaptureConfigurations.BITRATE_HQ_720P;
     private int mMaxDurationMs    = NO_DURATION_LIMIT;
     private int mMaxFilesizeBytes = NO_FILESIZE_LIMIT;
+    private boolean mShowTimer    = false;
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
     private int AUDIO_SOURCE  = MediaRecorder.AudioSource.DEFAULT;
@@ -51,6 +52,12 @@ public class CaptureConfiguration implements Parcelable {
         mVideoWidth = resolution.width;
         mVideoHeight = resolution.height;
         mBitrate = resolution.getBitrate(quality);
+    }
+
+    public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
+                                int maxFilesizeMb, boolean showTimer) {
+        this(resolution, quality, maxDurationSecs, maxFilesizeMb);
+        mShowTimer = showTimer;
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
@@ -107,6 +114,13 @@ public class CaptureConfiguration implements Parcelable {
         return mMaxFilesizeBytes;
     }
 
+    /**
+     * @return If timer must be displayed during video capture
+     */
+    public boolean getShowTimer() {
+        return mShowTimer;
+    }
+
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
     }
@@ -139,6 +153,7 @@ public class CaptureConfiguration implements Parcelable {
         dest.writeInt(mBitrate);
         dest.writeInt(mMaxDurationMs);
         dest.writeInt(mMaxFilesizeBytes);
+        dest.writeByte((byte) (mShowTimer? 1 : 0));
 
         dest.writeInt(OUTPUT_FORMAT);
         dest.writeInt(AUDIO_SOURCE);
@@ -167,6 +182,7 @@ public class CaptureConfiguration implements Parcelable {
         mBitrate = in.readInt();
         mMaxDurationMs = in.readInt();
         mMaxFilesizeBytes = in.readInt();
+        mShowTimer = in.readByte() != 0;
 
         OUTPUT_FORMAT = in.readInt();
         AUDIO_SOURCE = in.readInt();
