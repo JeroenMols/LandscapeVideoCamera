@@ -1,4 +1,4 @@
-LandscapeVideoCamera [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera)
+LandscapeVideoCamera [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera) [![MethodCount](https://img.shields.io/badge/Methods count-299-e91e63.svg)](http://www.methodscount.com/?lib=com.github.jeroenmols%3Alandscapevideocamera%3A1.1.4)
 =====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
@@ -62,7 +62,7 @@ This library provides a full and reusable custom camera, which:
 ```
   2. Add a dependency on the library:
 ```groovy
-          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.3'
+          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.4'
 ```
   3. Specify the VideoCaptureActivity in your manifest:
 ```xml
@@ -83,6 +83,7 @@ This library provides a full and reusable custom camera, which:
          CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
+         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb, boolean showTimer);
 ```
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
 
@@ -98,7 +99,7 @@ This library provides a full and reusable custom camera, which:
   7. Check the resultcode (`RESULT_OK`, `RESULT_CANCELLED` or `VideoCaptureActivity.RESULT_ERROR`) and in case of success get the output filename in the intent extra `EXTRA_OUTPUT_FILENAME`.
 
 ## Questions
-@molsjeroen
+[@molsjeroen](https://twitter.com/molsjeroen)
 
 
 ## Thanks
