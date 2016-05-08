@@ -15,7 +15,7 @@ There are a number of issues with the default Android intent to capture videos (
 3. The default intent doesn't care whether users capture their video in portrait mode or landscape.
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/JeroenMols/LandscapeVideoCamera/master/screenshots/preview.gif" alt="LandscapeVideoCamera in action" height="550"/>
+  <img src="https://raw.githubusercontent.com/JeroenMols/LandscapeVideoCamera/master/screenshots/preview.gif" alt="LandscapeVideoCamera in action" width="550"/>
 </p>
 
 ## Features
