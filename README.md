@@ -1,9 +1,10 @@
 LandscapeVideoCamera
 =====================
 [![Build Status][build-status-svg]][build-status-link]
-[![codecov.io][coverage-svg]][coverage-link]
+[![Codecov.io][coverage-svg]][coverage-link]
 [![Release][jitpack-svg]][jitpack-link]
 [![MethodCount][methodcount-svg]][methodcount-link]
+[![License][license-svg]][license-link]
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
 
@@ -116,4 +117,6 @@ This library provides a full and reusable custom camera, which:
 [jitpack-svg]: https://jitpack.io/v/jeroenmols/landscapevideocamera.svg
 [jitpack-link]: https://jitpack.io/#jeroenmols/LandscapeVideoCamera
 [methodcount-svg]: https://img.shields.io/badge/Methodscount-299-e91e63.svg
-[methodcount-link]: http://www.methodscount.com/?lib=com.github.jeroenmols%3Alandscapevideocamera%3A1.1.4
+[methodcount-link]: http://www.methodscount.com/?lib=com.github.JeroenMols%3ALandscapeVideoCamera%3A%2B
+[license-svg]: https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000
+[license-link]: https://github.com/JeroenMols/LandscapeVideoCamera/blob/master/LICENSE
