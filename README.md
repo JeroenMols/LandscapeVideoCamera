@@ -118,5 +118,5 @@ This library provides a full and reusable custom camera, which:
 [jitpack-link]: https://jitpack.io/#jeroenmols/LandscapeVideoCamera
 [methodcount-svg]: https://img.shields.io/badge/Methodscount-299-e91e63.svg
 [methodcount-link]: http://www.methodscount.com/?lib=com.github.JeroenMols%3ALandscapeVideoCamera%3A%2B
-[license-svg]: https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000
+[license-svg]: https://img.shields.io/:license-apache-blue.svg?style=flat
 [license-link]: https://github.com/JeroenMols/LandscapeVideoCamera/blob/master/LICENSE
