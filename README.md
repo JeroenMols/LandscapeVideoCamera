@@ -1,9 +1,9 @@
 LandscapeVideoCamera
+=====================
 [![Build Status][build-status-svg]][build-status-link]
 [![codecov.io][coverage-svg]][coverage-link]
 [![Release][jitpack-svg]][jitpack-link]
 [![MethodCount][methodcount-svg]][methodcount-link]
-=====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
 
