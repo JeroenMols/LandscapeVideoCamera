@@ -1,4 +1,8 @@
-LandscapeVideoCamera [![Build Status](https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master)](https://travis-ci.org/JeroenMols/LandscapeVideoCamera) [![codecov.io](https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master)](https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master)  [![Release](https://jitpack.io/v/jeroenmols/landscapevideocamera.svg)](https://jitpack.io/#jeroenmols/LandscapeVideoCamera) [![MethodCount](https://img.shields.io/badge/Methods count-299-e91e63.svg)](http://www.methodscount.com/?lib=com.github.jeroenmols%3Alandscapevideocamera%3A1.1.4)
+LandscapeVideoCamera
+[![Build Status][build-status-svg]][build-status-link]
+[![codecov.io][coverage-svg]][coverage-link]
+[![Release][jitpack-svg]][jitpack-link]
+[![MethodCount][methodcount-svg]][methodcount-link]
 =====================
 
 Highly flexible Android Camera which offers granular control over the video quality and filesize, while restricting recordings to be landscape only.
@@ -104,3 +108,12 @@ This library provides a full and reusable custom camera, which:
 
 ## Thanks
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-LandscapeVideoCamera-brightgreen.svg?style=flat)](https://android-arsenal.com/details/1/1209)
+
+[build-status-svg]: https://travis-ci.org/JeroenMols/LandscapeVideoCamera.svg?branch=master
+[build-status-link]: https://travis-ci.org/JeroenMols/LandscapeVideoCamera
+[coverage-svg]: https://codecov.io/github/JeroenMols/LandscapeVideoCamera/coverage.svg?branch=master
+[coverage-link]: https://codecov.io/github/JeroenMols/LandscapeVideoCamera?branch=master
+[jitpack-svg]: https://jitpack.io/v/jeroenmols/landscapevideocamera.svg
+[jitpack-link]: https://jitpack.io/#jeroenmols/LandscapeVideoCamera
+[methodcount-svg]: https://img.shields.io/badge/Methodscount-299-e91e63.svg
+[methodcount-link]: http://www.methodscount.com/?lib=com.github.jeroenmols%3Alandscapevideocamera%3A1.1.4
