@@ -37,26 +37,6 @@ This library provides a full and reusable custom camera, which:
   * audio/video codec
   * ...
 
-## Screenshots
-
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_2.png" alt="Portrait" height="450"/>
-</p>
-
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_3.png" alt="Not recording" width="450"/>
-</p>
-
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_4.png" alt="Not recording" width="450"/>
-</p>
-
-<p align="center">
-  <img src="https://raw.github.com/jmolsmobile/LandscapeVideoCapture/master/playstore/screenshot_5.png" alt="Not recording" width="450"/>
-</p>
-
-
-
 ## How to use
 
   1. Add the Jitpack repository to your project:
