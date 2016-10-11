@@ -155,6 +155,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         intent.putExtras(getIntent().getExtras());      //Pass all the current intent parameters
         intent.putExtra(EXTRA_CAMERA_FACING, isFrontFacingCamera ? PredefinedCameraFacing.REAR_FACING : PredefinedCameraFacing.FRONT_FACING);
         startActivity(intent);
+        overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
     }
 
     public int getCameraFacing() {
