@@ -72,6 +72,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private EditText       maxDurationEt;
     private EditText       maxFilesizeEt;
     private CheckBox       showTimerCb;
+    private CheckBox       allowFrontCameraCb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -88,6 +89,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         maxDurationEt = (EditText) rootView.findViewById(R.id.et_duration);
         maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
         showTimerCb = (CheckBox) rootView.findViewById(R.id.cb_showtimer);
+        allowFrontCameraCb = (CheckBox) rootView.findViewById(R.id.cb_show_camera_switch);
 
 
         if (savedInstanceState != null) {
@@ -231,8 +233,8 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
             //NOP
         }
         boolean showTimer = showTimerCb.isChecked();
-        final CaptureConfiguration config = new CaptureConfiguration(resolution, quality, fileDuration, filesize, showTimer);
-        return config;
+        boolean allowFrontCamera = allowFrontCameraCb.isChecked();
+        return new CaptureConfiguration(resolution, quality, fileDuration, filesize, showTimer, allowFrontCamera);
     }
 
     private CaptureQuality getQuality(int position) {

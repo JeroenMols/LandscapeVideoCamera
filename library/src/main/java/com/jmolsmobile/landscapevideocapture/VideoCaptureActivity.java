@@ -97,6 +97,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
                 isFrontFacingCamera);
         mVideoCaptureView.setRecordingButtonInterface(this);
         mVideoCaptureView.setCameraFacing(isFrontFacingCamera);
+        mVideoCaptureView.disableSwitchCameraButton(!mCaptureConfiguration.isAllowFrontFacingCamera());
 
         boolean showTimer = this.getIntent().getBooleanExtra(EXTRA_SHOW_TIMER, false);
         mVideoCaptureView.showTimer(showTimer);

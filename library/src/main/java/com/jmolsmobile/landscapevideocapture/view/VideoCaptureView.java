@@ -50,6 +50,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     private RecordingButtonInterface mRecordingInterface;
     private boolean mShowTimer;
     private boolean isFrontCameraEnabled;
+    private boolean disableCameraSwitch;
 
     public VideoCaptureView(Context context) {
         super(context);
@@ -89,7 +90,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         this.mRecordingInterface = mBtnInterface;
     }
 
+    public void disableSwitchCameraButton(boolean disableCameraSwitch){
+        this.disableCameraSwitch = disableCameraSwitch;
+        if (disableCameraSwitch) mChangeCameraIv.setVisibility(View.INVISIBLE);
+    }
+
     public void setCameraFacing(boolean isFrontFacing){
+        if (disableCameraSwitch)return;
         isFrontCameraEnabled = isFrontFacing;
         mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
                 R.drawable.ic_change_camera_back :
@@ -102,7 +109,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     public void updateUINotRecording() {
         mRecordBtnIv.setSelected(false);
-        mChangeCameraIv.setVisibility(CapturePreview.isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
+        mChangeCameraIv.setVisibility(CapturePreview.isFrontCameraAvailable() && !disableCameraSwitch ? VISIBLE : INVISIBLE);
         mRecordBtnIv.setVisibility(View.VISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);

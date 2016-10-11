@@ -203,7 +203,19 @@
                     android:layout_below="@id/iv_filesize"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/ic_timelapse_black_48dp" />
+
             </RelativeLayout>
+
+            <CheckBox
+                android:id="@+id/cb_show_camera_switch"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:gravity="center_vertical"
+                android:layout_alignBottom="@+id/cb_showtimer"
+                android:layout_marginBottom="10dp"
+                android:checked="true"
+                android:layout_marginLeft="72dp"
+                android:text="Allow front facing camera"/>
 
             <Button
                 android:id="@+id/btn_capturevideo"
