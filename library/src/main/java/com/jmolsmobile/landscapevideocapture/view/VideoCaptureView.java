@@ -32,8 +32,6 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.R;
-import com.jmolsmobile.landscapevideocapture.R.id;
-import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
@@ -50,61 +48,73 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     private RecordingButtonInterface mRecordingInterface;
     private boolean mShowTimer;
+    private boolean isFrontCameraEnabled;
 
     public VideoCaptureView(Context context) {
-		super(context);
-		initialize(context);
-	}
+        super(context);
+        initialize(context);
+    }
 
-	public VideoCaptureView(Context context, AttributeSet attrs) {
-		super(context, attrs);
-		initialize(context);
-	}
+    public VideoCaptureView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialize(context);
+    }
 
-	public VideoCaptureView(Context context, AttributeSet attrs, int defStyleAttr) {
-		super(context, attrs, defStyleAttr);
-		initialize(context);
-	}
+    public VideoCaptureView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        initialize(context);
+    }
 
-	private void initialize(Context context) {
-		final View videoCapture = View.inflate(context, R.layout.view_videocapture, this);
+    private void initialize(Context context) {
+        final View videoCapture = View.inflate(context, R.layout.view_videocapture, this);
 
-		mRecordBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_recordbtn_iv);
-		mAcceptBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_acceptbtn_iv);
-		mDeclineBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_declinebtn_iv);
-        mChangeCameraIv = (ImageView) videoCapture.findViewById(id.change_camera_iv);
+        mRecordBtnIv = (ImageView) videoCapture.findViewById(R.id.videocapture_recordbtn_iv);
+        mAcceptBtnIv = (ImageView) videoCapture.findViewById(R.id.videocapture_acceptbtn_iv);
+        mDeclineBtnIv = (ImageView) videoCapture.findViewById(R.id.videocapture_declinebtn_iv);
+        mChangeCameraIv = (ImageView) videoCapture.findViewById(R.id.change_camera_iv);
 
-		mRecordBtnIv.setOnClickListener(this);
-		mAcceptBtnIv.setOnClickListener(this);
-		mDeclineBtnIv.setOnClickListener(this);
+        mRecordBtnIv.setOnClickListener(this);
+        mAcceptBtnIv.setOnClickListener(this);
+        mDeclineBtnIv.setOnClickListener(this);
         mChangeCameraIv.setOnClickListener(this);
 
         mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
         mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
 
-        mTimerTv = (TextView) videoCapture.findViewById(id.videocapture_timer_tv);
-
-        //check if the device has two cameras
-        mChangeCameraIv.setVisibility(CameraWrapper.isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
+        mTimerTv = (TextView) videoCapture.findViewById(R.id.videocapture_timer_tv);
     }
 
-	public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
-		this.mRecordingInterface = mBtnInterface;
-	}
+    @SuppressWarnings("deprecation")
+    private boolean isFrontCameraAvailable() {
+        int i;
+        for (i = 0; i < Camera.getNumberOfCameras(); i++) {
+            Camera.CameraInfo newInfo = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, newInfo);
+            if (newInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                return true;
+            }
+        }
 
-	public SurfaceHolder getPreviewSurfaceHolder() {
-		return mSurfaceView.getHolder();
-	}
+        return false;
+    }
 
-	public void updateUINotRecording() {
-		mRecordBtnIv.setSelected(false);
-		mRecordBtnIv.setVisibility(View.VISIBLE);
-		mAcceptBtnIv.setVisibility(View.GONE);
-		mDeclineBtnIv.setVisibility(View.GONE);
-        mChangeCameraIv.setVisibility(VISIBLE);
-		mThumbnailIv.setVisibility(View.GONE);
-		mSurfaceView.setVisibility(View.VISIBLE);
-	}
+    public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
+        this.mRecordingInterface = mBtnInterface;
+    }
+
+    public SurfaceHolder getPreviewSurfaceHolder() {
+        return mSurfaceView.getHolder();
+    }
+
+    public void updateUINotRecording() {
+        mRecordBtnIv.setSelected(false);
+        mChangeCameraIv.setVisibility(isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
+        mRecordBtnIv.setVisibility(View.VISIBLE);
+        mAcceptBtnIv.setVisibility(View.GONE);
+        mDeclineBtnIv.setVisibility(View.GONE);
+        mThumbnailIv.setVisibility(View.GONE);
+        mSurfaceView.setVisibility(View.VISIBLE);
+    }
 
     private Runnable updateTimerThread = new Runnable() {
         public void run() {
@@ -120,7 +130,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     public void updateUIRecordingOngoing() {
         mRecordBtnIv.setSelected(true);
         mRecordBtnIv.setVisibility(View.VISIBLE);
-        mChangeCameraIv.setVisibility(GONE);
+        mChangeCameraIv.setVisibility(View.INVISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);
         mThumbnailIv.setVisibility(View.GONE);
@@ -136,7 +146,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     public void updateUIRecordingFinished(Bitmap videoThumbnail) {
         mRecordBtnIv.setVisibility(View.INVISIBLE);
         mAcceptBtnIv.setVisibility(View.VISIBLE);
-        mChangeCameraIv.setVisibility(GONE);
+        mChangeCameraIv.setVisibility(View.INVISIBLE);
         mDeclineBtnIv.setVisibility(View.VISIBLE);
         mThumbnailIv.setVisibility(View.VISIBLE);
         mSurfaceView.setVisibility(View.GONE);
@@ -149,19 +159,25 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     }
 
-	@Override
-	public void onClick(View v) {
-		if (mRecordingInterface == null) return;
+    @Override
+    public void onClick(View v) {
+        if (mRecordingInterface == null) return;
 
-		if (v.getId() == mRecordBtnIv.getId()) {
-			mRecordingInterface.onRecordButtonClicked();
-		} else if (v.getId() == mAcceptBtnIv.getId()) {
-			mRecordingInterface.onAcceptButtonClicked();
-		} else if (v.getId() == mDeclineBtnIv.getId()) {
-			mRecordingInterface.onDeclineButtonClicked();
-		}   
+        if (v.getId() == mRecordBtnIv.getId()) {
+            mRecordingInterface.onRecordButtonClicked();
+        } else if (v.getId() == mAcceptBtnIv.getId()) {
+            mRecordingInterface.onAcceptButtonClicked();
+        } else if (v.getId() == mDeclineBtnIv.getId()) {
+            mRecordingInterface.onDeclineButtonClicked();
+        } else if (v.getId() == mChangeCameraIv.getId()) {
+            mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
+                    R.drawable.ic_change_camera_back :
+                    R.drawable.ic_change_camera_front);
+            isFrontCameraEnabled = !isFrontCameraEnabled;
+            mRecordingInterface.onToggleCamera();
+        }
 
-	}
+    }
 
     public void showTimer(boolean showTimer) {
         this.mShowTimer = showTimer;

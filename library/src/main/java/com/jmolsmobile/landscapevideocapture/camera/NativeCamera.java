@@ -39,8 +39,27 @@ NativeCamera {
         return camera;
     }
 
-    public void openNativeCamera() throws RuntimeException {
-        camera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
+    public void nullifyCamera(){
+        camera = null;
+    }
+
+    public void openNativeCamera(boolean isFront) throws RuntimeException {
+        if (isFront) {
+            boolean found = false;
+            int i;
+            for (i = 0; i < Camera.getNumberOfCameras(); i++) {
+                Camera.CameraInfo newInfo = new Camera.CameraInfo();
+                Camera.getCameraInfo(i, newInfo);
+                if (newInfo.facing == CameraInfo.CAMERA_FACING_FRONT) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found) camera = Camera.open(CameraInfo.CAMERA_FACING_FRONT);
+        } else {
+            camera = Camera.open(CameraInfo.CAMERA_FACING_BACK);
+        }
     }
 
     public void unlockNativeCamera() {

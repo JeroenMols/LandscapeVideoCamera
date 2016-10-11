@@ -16,6 +16,7 @@
 
 package com.jmolsmobile.landscapevideocapture.recorder;
 
+import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
@@ -36,16 +37,17 @@ import java.io.IOException;
 
 public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
-    private       CameraWrapper  mCameraWrapper;
-    private final Surface        mPreviewSurface;
-    private       CapturePreview mVideoCapturePreview;
+    private CameraWrapper mCameraWrapper;
+    private CapturePreview mVideoCapturePreview;
 
     private final CaptureConfiguration mCaptureConfiguration;
-    private final VideoFile            mVideoFile;
+    private final VideoFile mVideoFile;
 
     private MediaRecorder mRecorder;
     private boolean mRecording = false;
     private final VideoRecorderInterface mRecorderInterface;
+    private boolean isFrontCameraEnabled;
+    private SurfaceHolder mPreviewHolder;
 
     public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration, VideoFile videoFile,
                          CameraWrapper cameraWrapper, SurfaceHolder previewHolder) {
@@ -53,14 +55,25 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mRecorderInterface = recorderInterface;
         mVideoFile = videoFile;
         mCameraWrapper = cameraWrapper;
-        mPreviewSurface = previewHolder.getSurface();
+        mPreviewHolder = previewHolder;
 
-        initializeCameraAndPreview(previewHolder);
+        initializeCameraAndPreview(previewHolder, false);
     }
 
-    protected void initializeCameraAndPreview(SurfaceHolder previewHolder) {
+
+    public void toggleCamera() throws Exception {
+        isFrontCameraEnabled = !isFrontCameraEnabled;
+        mCameraWrapper.stopPreview();
+        mCameraWrapper.releaseCamera();
+
+        mCameraWrapper.getCamera();
+
+        initializeCameraAndPreview(mPreviewHolder, isFrontCameraEnabled);
+    }
+
+    protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean isFrontCameraEnabled) {
         try {
-            mCameraWrapper.openCamera();
+            mCameraWrapper.openCamera(isFrontCameraEnabled);
         } catch (final OpenCameraException e) {
             e.printStackTrace();
             mRecorderInterface.onRecordingFailed(e.getMessage());

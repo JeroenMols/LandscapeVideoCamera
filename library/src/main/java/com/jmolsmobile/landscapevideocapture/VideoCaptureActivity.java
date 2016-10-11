@@ -22,6 +22,7 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -129,6 +130,14 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     public void onRecordingStarted() {
         mVideoCaptureView.updateUIRecordingOngoing();
     }
+ @Override
+    public void onToggleCamera() {
+     try {
+         mVideoRecorder.toggleCamera();
+     } catch (Exception e) {
+         e.printStackTrace();
+     }
+ }
 
     @Override
     public void onRecordingStopped(String message) {
