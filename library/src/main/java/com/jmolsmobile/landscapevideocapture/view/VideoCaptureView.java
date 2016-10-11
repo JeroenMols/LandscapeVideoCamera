@@ -32,6 +32,7 @@ import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.R;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
@@ -84,22 +85,15 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mTimerTv = (TextView) videoCapture.findViewById(R.id.videocapture_timer_tv);
     }
 
-    @SuppressWarnings("deprecation")
-    private boolean isFrontCameraAvailable() {
-        int i;
-        for (i = 0; i < Camera.getNumberOfCameras(); i++) {
-            Camera.CameraInfo newInfo = new Camera.CameraInfo();
-            Camera.getCameraInfo(i, newInfo);
-            if (newInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
         this.mRecordingInterface = mBtnInterface;
+    }
+
+    public void setCameraFacing(boolean isFrontFacing){
+        isFrontCameraEnabled = isFrontFacing;
+        mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
+                R.drawable.ic_change_camera_back :
+                R.drawable.ic_change_camera_front);
     }
 
     public SurfaceHolder getPreviewSurfaceHolder() {
@@ -108,7 +102,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     public void updateUINotRecording() {
         mRecordBtnIv.setSelected(false);
-        mChangeCameraIv.setVisibility(isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
+        mChangeCameraIv.setVisibility(CapturePreview.isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
         mRecordBtnIv.setVisibility(View.VISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);

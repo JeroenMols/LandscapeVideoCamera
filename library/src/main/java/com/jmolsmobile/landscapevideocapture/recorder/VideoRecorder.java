@@ -16,11 +16,9 @@
 
 package com.jmolsmobile.landscapevideocapture.recorder;
 
-import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
@@ -46,29 +44,19 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
     private MediaRecorder mRecorder;
     private boolean mRecording = false;
     private final VideoRecorderInterface mRecorderInterface;
-    private boolean isFrontCameraEnabled;
-    private SurfaceHolder mPreviewHolder;
 
-    public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration, VideoFile videoFile,
-                         CameraWrapper cameraWrapper, SurfaceHolder previewHolder) {
+    public VideoRecorder(VideoRecorderInterface recorderInterface,
+                         CaptureConfiguration captureConfiguration,
+                         VideoFile videoFile,
+                         CameraWrapper cameraWrapper,
+                         SurfaceHolder previewHolder,
+                         boolean isFrontFacingCamera) {
         mCaptureConfiguration = captureConfiguration;
         mRecorderInterface = recorderInterface;
         mVideoFile = videoFile;
         mCameraWrapper = cameraWrapper;
-        mPreviewHolder = previewHolder;
 
-        initializeCameraAndPreview(previewHolder, false);
-    }
-
-
-    public void toggleCamera() throws Exception {
-        isFrontCameraEnabled = !isFrontCameraEnabled;
-        mCameraWrapper.stopPreview();
-        mCameraWrapper.releaseCamera();
-
-        mCameraWrapper.getCamera();
-
-        initializeCameraAndPreview(mPreviewHolder, isFrontCameraEnabled);
+        initializeCameraAndPreview(previewHolder, isFrontFacingCamera);
     }
 
     protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean isFrontCameraEnabled) {

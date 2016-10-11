@@ -31,6 +31,8 @@ import android.widget.Toast;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.NativeCamera;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCameraFacing;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
@@ -41,20 +43,22 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     public static final int RESULT_ERROR = 753245;
 
-    public static final String EXTRA_OUTPUT_FILENAME       = "com.jmolsmobile.extraoutputfilename";
+    public static final String EXTRA_CAMERA_FACING = "com.jmolsmobile.extracamrafacing";
+    public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
-    public static final String EXTRA_ERROR_MESSAGE         = "com.jmolsmobile.extraerrormessage";
-    public static final String EXTRA_SHOW_TIMER            = "com.jmolsmobile.extrashowtimer";
+    public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
+    public static final String EXTRA_SHOW_TIMER = "com.jmolsmobile.extrashowtimer";
 
-    private static final   String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
-    protected static final String SAVED_OUTPUT_FILENAME  = "com.jmolsmobile.savedoutputfilename";
+    private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
+    protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
 
     private boolean mVideoRecorded = false;
     VideoFile mVideoFile = null;
     private CaptureConfiguration mCaptureConfiguration;
 
     private VideoCaptureView mVideoCaptureView;
-    private VideoRecorder    mVideoRecorder;
+    private VideoRecorder mVideoRecorder;
+    private boolean isFrontFacingCamera;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -73,6 +77,11 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     private void initializeCaptureConfiguration(final Bundle savedInstanceState) {
+        //Decide weather to use frot facing or rear facing camera?
+        isFrontFacingCamera = CapturePreview.isFrontCameraAvailable()
+                && getIntent().getIntExtra(EXTRA_CAMERA_FACING, PredefinedCameraFacing.REAR_FACING)
+                == PredefinedCameraFacing.FRONT_FACING;
+
         mCaptureConfiguration = generateCaptureConfiguration();
         mVideoRecorded = generateVideoRecorded(savedInstanceState);
         mVideoFile = generateOutputFile(savedInstanceState);
@@ -80,9 +89,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private void initializeRecordingUI() {
         Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(new NativeCamera(), display.getRotation()),
-                mVideoCaptureView.getPreviewSurfaceHolder());
+        mVideoRecorder = new VideoRecorder(this,
+                mCaptureConfiguration,
+                mVideoFile,
+                new CameraWrapper(new NativeCamera(), display.getRotation()),
+                mVideoCaptureView.getPreviewSurfaceHolder(),
+                isFrontFacingCamera);
         mVideoCaptureView.setRecordingButtonInterface(this);
+        mVideoCaptureView.setCameraFacing(isFrontFacingCamera);
+
         boolean showTimer = this.getIntent().getBooleanExtra(EXTRA_SHOW_TIMER, false);
         mVideoCaptureView.showTimer(showTimer);
         if (mVideoRecorded) {
@@ -130,14 +145,20 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     public void onRecordingStarted() {
         mVideoCaptureView.updateUIRecordingOngoing();
     }
- @Override
+
+    @Override
     public void onToggleCamera() {
-     try {
-         mVideoRecorder.toggleCamera();
-     } catch (Exception e) {
-         e.printStackTrace();
-     }
- }
+        //restart the activity with other camera. That is front facing if the current camera is rear facing and
+        //rear facing if the current camera is front facing.
+        Intent intent = new Intent(VideoCaptureActivity.this, VideoCaptureActivity.class);
+        intent.putExtras(getIntent().getExtras());      //Pass all the current intent parameters
+        intent.putExtra(EXTRA_CAMERA_FACING, isFrontFacingCamera ? PredefinedCameraFacing.REAR_FACING : PredefinedCameraFacing.FRONT_FACING);
+        startActivity(intent);
+    }
+
+    public int getCameraFacing() {
+        return isFrontFacingCamera ? PredefinedCameraFacing.FRONT_FACING : PredefinedCameraFacing.REAR_FACING;
+    }
 
     @Override
     public void onRecordingStopped(String message) {
