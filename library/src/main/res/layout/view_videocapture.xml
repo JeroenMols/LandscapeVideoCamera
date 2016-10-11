@@ -46,6 +46,20 @@
         android:clickable="true"/>
 
     <ImageView
+        android:id="@+id/change_camera_iv"
+        android:layout_width="48dp"
+        android:src="@drawable/ic_change_camera_front"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/videocapture_recordbtn_iv"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:background="@drawable/states_btn_acceptdecline"
+        android:clickable="true"
+        android:padding="8dp"
+        android:visibility="gone"
+        android:layout_height="48dp"/>
+
+    <ImageView
         android:id="@+id/videocapture_acceptbtn_iv"
         android:layout_width="48dp"
         android:layout_height="48dp"

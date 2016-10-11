@@ -18,6 +18,7 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -32,12 +33,15 @@ import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.R;
 import com.jmolsmobile.landscapevideocapture.R.id;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     private ImageView mDeclineBtnIv;
     private ImageView mAcceptBtnIv;
     private ImageView mRecordBtnIv;
+    private ImageView mChangeCameraIv;
+
     private SurfaceView mSurfaceView;
     private ImageView mThumbnailIv;
     private TextView mTimerTv;
@@ -47,7 +51,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     private RecordingButtonInterface mRecordingInterface;
     private boolean mShowTimer;
 
-	public VideoCaptureView(Context context) {
+    public VideoCaptureView(Context context) {
 		super(context);
 		initialize(context);
 	}
@@ -68,15 +72,20 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mRecordBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_recordbtn_iv);
 		mAcceptBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_acceptbtn_iv);
 		mDeclineBtnIv = (ImageView) videoCapture.findViewById(id.videocapture_declinebtn_iv);
+        mChangeCameraIv = (ImageView) videoCapture.findViewById(id.change_camera_iv);
 
 		mRecordBtnIv.setOnClickListener(this);
 		mAcceptBtnIv.setOnClickListener(this);
 		mDeclineBtnIv.setOnClickListener(this);
+        mChangeCameraIv.setOnClickListener(this);
 
         mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
         mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
 
         mTimerTv = (TextView) videoCapture.findViewById(id.videocapture_timer_tv);
+
+        //check if the device has two cameras
+        mChangeCameraIv.setVisibility(CameraWrapper.isFrontCameraAvailable() ? VISIBLE : INVISIBLE);
     }
 
 	public void setRecordingButtonInterface(RecordingButtonInterface mBtnInterface) {
@@ -92,6 +101,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 		mRecordBtnIv.setVisibility(View.VISIBLE);
 		mAcceptBtnIv.setVisibility(View.GONE);
 		mDeclineBtnIv.setVisibility(View.GONE);
+        mChangeCameraIv.setVisibility(VISIBLE);
 		mThumbnailIv.setVisibility(View.GONE);
 		mSurfaceView.setVisibility(View.VISIBLE);
 	}
@@ -110,6 +120,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     public void updateUIRecordingOngoing() {
         mRecordBtnIv.setSelected(true);
         mRecordBtnIv.setVisibility(View.VISIBLE);
+        mChangeCameraIv.setVisibility(GONE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);
         mThumbnailIv.setVisibility(View.GONE);
@@ -125,11 +136,12 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     public void updateUIRecordingFinished(Bitmap videoThumbnail) {
         mRecordBtnIv.setVisibility(View.INVISIBLE);
         mAcceptBtnIv.setVisibility(View.VISIBLE);
+        mChangeCameraIv.setVisibility(GONE);
         mDeclineBtnIv.setVisibility(View.VISIBLE);
         mThumbnailIv.setVisibility(View.VISIBLE);
         mSurfaceView.setVisibility(View.GONE);
-        final Bitmap thumbnail = videoThumbnail;
-        if (thumbnail != null) {
+
+        if (videoThumbnail != null) {
             mThumbnailIv.setScaleType(ScaleType.CENTER_CROP);
             mThumbnailIv.setImageBitmap(videoThumbnail);
         }
@@ -147,7 +159,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 			mRecordingInterface.onAcceptButtonClicked();
 		} else if (v.getId() == mDeclineBtnIv.getId()) {
 			mRecordingInterface.onDeclineButtonClicked();
-		}
+		}   
 
 	}
 
