@@ -58,8 +58,8 @@ public class CameraWrapperTest extends MockitoTestCase {
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         try {
-            wrapper.openCamera();
-            verify(mockCamera, times(1)).openNativeCamera();
+            wrapper.openCamera(false);
+            verify(mockCamera, times(1)).openNativeCamera(false);
         } catch (final OpenCameraException e) {
             fail("Should not throw exception");
         }
@@ -71,7 +71,7 @@ public class CameraWrapperTest extends MockitoTestCase {
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         try {
-            wrapper.openCamera();
+            wrapper.openCamera(false);
             fail("Missing exception");
         } catch (final OpenCameraException e) {
             assertEquals(OpenType.NOCAMERA.getMessage(), e.getMessage());
@@ -81,11 +81,11 @@ public class CameraWrapperTest extends MockitoTestCase {
     @Test
     public void openCameraInUse() {
         NativeCamera mockCamera = mock(NativeCamera.class);
-        doThrow(new RuntimeException()).when(mockCamera).openNativeCamera();
+        doThrow(new RuntimeException()).when(mockCamera).openNativeCamera(false);
         final CameraWrapper wrapper = new CameraWrapper(mockCamera, Surface.ROTATION_0);
 
         try {
-            wrapper.openCamera();
+            wrapper.openCamera(false);
             fail("Missing exception");
         } catch (final OpenCameraException e) {
             assertEquals(OpenType.INUSE.getMessage(), e.getMessage());
