@@ -16,9 +16,28 @@
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        setup = [compileSdk: 23,
+                 targetSdk : 22,
+                 minSdk    : 10,
+                 buildTools: "23.0.0"]
+
+        versions = [support    : "24.1.1",
+                    supportTest: "0.4",
+                    dexmaker   : "1.2"]
+
+        deps = [supportAppCompat : "com.android.support:appcompat-v7:$ext.versions.support",
+                supportTestRunner: "com.android.support.test:runner:$ext.versions.supportTest",
+                supportTestRules : "com.android.support.test:rules:$ext.versions.supportTest",
+                mockitoCore      : 'org.mockito:mockito-core:1.9.5',
+                dexmaker         : "com.google.dexmaker:dexmaker:$ext.versions.dexmaker",
+                dexmakerMockito  : "com.google.dexmaker:dexmaker-mockito:$ext.versions.dexmaker"]
+    }
+
     repositories {
         jcenter()
     }
+
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.0.1'
