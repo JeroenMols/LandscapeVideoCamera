@@ -17,13 +17,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.0'
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
         applicationId "com.jmolsmobile.landscapevideocapture_sample"
-        minSdkVersion 10
-        targetSdkVersion 22
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
         versionCode 13
         versionName "1.1.4"
     }
@@ -36,7 +36,7 @@ android {
 }
 
 dependencies {
-    compile 'com.android.support:appcompat-v7:23.3.0'
+    compile deps.supportAppCompat
 //    compile project(':library')
 
     compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.4'

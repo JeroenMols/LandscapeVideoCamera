@@ -18,12 +18,12 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.kt3k.coveralls'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.0'
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
-        minSdkVersion 10
-        targetSdkVersion 22
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
         versionCode 1
         versionName "1.0"
 
@@ -38,11 +38,11 @@ android {
 }
 
 dependencies {
-    androidTestCompile 'com.android.support.test:runner:0.4'
-    androidTestCompile 'com.android.support.test:rules:0.4'
-    androidTestCompile 'org.mockito:mockito-core:1.9.5'
-    androidTestCompile 'com.google.dexmaker:dexmaker:1.2'
-    androidTestCompile 'com.google.dexmaker:dexmaker-mockito:1.2'
+    androidTestCompile deps.supportTestRunner
+    androidTestCompile deps.supportTestRules
+    androidTestCompile deps.mockitoCore
+    androidTestCompile deps.dexmaker
+    androidTestCompile deps.dexmakerMockito
 }
 
 coveralls {
