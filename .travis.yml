@@ -10,11 +10,13 @@ notifications:
 
 android:
   components:
-    - build-tools-24.0.2
+    - tools # to get the new `repository-11.xml`
+    - tools # to install Android SDK tools 25.1.x (x = 6 right now)
+    - platform-tools
+    - build-tools-23.0.0
+    - android-22
     - android-23
     - extra-android-m2repository
-    
-    - android-22
     - sys-img-armeabi-v7a-android-22
 
 before_script:
