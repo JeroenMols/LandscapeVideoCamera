@@ -24,8 +24,8 @@ android {
         applicationId "com.jmolsmobile.landscapevideocapture_sample"
         minSdkVersion 10
         targetSdkVersion 22
-        versionCode 13
-        versionName "1.1.4"
+        versionCode 14
+        versionName "1.2.0"
     }
     buildTypes {
         release {
@@ -37,7 +37,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
-    compile project(':library')
+//    compile project(':library')
 
-//    compile 'com.github.JeroenMols:LandscapeVideoCamera:1.1.4'
+    compile 'com.github.JeroenMols:LandscapeVideoCamera:1.2.0'
 }
