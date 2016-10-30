@@ -88,8 +88,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
                 mVideoCaptureView.getPreviewSurfaceHolder(),
                 isFrontFacingCameraSelected);
         mVideoCaptureView.setRecordingButtonInterface(this);
+        mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
         mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
-        mVideoCaptureView.disableSwitchCameraButton(!mCaptureConfiguration.getAllowFrontFacingCamera());
 
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());

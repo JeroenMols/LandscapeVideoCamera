@@ -49,7 +49,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     private RecordingButtonInterface mRecordingInterface;
     private boolean mShowTimer;
     private boolean isFrontCameraEnabled;
-    private boolean disableCameraSwitch;
+    private boolean isCameraSwitchingEnabled;
 
     public VideoCaptureView(Context context) {
         super(context);
@@ -89,13 +89,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         this.mRecordingInterface = mBtnInterface;
     }
 
-    public void disableSwitchCameraButton(boolean disableCameraSwitch) {
-        this.disableCameraSwitch = disableCameraSwitch;
-        if (disableCameraSwitch) mChangeCameraIv.setVisibility(View.INVISIBLE);
+    public void setCameraSwitchingEnabled(boolean isCameraSwitchingEnabled) {
+        this.isCameraSwitchingEnabled = isCameraSwitchingEnabled;
+        mChangeCameraIv.setVisibility(isCameraSwitchingEnabled ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void setCameraFacing(boolean isFrontFacing) {
-        if (disableCameraSwitch) return;
+        if (!isCameraSwitchingEnabled) return;
         isFrontCameraEnabled = isFrontFacing;
         mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
                 R.drawable.ic_change_camera_back :
@@ -108,7 +108,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     public void updateUINotRecording() {
         mRecordBtnIv.setSelected(false);
-        mChangeCameraIv.setVisibility(CapturePreview.isFrontCameraAvailable() && !disableCameraSwitch ? VISIBLE : INVISIBLE);
+        mChangeCameraIv.setVisibility(allowCameraSwitching() ? VISIBLE : INVISIBLE);
         mRecordBtnIv.setVisibility(View.VISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);
@@ -184,5 +184,9 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     private void updateRecordingTime(int seconds, int minutes) {
         mTimerTv.setText(String.format("%02d", minutes) + ":" + String.format("%02d", seconds));
+    }
+
+    private boolean allowCameraSwitching() {
+        return CapturePreview.isFrontCameraAvailable() && isCameraSwitchingEnabled;
     }
 }
