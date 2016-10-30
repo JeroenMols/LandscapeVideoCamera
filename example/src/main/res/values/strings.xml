@@ -32,7 +32,7 @@
 
     <string name="advanced">advanced</string>
     <string name="github">show on GitHub</string>
-    <string name="github_url">https://github.com/jmolsmobile/LandscapeVideoCamera</string>
+    <string name="github_url">https://github.com/jeroenmols/LandscapeVideoCamera</string>
     <string name="show_timer">Show Timer</string>
     <string name="allow_frontcamera">Allow front facing camera</string>
 
