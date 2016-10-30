@@ -35,6 +35,7 @@ This library provides a full and reusable custom camera, which:
   * Max filesize
   * Max video duration
   * audio/video codec
+  * switch between front and rear facing camera
   * ...
 
 ## How to use
@@ -69,6 +70,7 @@ This library provides a full and reusable custom camera, which:
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
          CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb, boolean showTimer);
+         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb, boolean showTimer, boolean allowFrontCamera);
 ```
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
 
@@ -78,6 +80,7 @@ This library provides a full and reusable custom camera, which:
 ```java
          final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
          intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
+         intent.putExtra(VideoCaptureActivity.EXTRA_CAMERA_FACING, PredefinedCameraFacing.REAR_FACING); //Opens rearfacing camera by default.
          intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
          startActivityForResult(intent, RESULT_CODE);
 ```

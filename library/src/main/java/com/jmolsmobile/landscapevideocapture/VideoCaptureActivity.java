@@ -40,20 +40,21 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     public static final int RESULT_ERROR = 753245;
 
-    public static final String EXTRA_OUTPUT_FILENAME       = "com.jmolsmobile.extraoutputfilename";
+    public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
-    public static final String EXTRA_ERROR_MESSAGE         = "com.jmolsmobile.extraerrormessage";
-    public static final String EXTRA_SHOW_TIMER            = "com.jmolsmobile.extrashowtimer";
+    public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
+    private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
 
-    private static final   String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
-    protected static final String SAVED_OUTPUT_FILENAME  = "com.jmolsmobile.savedoutputfilename";
+    private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
+    protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
 
     private boolean mVideoRecorded = false;
     VideoFile mVideoFile = null;
     private CaptureConfiguration mCaptureConfiguration;
 
     private VideoCaptureView mVideoCaptureView;
-    private VideoRecorder    mVideoRecorder;
+    private VideoRecorder mVideoRecorder;
+    private boolean isFrontFacingCameraSelected;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -75,15 +76,21 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         mCaptureConfiguration = generateCaptureConfiguration();
         mVideoRecorded = generateVideoRecorded(savedInstanceState);
         mVideoFile = generateOutputFile(savedInstanceState);
+        isFrontFacingCameraSelected = generateIsFrontFacingCameraSelected();
     }
 
     private void initializeRecordingUI() {
         Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-        mVideoRecorder = new VideoRecorder(this, mCaptureConfiguration, mVideoFile, new CameraWrapper(new NativeCamera(), display.getRotation()),
-                mVideoCaptureView.getPreviewSurfaceHolder());
+        mVideoRecorder = new VideoRecorder(this,
+                mCaptureConfiguration,
+                mVideoFile,
+                new CameraWrapper(new NativeCamera(), display.getRotation()),
+                mVideoCaptureView.getPreviewSurfaceHolder(),
+                isFrontFacingCameraSelected);
         mVideoCaptureView.setRecordingButtonInterface(this);
-        boolean showTimer = this.getIntent().getBooleanExtra(EXTRA_SHOW_TIMER, false);
-        mVideoCaptureView.showTimer(showTimer);
+        mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
+        mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
+
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
         } else {
@@ -128,6 +135,15 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     @Override
     public void onRecordingStarted() {
         mVideoCaptureView.updateUIRecordingOngoing();
+    }
+
+    @Override
+    public void onSwitchCamera(boolean isFrontFacingSelected) {
+        Intent intent = new Intent(VideoCaptureActivity.this, VideoCaptureActivity.class);
+        intent.putExtras(getIntent().getExtras());      //Pass all the current intent parameters
+        intent.putExtra(EXTRA_FRONTFACINGCAMERASELECTED, isFrontFacingSelected);
+        startActivity(intent);
+        overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
     }
 
     @Override
@@ -207,6 +223,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         }
         // TODO: add checks to see if outputfile is writeable
         return returnFile;
+    }
+
+    private boolean generateIsFrontFacingCameraSelected() {
+        return getIntent().getBooleanExtra(EXTRA_FRONTFACINGCAMERASELECTED, false);
     }
 
     public Bitmap getVideoThumbnail() {

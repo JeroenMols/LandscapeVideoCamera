@@ -19,7 +19,6 @@ package com.jmolsmobile.landscapevideocapture.recorder;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
-import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
@@ -36,31 +35,33 @@ import java.io.IOException;
 
 public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
 
-    private       CameraWrapper  mCameraWrapper;
-    private final Surface        mPreviewSurface;
-    private       CapturePreview mVideoCapturePreview;
+    private CameraWrapper mCameraWrapper;
+    private CapturePreview mVideoCapturePreview;
 
     private final CaptureConfiguration mCaptureConfiguration;
-    private final VideoFile            mVideoFile;
+    private final VideoFile mVideoFile;
 
     private MediaRecorder mRecorder;
     private boolean mRecording = false;
     private final VideoRecorderInterface mRecorderInterface;
 
-    public VideoRecorder(VideoRecorderInterface recorderInterface, CaptureConfiguration captureConfiguration, VideoFile videoFile,
-                         CameraWrapper cameraWrapper, SurfaceHolder previewHolder) {
+    public VideoRecorder(VideoRecorderInterface recorderInterface,
+                         CaptureConfiguration captureConfiguration,
+                         VideoFile videoFile,
+                         CameraWrapper cameraWrapper,
+                         SurfaceHolder previewHolder,
+                         boolean useFrontFacingCamera) {
         mCaptureConfiguration = captureConfiguration;
         mRecorderInterface = recorderInterface;
         mVideoFile = videoFile;
         mCameraWrapper = cameraWrapper;
-        mPreviewSurface = previewHolder.getSurface();
 
-        initializeCameraAndPreview(previewHolder);
+        initializeCameraAndPreview(previewHolder, useFrontFacingCamera);
     }
 
-    protected void initializeCameraAndPreview(SurfaceHolder previewHolder) {
+    protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean useFrontFacingCamera) {
         try {
-            mCameraWrapper.openCamera();
+            mCameraWrapper.openCamera(useFrontFacingCamera);
         } catch (final OpenCameraException e) {
             e.printStackTrace();
             mRecorderInterface.onRecordingFailed(e.getMessage());

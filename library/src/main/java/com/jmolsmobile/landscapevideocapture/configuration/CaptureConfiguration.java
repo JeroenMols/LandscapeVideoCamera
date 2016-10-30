@@ -26,22 +26,23 @@ import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConf
 public class CaptureConfiguration implements Parcelable {
 
     private static final int MBYTE_TO_BYTE = 1024 * 1024;
-    private static final int MSEC_TO_SEC   = 1000;
+    private static final int MSEC_TO_SEC = 1000;
 
     public static final int NO_DURATION_LIMIT = -1;
     public static final int NO_FILESIZE_LIMIT = -1;
 
-    private int mVideoWidth       = PredefinedCaptureConfigurations.WIDTH_720P;
-    private int mVideoHeight      = PredefinedCaptureConfigurations.HEIGHT_720P;
-    private int mBitrate          = PredefinedCaptureConfigurations.BITRATE_HQ_720P;
-    private int mMaxDurationMs    = NO_DURATION_LIMIT;
+    private int mVideoWidth = PredefinedCaptureConfigurations.WIDTH_720P;
+    private int mVideoHeight = PredefinedCaptureConfigurations.HEIGHT_720P;
+    private int mBitrate = PredefinedCaptureConfigurations.BITRATE_HQ_720P;
+    private int mMaxDurationMs = NO_DURATION_LIMIT;
     private int mMaxFilesizeBytes = NO_FILESIZE_LIMIT;
-    private boolean mShowTimer    = false;
+    private boolean mShowTimer = false;
+    private boolean mAllowFrontFacingCamera = true;
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
-    private int AUDIO_SOURCE  = MediaRecorder.AudioSource.DEFAULT;
+    private int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
     private int AUDIO_ENCODER = MediaRecorder.AudioEncoder.AAC;
-    private int VIDEO_SOURCE  = MediaRecorder.VideoSource.CAMERA;
+    private int VIDEO_SOURCE = MediaRecorder.VideoSource.CAMERA;
     private int VIDEO_ENCODER = MediaRecorder.VideoEncoder.H264;
 
     public CaptureConfiguration() {
@@ -56,8 +57,15 @@ public class CaptureConfiguration implements Parcelable {
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer) {
+        this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, false);
+        mShowTimer = showTimer;
+    }
+
+    public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
+                                int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb);
         mShowTimer = showTimer;
+        mAllowFrontFacingCamera = allowFrontFacingCamera;
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
@@ -121,6 +129,13 @@ public class CaptureConfiguration implements Parcelable {
         return mShowTimer;
     }
 
+    /**
+     * @return If front facing camera toggle must be displayed before capturing video
+     */
+    public boolean getAllowFrontFacingCamera() {
+        return mAllowFrontFacingCamera;
+    }
+
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
     }
@@ -153,7 +168,8 @@ public class CaptureConfiguration implements Parcelable {
         dest.writeInt(mBitrate);
         dest.writeInt(mMaxDurationMs);
         dest.writeInt(mMaxFilesizeBytes);
-        dest.writeByte((byte) (mShowTimer? 1 : 0));
+        dest.writeByte((byte) (mShowTimer ? 1 : 0));
+        dest.writeByte((byte) (mAllowFrontFacingCamera ? 1 : 0));
 
         dest.writeInt(OUTPUT_FORMAT);
         dest.writeInt(AUDIO_SOURCE);
@@ -183,6 +199,7 @@ public class CaptureConfiguration implements Parcelable {
         mMaxDurationMs = in.readInt();
         mMaxFilesizeBytes = in.readInt();
         mShowTimer = in.readByte() != 0;
+        mAllowFrontFacingCamera = in.readByte() != 0;
 
         OUTPUT_FORMAT = in.readInt();
         AUDIO_SOURCE = in.readInt();
@@ -190,5 +207,4 @@ public class CaptureConfiguration implements Parcelable {
         VIDEO_SOURCE = in.readInt();
         VIDEO_ENCODER = in.readInt();
     }
-
 }

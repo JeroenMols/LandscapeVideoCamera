@@ -38,7 +38,6 @@ public class CameraWrapper {
 
     private final int mDisplayRotation;
     private NativeCamera mNativeCamera = null;
-    private Parameters   mParameters   = null;
 
     public CameraWrapper(NativeCamera nativeCamera, int displayRotation) {
         mNativeCamera = nativeCamera;
@@ -49,15 +48,16 @@ public class CameraWrapper {
         return mNativeCamera.getNativeCamera();
     }
 
-    public void openCamera() throws OpenCameraException {
+    public void openCamera(boolean useFrontFacingCamera) throws OpenCameraException {
         try {
-            mNativeCamera.openNativeCamera();
+            mNativeCamera.openNativeCamera(useFrontFacingCamera);
         } catch (final RuntimeException e) {
             e.printStackTrace();
             throw new OpenCameraException(OpenType.INUSE);
         }
 
-        if (mNativeCamera.getNativeCamera() == null) throw new OpenCameraException(OpenType.NOCAMERA);
+        if (mNativeCamera.getNativeCamera() == null)
+            throw new OpenCameraException(OpenType.NOCAMERA);
     }
 
     public void prepareCameraForRecording() throws PrepareCameraException {
@@ -139,7 +139,12 @@ public class CameraWrapper {
 
     public int getRotationCorrection() {
         int displayRotation = mDisplayRotation * 90;
-        return (mNativeCamera.getCameraOrientation() - displayRotation + 360) % 360;
+        if (mNativeCamera.isFrontFacingCamera()) {
+            int mirroredRotation = (mNativeCamera.getCameraOrientation() + displayRotation) % 360;
+            return (360 - mirroredRotation) % 360;
+        } else {
+            return (mNativeCamera.getCameraOrientation() - displayRotation + 360) % 360;
+        }
     }
 
     @TargetApi(VERSION_CODES.HONEYCOMB)

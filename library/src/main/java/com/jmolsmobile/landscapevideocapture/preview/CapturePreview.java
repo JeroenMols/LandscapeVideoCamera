@@ -16,6 +16,7 @@
 
 package com.jmolsmobile.landscapevideocapture.preview;
 
+import android.hardware.Camera;
 import android.view.SurfaceHolder;
 
 import com.jmolsmobile.landscapevideocapture.CLog;
@@ -39,6 +40,7 @@ public class CapturePreview implements SurfaceHolder.Callback {
 
 	@SuppressWarnings("deprecation")
 	private void initalizeSurfaceHolder(final SurfaceHolder surfaceHolder) {
+		surfaceHolder.removeCallback(this);
 		surfaceHolder.addCallback(this);
 		surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS); // Necessary for older API's
 	}
@@ -109,5 +111,20 @@ public class CapturePreview implements SurfaceHolder.Callback {
 	protected void setPreviewRunning(boolean running) {
 		mPreviewRunning = running;
 	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean isFrontCameraAvailable() {
+		int i;
+		for (i = 0; i < Camera.getNumberOfCameras(); i++) {
+			Camera.CameraInfo newInfo = new Camera.CameraInfo();
+			Camera.getCameraInfo(i, newInfo);
+			if (newInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 
 }
