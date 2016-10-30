@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~  Copyright 2016 Jeroen Mols
   ~
   ~  Licensed under the Apache License, Version 2.0 (the "License");
@@ -30,10 +29,11 @@
     <string name="duration_unit">sec</string>
     <string name="filesize_hint">maximum filesize</string>
     <string name="filesize_unit">Mb</string>
-    
+
     <string name="advanced">advanced</string>
     <string name="github">show on GitHub</string>
     <string name="github_url">https://github.com/jmolsmobile/LandscapeVideoCamera</string>
     <string name="show_timer">Show Timer</string>
+    <string name="allow_frontcamera">Allow front facing camera</string>
 
 </resources>
