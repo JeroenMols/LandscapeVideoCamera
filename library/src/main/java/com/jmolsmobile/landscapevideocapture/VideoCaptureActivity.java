@@ -22,7 +22,6 @@ import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
-import android.util.Log;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -43,11 +42,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     public static final int RESULT_ERROR = 753245;
 
-    public static final String EXTRA_CAMERA_FACING = "com.jmolsmobile.extracamrafacing";
+    public static final String EXTRA_CAMERA_FACING = "com.jmolsmobile.extracamerafacing";
     public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
     public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
-    public static final String EXTRA_SHOW_TIMER = "com.jmolsmobile.extrashowtimer";
 
     private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
     protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
@@ -99,8 +97,6 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         mVideoCaptureView.setCameraFacing(isFrontFacingCamera);
         mVideoCaptureView.disableSwitchCameraButton(!mCaptureConfiguration.isAllowFrontFacingCamera());
 
-        boolean showTimer = this.getIntent().getBooleanExtra(EXTRA_SHOW_TIMER, false);
-        mVideoCaptureView.showTimer(showTimer);
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
         } else {
