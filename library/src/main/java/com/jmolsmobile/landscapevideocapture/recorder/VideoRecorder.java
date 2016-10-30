@@ -50,18 +50,18 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
                          VideoFile videoFile,
                          CameraWrapper cameraWrapper,
                          SurfaceHolder previewHolder,
-                         boolean isFrontFacingCamera) {
+                         boolean useFrontFacingCamera) {
         mCaptureConfiguration = captureConfiguration;
         mRecorderInterface = recorderInterface;
         mVideoFile = videoFile;
         mCameraWrapper = cameraWrapper;
 
-        initializeCameraAndPreview(previewHolder, isFrontFacingCamera);
+        initializeCameraAndPreview(previewHolder, useFrontFacingCamera);
     }
 
-    protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean isFrontCameraEnabled) {
+    protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean useFrontFacingCamera) {
         try {
-            mCameraWrapper.openCamera(isFrontCameraEnabled);
+            mCameraWrapper.openCamera(useFrontFacingCamera);
         } catch (final OpenCameraException e) {
             e.printStackTrace();
             mRecorderInterface.onRecordingFailed(e.getMessage());
