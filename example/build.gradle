@@ -37,7 +37,7 @@ android {
 
 dependencies {
     compile 'com.android.support:appcompat-v7:23.3.0'
-//    compile project(':library')
+    compile project(':library')
 
-    compile 'com.github.JeroenMols:LandscapeVideoCamera:1.2.0'
+//    compile 'com.github.JeroenMols:LandscapeVideoCamera:1.2.0'
 }
