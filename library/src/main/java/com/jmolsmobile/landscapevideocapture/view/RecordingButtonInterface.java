@@ -18,12 +18,12 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 public interface RecordingButtonInterface {
 
-	public abstract void onRecordButtonClicked();
+    void onRecordButtonClicked();
 
-	public abstract void onAcceptButtonClicked();
+    void onAcceptButtonClicked();
 
-	public abstract void onDeclineButtonClicked();
+    void onDeclineButtonClicked();
 
-	public abstract void onToggleCamera();
+    void onSwitchCamera(boolean isFrontFacingSelected);
 
 }

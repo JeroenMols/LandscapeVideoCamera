@@ -129,6 +129,13 @@ public class CaptureConfiguration implements Parcelable {
         return mShowTimer;
     }
 
+    /**
+     * @return If front facing camera toggle must be displayed before capturing video
+     */
+    public boolean getAllowFrontFacingCamera() {
+        return mAllowFrontFacingCamera;
+    }
+
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
     }
@@ -152,10 +159,6 @@ public class CaptureConfiguration implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    public boolean isAllowFrontFacingCamera() {
-        return mAllowFrontFacingCamera;
     }
 
     @Override

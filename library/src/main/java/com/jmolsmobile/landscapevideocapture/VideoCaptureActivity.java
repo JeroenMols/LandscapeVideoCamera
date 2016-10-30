@@ -30,8 +30,6 @@ import android.widget.Toast;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.camera.NativeCamera;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCameraFacing;
-import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
 import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
@@ -42,10 +40,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     public static final int RESULT_ERROR = 753245;
 
-    public static final String EXTRA_CAMERA_FACING = "com.jmolsmobile.extracamerafacing";
     public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
     public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
+    private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
 
     private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
     protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
@@ -56,7 +54,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private VideoCaptureView mVideoCaptureView;
     private VideoRecorder mVideoRecorder;
-    private boolean isFrontFacingCamera;
+    private boolean isFrontFacingCameraSelected;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -75,14 +73,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     private void initializeCaptureConfiguration(final Bundle savedInstanceState) {
-        //Decide weather to use frot facing or rear facing camera?
-        isFrontFacingCamera = CapturePreview.isFrontCameraAvailable()
-                && getIntent().getIntExtra(EXTRA_CAMERA_FACING, PredefinedCameraFacing.REAR_FACING)
-                == PredefinedCameraFacing.FRONT_FACING;
-
         mCaptureConfiguration = generateCaptureConfiguration();
         mVideoRecorded = generateVideoRecorded(savedInstanceState);
         mVideoFile = generateOutputFile(savedInstanceState);
+        isFrontFacingCameraSelected = generateIsFrontFacingCameraSelected();
     }
 
     private void initializeRecordingUI() {
@@ -92,10 +86,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
                 mVideoFile,
                 new CameraWrapper(new NativeCamera(), display.getRotation()),
                 mVideoCaptureView.getPreviewSurfaceHolder(),
-                isFrontFacingCamera);
+                isFrontFacingCameraSelected);
         mVideoCaptureView.setRecordingButtonInterface(this);
-        mVideoCaptureView.setCameraFacing(isFrontFacingCamera);
-        mVideoCaptureView.disableSwitchCameraButton(!mCaptureConfiguration.isAllowFrontFacingCamera());
+        mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
+        mVideoCaptureView.disableSwitchCameraButton(!mCaptureConfiguration.getAllowFrontFacingCamera());
 
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
@@ -144,18 +138,12 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     @Override
-    public void onToggleCamera() {
-        //restart the activity with other camera. That is front facing if the current camera is rear facing and
-        //rear facing if the current camera is front facing.
+    public void onSwitchCamera(boolean isFrontFacingSelected) {
         Intent intent = new Intent(VideoCaptureActivity.this, VideoCaptureActivity.class);
         intent.putExtras(getIntent().getExtras());      //Pass all the current intent parameters
-        intent.putExtra(EXTRA_CAMERA_FACING, isFrontFacingCamera ? PredefinedCameraFacing.REAR_FACING : PredefinedCameraFacing.FRONT_FACING);
+        intent.putExtra(EXTRA_FRONTFACINGCAMERASELECTED, isFrontFacingSelected);
         startActivity(intent);
         overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
-    }
-
-    public int getCameraFacing() {
-        return isFrontFacingCamera ? PredefinedCameraFacing.FRONT_FACING : PredefinedCameraFacing.REAR_FACING;
     }
 
     @Override
@@ -235,6 +223,10 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         }
         // TODO: add checks to see if outputfile is writeable
         return returnFile;
+    }
+
+    private boolean generateIsFrontFacingCameraSelected() {
+        return getIntent().getBooleanExtra(EXTRA_FRONTFACINGCAMERASELECTED, false);
     }
 
     public Bitmap getVideoThumbnail() {

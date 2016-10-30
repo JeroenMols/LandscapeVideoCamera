@@ -18,7 +18,6 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.hardware.Camera;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.util.AttributeSet;
@@ -90,13 +89,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         this.mRecordingInterface = mBtnInterface;
     }
 
-    public void disableSwitchCameraButton(boolean disableCameraSwitch){
+    public void disableSwitchCameraButton(boolean disableCameraSwitch) {
         this.disableCameraSwitch = disableCameraSwitch;
         if (disableCameraSwitch) mChangeCameraIv.setVisibility(View.INVISIBLE);
     }
 
-    public void setCameraFacing(boolean isFrontFacing){
-        if (disableCameraSwitch)return;
+    public void setCameraFacing(boolean isFrontFacing) {
+        if (disableCameraSwitch) return;
         isFrontCameraEnabled = isFrontFacing;
         mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
                 R.drawable.ic_change_camera_back :
@@ -171,11 +170,10 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         } else if (v.getId() == mDeclineBtnIv.getId()) {
             mRecordingInterface.onDeclineButtonClicked();
         } else if (v.getId() == mChangeCameraIv.getId()) {
-            mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
-                    R.drawable.ic_change_camera_back :
-                    R.drawable.ic_change_camera_front);
             isFrontCameraEnabled = !isFrontCameraEnabled;
-            mRecordingInterface.onToggleCamera();
+            mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
+                    R.drawable.ic_change_camera_front : R.drawable.ic_change_camera_back);
+            mRecordingInterface.onSwitchCamera(isFrontCameraEnabled);
         }
 
     }
