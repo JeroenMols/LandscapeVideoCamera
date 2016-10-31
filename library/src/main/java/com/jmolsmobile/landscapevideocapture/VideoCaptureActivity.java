@@ -39,12 +39,13 @@ import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, VideoRecorderInterface {
 
     public static final int RESULT_ERROR = 753245;
+    private static final int REQUESTCODE_SWITCHCAMERA = 578465;
 
     public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
     public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
-    private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
 
+    private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
     private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
     protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
 
@@ -142,7 +143,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         Intent intent = new Intent(VideoCaptureActivity.this, VideoCaptureActivity.class);
         intent.putExtras(getIntent().getExtras());      //Pass all the current intent parameters
         intent.putExtra(EXTRA_FRONTFACINGCAMERASELECTED, isFrontFacingSelected);
-        startActivity(intent);
+        startActivityForResult(intent, REQUESTCODE_SWITCHCAMERA);
         overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
     }
 
@@ -238,4 +239,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         return thumbnail;
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        this.setResult(resultCode, data);
+        finish();
+    }
 }
