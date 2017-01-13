@@ -38,6 +38,7 @@ public class CaptureConfiguration implements Parcelable {
     private int mMaxFilesizeBytes = NO_FILESIZE_LIMIT;
     private boolean mShowTimer = false;
     private boolean mAllowFrontFacingCamera = true;
+    private int mVideoFPS = 30;
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
     private int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
@@ -56,23 +57,25 @@ public class CaptureConfiguration implements Parcelable {
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
-                                int maxFilesizeMb, boolean showTimer) {
-        this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, false);
+                                int maxFilesizeMb, boolean showTimer, int videoFPS) {
+        this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, false, videoFPS);
         mShowTimer = showTimer;
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
-                                int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera) {
-        this(resolution, quality, maxDurationSecs, maxFilesizeMb);
+                                int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera,
+                                int videoFPS) {
+        this(resolution, quality, maxDurationSecs, maxFilesizeMb, videoFPS);
         mShowTimer = showTimer;
         mAllowFrontFacingCamera = allowFrontFacingCamera;
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
-                                int maxFilesizeMb) {
+                                int maxFilesizeMb, int videoFPS) {
         this(resolution, quality);
         mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
         mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
+        mVideoFPS = videoFPS;
     }
 
     public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate) {
@@ -206,5 +209,13 @@ public class CaptureConfiguration implements Parcelable {
         AUDIO_ENCODER = in.readInt();
         VIDEO_SOURCE = in.readInt();
         VIDEO_ENCODER = in.readInt();
+    }
+
+    public int getVideoFPS() {
+        return mVideoFPS;
+    }
+
+    public void setVideoFPS(int videoFPS) {
+        mVideoFPS = videoFPS;
     }
 }
