@@ -54,6 +54,11 @@ public class PredefinedCaptureConfigurations {
     public static final int HEIGHT_2160P     = 2160;
     public static final int WIDTH_2160P      = 3840;
 
+    public static final int FPS_30 = 30;
+    public static final int FPS_20 = 20;
+    public static final int FPS_24 = 24;
+    public static final int FPS_60 = 60;
+
     public enum CaptureQuality {
         LOW, MEDIUM, HIGH;
     }
