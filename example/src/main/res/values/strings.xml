@@ -35,5 +35,6 @@
     <string name="github_url">https://github.com/jeroenmols/LandscapeVideoCamera</string>
     <string name="show_timer">Show Timer</string>
     <string name="allow_frontcamera">Allow front facing camera</string>
+    <string name="enter_fps_hint">Enter FPS</string>
 
 </resources>
