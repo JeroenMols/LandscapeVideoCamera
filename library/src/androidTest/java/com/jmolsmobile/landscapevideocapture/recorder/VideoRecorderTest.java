@@ -87,7 +87,7 @@ public class VideoRecorderTest extends MockitoTestCase {
     @Test
     public void stopRecordingWhenStarted() throws Exception {
         final VideoRecorder spyRecorder =
-                spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class), false));
+                spy(new VideoRecorder(mock(VideoRecorderInterface.class), mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class), false));
         doReturn(true).when(spyRecorder).isRecording();
         doNothing().when(spyRecorder).stopRecording(anyString());
 

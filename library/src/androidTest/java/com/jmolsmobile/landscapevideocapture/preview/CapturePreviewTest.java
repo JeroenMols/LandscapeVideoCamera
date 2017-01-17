@@ -190,6 +190,6 @@ public class CapturePreviewTest extends MockitoTestCase {
     private void createCapturePreviewAndCallSurfaceChanged(final CapturePreviewInterface mockInterface,
                                                            final CameraWrapper mockWrapper) {
         final CapturePreview preview = new CapturePreview(mockInterface, mockWrapper, mock(SurfaceHolder.class));
-        preview.surfaceChanged(null, 0, 0, 0);
+        preview.surfaceChanged(mock(SurfaceHolder.class), 0, 0, 0);
     }
 }
