@@ -52,27 +52,27 @@ import java.util.List;
 
 public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
-    private final String KEY_STATUSMESSAGE    = "com.jmolsmobile.statusmessage";
+    private final String KEY_STATUSMESSAGE = "com.jmolsmobile.statusmessage";
     private final String KEY_ADVANCEDSETTINGS = "com.jmolsmobile.advancedsettings";
-    private final String KEY_FILENAME         = "com.jmolsmobile.outputfilename";
+    private final String KEY_FILENAME = "com.jmolsmobile.outputfilename";
 
     private final String[] RESOLUTION_NAMES = new String[]{"1080p", "720p", "480p"};
-    private final String[] QUALITY_NAMES    = new String[]{"high", "medium", "low"};
+    private final String[] QUALITY_NAMES = new String[]{"high", "medium", "low"};
 
     private String statusMessage = null;
-    private String filename      = null;
+    private String filename = null;
 
     private ImageView thumbnailIv;
-    private TextView  statusTv;
-    private Spinner   resolutionSp;
-    private Spinner   qualitySp;
+    private TextView statusTv;
+    private Spinner resolutionSp;
+    private Spinner qualitySp;
 
     private RelativeLayout advancedRl;
-    private EditText       filenameEt;
-    private EditText       maxDurationEt;
-    private EditText       maxFilesizeEt;
-    private CheckBox       showTimerCb;
-    private CheckBox       allowFrontCameraCb;
+    private EditText filenameEt;
+    private EditText maxDurationEt;
+    private EditText maxFilesizeEt;
+    private CheckBox showTimerCb;
+    private CheckBox allowFrontCameraCb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -239,13 +239,13 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
     private CaptureQuality getQuality(int position) {
         final CaptureQuality[] quality = new CaptureQuality[]{CaptureQuality.HIGH, CaptureQuality.MEDIUM,
-                                                              CaptureQuality.LOW};
+                CaptureQuality.LOW};
         return quality[position];
     }
 
     private CaptureResolution getResolution(int position) {
         final CaptureResolution[] resolution = new CaptureResolution[]{CaptureResolution.RES_1080P,
-                                                                       CaptureResolution.RES_720P, CaptureResolution.RES_480P};
+                CaptureResolution.RES_720P, CaptureResolution.RES_480P};
         return resolution[position];
     }
 
