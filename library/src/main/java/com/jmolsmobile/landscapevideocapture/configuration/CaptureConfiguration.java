@@ -38,6 +38,7 @@ public class CaptureConfiguration implements Parcelable {
     private int mMaxFilesizeBytes = NO_FILESIZE_LIMIT;
     private boolean mShowTimer = false;
     private boolean mAllowFrontFacingCamera = true;
+    private int mVideoFPS = PredefinedCaptureConfigurations.FPS_30;     //Default FPS is 30.
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
     private int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
@@ -168,6 +169,7 @@ public class CaptureConfiguration implements Parcelable {
         dest.writeInt(mBitrate);
         dest.writeInt(mMaxDurationMs);
         dest.writeInt(mMaxFilesizeBytes);
+        dest.writeInt(mVideoFPS);
         dest.writeByte((byte) (mShowTimer ? 1 : 0));
         dest.writeByte((byte) (mAllowFrontFacingCamera ? 1 : 0));
 
@@ -198,6 +200,7 @@ public class CaptureConfiguration implements Parcelable {
         mBitrate = in.readInt();
         mMaxDurationMs = in.readInt();
         mMaxFilesizeBytes = in.readInt();
+        mVideoFPS = in.readInt();
         mShowTimer = in.readByte() != 0;
         mAllowFrontFacingCamera = in.readByte() != 0;
 
@@ -206,5 +209,9 @@ public class CaptureConfiguration implements Parcelable {
         AUDIO_ENCODER = in.readInt();
         VIDEO_SOURCE = in.readInt();
         VIDEO_ENCODER = in.readInt();
+    }
+
+    public int getVideoFPS() {
+        return mVideoFPS;
     }
 }

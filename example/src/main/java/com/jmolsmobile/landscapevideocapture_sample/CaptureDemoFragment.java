@@ -45,6 +45,7 @@ import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
@@ -71,6 +72,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private EditText filenameEt;
     private EditText maxDurationEt;
     private EditText maxFilesizeEt;
+    private EditText fpsEt;
     private CheckBox showTimerCb;
     private CheckBox allowFrontCameraCb;
 
@@ -86,6 +88,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         statusTv = (TextView) rootView.findViewById(R.id.tv_status);
         advancedRl = (RelativeLayout) rootView.findViewById(R.id.rl_advanced);
         filenameEt = (EditText) rootView.findViewById(R.id.et_filename);
+        fpsEt = (EditText) rootView.findViewById(R.id.et_fps);
         maxDurationEt = (EditText) rootView.findViewById(R.id.et_duration);
         maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
         showTimerCb = (CheckBox) rootView.findViewById(R.id.cb_showtimer);
@@ -242,9 +245,18 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         } catch (final Exception e2) {
             //NOP
         }
+        int fps = PredefinedCaptureConfigurations.FPS_30;
+        try {
+            fps = Integer.valueOf(fpsEt.getEditableText().toString());
+        } catch (final Exception e2) {
+            //NOP
+        }
         boolean showTimer = showTimerCb.isChecked();
         boolean allowFrontCamera = allowFrontCameraCb.isChecked();
-        return new CaptureConfiguration(resolution, quality, fileDuration, filesize, showTimer, allowFrontCamera);
+        return new CaptureConfiguration(resolution, quality,
+                fileDuration, filesize, showTimer,
+                allowFrontCamera,
+                fps);
     }
 
     private CaptureQuality getQuality(int position) {

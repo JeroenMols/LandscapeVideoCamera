@@ -37,5 +37,6 @@
     <string name="allow_frontcamera">Allow front facing camera</string>
     <string name="privacy">privacy policy</string>
     <string name="privacy_url">http://jeroenmols.com/apps/landscapevideocamera/privacy_policy.html</string>
+    <string name="enter_fps_hint">Enter FPS</string>
 
 </resources>

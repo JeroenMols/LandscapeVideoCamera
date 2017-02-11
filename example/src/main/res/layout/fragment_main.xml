@@ -205,6 +205,31 @@
                     android:text="@string/filesize_unit"
                     android:textSize="14sp" />
 
+               <!--to-->
+
+                <ImageView
+                    android:id="@+id/iv_fps"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_below="@id/iv_filesize"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_fps" />
+
+                <EditText
+                    android:id="@+id/et_fps"
+                    android:layout_width="175dp"
+                    android:layout_height="36dp"
+                    android:layout_alignBottom="@id/iv_fps"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp"
+                    android:gravity="bottom"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:hint="@string/enter_fps_hint"
+                    android:textSize="14sp" />
+
+                <!--hdf-->
+
                 <CheckBox
                     android:id="@+id/cb_showtimer"
                     android:layout_width="175dp"
@@ -219,7 +244,7 @@
                     android:id="@+id/iv_showtimer"
                     android:layout_width="36dp"
                     android:layout_height="56dp"
-                    android:layout_below="@id/iv_filesize"
+                    android:layout_below="@id/et_fps"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/ic_timelapse_black_48dp" />
 

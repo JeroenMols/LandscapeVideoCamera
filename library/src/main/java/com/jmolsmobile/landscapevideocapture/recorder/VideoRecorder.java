@@ -128,7 +128,8 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
     }
 
     @SuppressWarnings("deprecation")
-    protected void configureMediaRecorder(final MediaRecorder recorder, android.hardware.Camera camera) throws IllegalStateException, IllegalArgumentException {
+    protected void configureMediaRecorder(final MediaRecorder recorder, android.hardware.Camera camera)
+            throws IllegalStateException, IllegalArgumentException {
         recorder.setCamera(camera);
         recorder.setAudioSource(mCaptureConfiguration.getAudioSource());
         recorder.setVideoSource(mCaptureConfiguration.getVideoSource());
@@ -148,6 +149,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         recorder.setMaxDuration(mCaptureConfiguration.getMaxCaptureDuration());
         recorder.setOutputFile(mVideoFile.getFullPath());
         recorder.setOrientationHint(mCameraWrapper.getRotationCorrection());
+        recorder.setVideoFrameRate(mCaptureConfiguration.getVideoFPS());
 
         try {
             recorder.setMaxFileSize(mCaptureConfiguration.getMaxCaptureFileSize());
