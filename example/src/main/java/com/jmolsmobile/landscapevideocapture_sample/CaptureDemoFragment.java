@@ -148,6 +148,9 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
             case R.id.menu_github:
                 openGitHub();
                 break;
+            case R.id.menu_privacy:
+                openPrivacyPolicy();
+                break;
         }
         return true;
     }
@@ -158,6 +161,13 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
     private void openGitHub() {
         Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.github_url)));
+        if (canHandleIntent(browserIntent)) {
+            startActivity(browserIntent);
+        }
+    }
+
+    private void openPrivacyPolicy() {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.privacy_url)));
         if (canHandleIntent(browserIntent)) {
             startActivity(browserIntent);
         }

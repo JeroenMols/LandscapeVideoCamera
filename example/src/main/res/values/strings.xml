@@ -35,5 +35,7 @@
     <string name="github_url">https://github.com/jeroenmols/LandscapeVideoCamera</string>
     <string name="show_timer">Show Timer</string>
     <string name="allow_frontcamera">Allow front facing camera</string>
+    <string name="privacy">privacy policy</string>
+    <string name="privacy_url">http://jeroenmols.com/apps/landscapevideocamera/privacy_policy.html</string>
 
 </resources>
