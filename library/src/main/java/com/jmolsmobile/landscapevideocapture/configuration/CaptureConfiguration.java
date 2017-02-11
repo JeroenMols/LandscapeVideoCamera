@@ -70,6 +70,13 @@ public class CaptureConfiguration implements Parcelable {
     }
 
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
+                                int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera,
+                                int videoFPS) {
+        this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, allowFrontFacingCamera);
+        mVideoFPS = videoFPS;
+    }
+
+    public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb) {
         this(resolution, quality);
         mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
