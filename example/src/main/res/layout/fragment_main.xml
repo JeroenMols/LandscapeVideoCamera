@@ -205,7 +205,7 @@
                     android:text="@string/filesize_unit"
                     android:textSize="14sp" />
 
-               <!--to-->
+                <!--to-->
 
                 <ImageView
                     android:id="@+id/iv_fps"
@@ -213,7 +213,7 @@
                     android:layout_height="56dp"
                     android:layout_below="@id/iv_filesize"
                     android:layout_marginLeft="16dp"
-                    android:src="@drawable/ic_fps" />
+                    android:src="@drawable/ic_burst_mode_black_24dp" />
 
                 <EditText
                     android:id="@+id/et_fps"
@@ -223,9 +223,9 @@
                     android:layout_marginBottom="10dp"
                     android:layout_marginLeft="72dp"
                     android:gravity="bottom"
+                    android:hint="@string/enter_fps_hint"
                     android:inputType="number"
                     android:maxLength="3"
-                    android:hint="@string/enter_fps_hint"
                     android:textSize="14sp" />
 
                 <!--hdf-->
