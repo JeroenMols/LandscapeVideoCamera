@@ -19,6 +19,9 @@ public class CaptureConfigurationBuilderTest {
 
     public static final CaptureQuality MOCK_QUALITY = CaptureQuality.HIGH;
     public static final CaptureResolution MOCK_RESOLUTION = CaptureResolution.RES_360P;
+    public static final int MOCK_WIDTH = 800;
+    public static final int MOCK_HEIGHT = 600;
+    public static final int MOCK_BITRATE = 300000;
 
     @Test
     public void canBuildCaptureConfiguration() throws Exception {
@@ -42,10 +45,30 @@ public class CaptureConfigurationBuilderTest {
     }
 
     @Test
-    public void builtConfigurationHasQuality() throws Exception {
+    public void builtConfigurationHasBitrate() throws Exception {
         CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).build();
 
         assertThat(configuration.getVideoBitrate()).isEqualTo(MOCK_RESOLUTION.getBitrate(MOCK_QUALITY));
     }
 
+    @Test
+    public void builtManualConfigurationHasWidth() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_WIDTH, MOCK_HEIGHT, MOCK_BITRATE).build();
+
+        assertThat(configuration.getVideoWidth()).isEqualTo(MOCK_WIDTH);
+    }
+
+    @Test
+    public void builtManualConfigurationHasHeight() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_WIDTH, MOCK_HEIGHT, MOCK_BITRATE).build();
+
+        assertThat(configuration.getVideoHeight()).isEqualTo(MOCK_HEIGHT);
+    }
+
+    @Test
+    public void builtManualConfigurationHasBitrate() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_WIDTH, MOCK_HEIGHT, MOCK_BITRATE).build();
+
+        assertThat(configuration.getVideoBitrate()).isEqualTo(MOCK_BITRATE);
+    }
 }

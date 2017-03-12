@@ -233,6 +233,13 @@ public class CaptureConfiguration implements Parcelable {
             configuration.mBitrate = resolution.getBitrate(quality);
         }
 
+        public Builder(int width, int height, int bitrate) {
+            configuration = new CaptureConfiguration();
+            configuration.mVideoWidth = width;
+            configuration.mVideoHeight = height;
+            configuration.mBitrate = bitrate;
+        }
+
         public CaptureConfiguration build() {
             return configuration;
         }
