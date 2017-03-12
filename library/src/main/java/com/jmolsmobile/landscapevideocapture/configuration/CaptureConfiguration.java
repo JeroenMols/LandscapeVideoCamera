@@ -46,22 +46,25 @@ public class CaptureConfiguration implements Parcelable {
     private int VIDEO_SOURCE = MediaRecorder.VideoSource.CAMERA;
     private int VIDEO_ENCODER = MediaRecorder.VideoEncoder.H264;
 
-    public CaptureConfiguration() {
+    private CaptureConfiguration() {
         // Default configuration
     }
 
+    @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality) {
         mVideoWidth = resolution.width;
         mVideoHeight = resolution.height;
         mBitrate = resolution.getBitrate(quality);
     }
 
+    @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, false);
         mShowTimer = showTimer;
     }
 
+    @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb);
@@ -69,6 +72,7 @@ public class CaptureConfiguration implements Parcelable {
         mAllowFrontFacingCamera = allowFrontFacingCamera;
     }
 
+    @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera,
                                 int videoFPS) {
@@ -76,6 +80,7 @@ public class CaptureConfiguration implements Parcelable {
         mVideoFPS = videoFPS;
     }
 
+    @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb) {
         this(resolution, quality);
@@ -83,12 +88,14 @@ public class CaptureConfiguration implements Parcelable {
         mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
     }
 
+    @Deprecated
     public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate) {
         mVideoWidth = videoWidth;
         mVideoHeight = videoHeight;
         mBitrate = bitrate;
     }
 
+    @Deprecated
     public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb) {
         this(videoWidth, videoHeight, bitrate);
         mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
