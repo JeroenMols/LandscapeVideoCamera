@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.Builder;
+import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.MBYTE_TO_BYTE;
+import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.MSEC_TO_SEC;
 import static com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -22,6 +24,8 @@ public class CaptureConfigurationBuilderTest {
     public static final int MOCK_WIDTH = 800;
     public static final int MOCK_HEIGHT = 600;
     public static final int MOCK_BITRATE = 300000;
+    public static final int MOCK_DURATION = 30;
+    public static final int MOCK_FILESIZE = 10;
 
     @Test
     public void canBuildCaptureConfiguration() throws Exception {
@@ -70,5 +74,19 @@ public class CaptureConfigurationBuilderTest {
         CaptureConfiguration configuration = new Builder(MOCK_WIDTH, MOCK_HEIGHT, MOCK_BITRATE).build();
 
         assertThat(configuration.getVideoBitrate()).isEqualTo(MOCK_BITRATE);
+    }
+
+    @Test
+    public void builtConfigurationHasMaxDurationInMs() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).maxDuration(MOCK_DURATION).build();
+
+        assertThat(configuration.getMaxCaptureDuration()).isEqualTo(MOCK_DURATION * MSEC_TO_SEC);
+    }
+
+    @Test
+    public void builtConfigurationHasMaxFilesizeInBytes() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).maxFileSize(MOCK_FILESIZE).build();
+
+        assertThat(configuration.getMaxCaptureDuration()).isEqualTo(MOCK_FILESIZE * MBYTE_TO_BYTE);
     }
 }

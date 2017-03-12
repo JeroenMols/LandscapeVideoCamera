@@ -25,8 +25,8 @@ import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConf
 
 public class CaptureConfiguration implements Parcelable {
 
-    private static final int MBYTE_TO_BYTE = 1024 * 1024;
-    private static final int MSEC_TO_SEC = 1000;
+    public static final int MBYTE_TO_BYTE = 1024 * 1024;
+    public static final int MSEC_TO_SEC = 1000;
 
     public static final int NO_DURATION_LIMIT = -1;
     public static final int NO_FILESIZE_LIMIT = -1;
@@ -242,6 +242,16 @@ public class CaptureConfiguration implements Parcelable {
 
         public CaptureConfiguration build() {
             return configuration;
+        }
+
+        public Builder maxDuration(int maxDurationSec) {
+            configuration.mMaxDurationMs = maxDurationSec * MSEC_TO_SEC;
+            return this;
+        }
+
+        public Builder maxFileSize(int maxFileSize) {
+            configuration.mMaxFilesizeBytes = maxFileSize * MBYTE_TO_BYTE;
+            return this;
         }
     }
 }
