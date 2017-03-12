@@ -253,5 +253,10 @@ public class CaptureConfiguration implements Parcelable {
             configuration.mMaxFilesizeBytes = maxFileSize * MBYTE_TO_BYTE;
             return this;
         }
+
+        public Builder frameRate(int frameRate) {
+            configuration.mVideoFPS = frameRate;
+            return this;
+        }
     }
 }

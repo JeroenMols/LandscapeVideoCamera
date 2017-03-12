@@ -26,6 +26,7 @@ public class CaptureConfigurationBuilderTest {
     public static final int MOCK_BITRATE = 300000;
     public static final int MOCK_DURATION = 30;
     public static final int MOCK_FILESIZE = 10;
+    public static final int MOCK_FPS = 60;
 
     @Test
     public void canBuildCaptureConfiguration() throws Exception {
@@ -87,6 +88,13 @@ public class CaptureConfigurationBuilderTest {
     public void builtConfigurationHasMaxFilesizeInBytes() throws Exception {
         CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).maxFileSize(MOCK_FILESIZE).build();
 
-        assertThat(configuration.getMaxCaptureDuration()).isEqualTo(MOCK_FILESIZE * MBYTE_TO_BYTE);
+        assertThat(configuration.getMaxCaptureFileSize()).isEqualTo(MOCK_FILESIZE * MBYTE_TO_BYTE);
+    }
+
+    @Test
+    public void builtConfigurationHasFrameRate() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).frameRate(MOCK_FPS).build();
+
+        assertThat(configuration.getVideoFPS()).isEqualTo(MOCK_FPS);
     }
 }
