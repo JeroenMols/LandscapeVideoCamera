@@ -31,14 +31,14 @@ public class CaptureConfiguration implements Parcelable {
     public static final int NO_DURATION_LIMIT = -1;
     public static final int NO_FILESIZE_LIMIT = -1;
 
-    private int mVideoWidth = PredefinedCaptureConfigurations.WIDTH_720P;
-    private int mVideoHeight = PredefinedCaptureConfigurations.HEIGHT_720P;
-    private int mBitrate = PredefinedCaptureConfigurations.BITRATE_HQ_720P;
-    private int mMaxDurationMs = NO_DURATION_LIMIT;
-    private int mMaxFilesizeBytes = NO_FILESIZE_LIMIT;
-    private boolean mShowTimer = false;
-    private boolean mAllowFrontFacingCamera = true;
-    private int mVideoFPS = PredefinedCaptureConfigurations.FPS_30;     //Default FPS is 30.
+    private int videoWidth = PredefinedCaptureConfigurations.WIDTH_720P;
+    private int videoHeight = PredefinedCaptureConfigurations.HEIGHT_720P;
+    private int bitrate = PredefinedCaptureConfigurations.BITRATE_HQ_720P;
+    private int maxDurationMs = NO_DURATION_LIMIT;
+    private int maxFilesizeBytes = NO_FILESIZE_LIMIT;
+    private boolean showTimer = false;
+    private boolean allowFrontFacingCamera = true;
+    private int videoFramerate = PredefinedCaptureConfigurations.FPS_30;     //Default FPS is 30.
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
     private int AUDIO_SOURCE = MediaRecorder.AudioSource.DEFAULT;
@@ -52,24 +52,24 @@ public class CaptureConfiguration implements Parcelable {
 
     @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality) {
-        mVideoWidth = resolution.width;
-        mVideoHeight = resolution.height;
-        mBitrate = resolution.getBitrate(quality);
+        videoWidth = resolution.width;
+        videoHeight = resolution.height;
+        bitrate = resolution.getBitrate(quality);
     }
 
     @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, false);
-        mShowTimer = showTimer;
+        this.showTimer = showTimer;
     }
 
     @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb);
-        mShowTimer = showTimer;
-        mAllowFrontFacingCamera = allowFrontFacingCamera;
+        this.showTimer = showTimer;
+        this.allowFrontFacingCamera = allowFrontFacingCamera;
     }
 
     @Deprecated
@@ -77,78 +77,78 @@ public class CaptureConfiguration implements Parcelable {
                                 int maxFilesizeMb, boolean showTimer, boolean allowFrontFacingCamera,
                                 int videoFPS) {
         this(resolution, quality, maxDurationSecs, maxFilesizeMb, showTimer, allowFrontFacingCamera);
-        mVideoFPS = videoFPS;
+        videoFramerate = videoFPS;
     }
 
     @Deprecated
     public CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs,
                                 int maxFilesizeMb) {
         this(resolution, quality);
-        mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
-        mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
+        maxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+        maxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
     }
 
     @Deprecated
     public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate) {
-        mVideoWidth = videoWidth;
-        mVideoHeight = videoHeight;
-        mBitrate = bitrate;
+        this.videoWidth = videoWidth;
+        this.videoHeight = videoHeight;
+        this.bitrate = bitrate;
     }
 
     @Deprecated
     public CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb) {
         this(videoWidth, videoHeight, bitrate);
-        mMaxDurationMs = maxDurationSecs * MSEC_TO_SEC;
-        mMaxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
+        maxDurationMs = maxDurationSecs * MSEC_TO_SEC;
+        maxFilesizeBytes = maxFilesizeMb * MBYTE_TO_BYTE;
     }
 
     /**
      * @return Width of the captured video in pixels
      */
     public int getVideoWidth() {
-        return mVideoWidth;
+        return videoWidth;
     }
 
     /**
      * @return Height of the captured video in pixels
      */
     public int getVideoHeight() {
-        return mVideoHeight;
+        return videoHeight;
     }
 
     /**
      * @return Bitrate of the captured video in bits per second
      */
     public int getVideoBitrate() {
-        return mBitrate;
+        return bitrate;
     }
 
     /**
      * @return Maximum duration of the captured video in milliseconds
      */
     public int getMaxCaptureDuration() {
-        return mMaxDurationMs;
+        return maxDurationMs;
     }
 
     /**
      * @return Maximum filesize of the captured video in bytes
      */
     public int getMaxCaptureFileSize() {
-        return mMaxFilesizeBytes;
+        return maxFilesizeBytes;
     }
 
     /**
      * @return If timer must be displayed during video capture
      */
     public boolean getShowTimer() {
-        return mShowTimer;
+        return showTimer;
     }
 
     /**
      * @return If front facing camera toggle must be displayed before capturing video
      */
     public boolean getAllowFrontFacingCamera() {
-        return mAllowFrontFacingCamera;
+        return allowFrontFacingCamera;
     }
 
     public int getOutputFormat() {
@@ -178,14 +178,14 @@ public class CaptureConfiguration implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mVideoWidth);
-        dest.writeInt(mVideoHeight);
-        dest.writeInt(mBitrate);
-        dest.writeInt(mMaxDurationMs);
-        dest.writeInt(mMaxFilesizeBytes);
-        dest.writeInt(mVideoFPS);
-        dest.writeByte((byte) (mShowTimer ? 1 : 0));
-        dest.writeByte((byte) (mAllowFrontFacingCamera ? 1 : 0));
+        dest.writeInt(videoWidth);
+        dest.writeInt(videoHeight);
+        dest.writeInt(bitrate);
+        dest.writeInt(maxDurationMs);
+        dest.writeInt(maxFilesizeBytes);
+        dest.writeInt(videoFramerate);
+        dest.writeByte((byte) (showTimer ? 1 : 0));
+        dest.writeByte((byte) (allowFrontFacingCamera ? 1 : 0));
 
         dest.writeInt(OUTPUT_FORMAT);
         dest.writeInt(AUDIO_SOURCE);
@@ -209,14 +209,14 @@ public class CaptureConfiguration implements Parcelable {
     };
 
     private CaptureConfiguration(Parcel in) {
-        mVideoWidth = in.readInt();
-        mVideoHeight = in.readInt();
-        mBitrate = in.readInt();
-        mMaxDurationMs = in.readInt();
-        mMaxFilesizeBytes = in.readInt();
-        mVideoFPS = in.readInt();
-        mShowTimer = in.readByte() != 0;
-        mAllowFrontFacingCamera = in.readByte() != 0;
+        videoWidth = in.readInt();
+        videoHeight = in.readInt();
+        bitrate = in.readInt();
+        maxDurationMs = in.readInt();
+        maxFilesizeBytes = in.readInt();
+        videoFramerate = in.readInt();
+        showTimer = in.readByte() != 0;
+        allowFrontFacingCamera = in.readByte() != 0;
 
         OUTPUT_FORMAT = in.readInt();
         AUDIO_SOURCE = in.readInt();
@@ -226,7 +226,7 @@ public class CaptureConfiguration implements Parcelable {
     }
 
     public int getVideoFPS() {
-        return mVideoFPS;
+        return videoFramerate;
     }
 
     public static class Builder {
@@ -235,16 +235,16 @@ public class CaptureConfiguration implements Parcelable {
 
         public Builder(CaptureResolution resolution, CaptureQuality quality) {
             configuration = new CaptureConfiguration();
-            configuration.mVideoWidth = resolution.width;
-            configuration.mVideoHeight = resolution.height;
-            configuration.mBitrate = resolution.getBitrate(quality);
+            configuration.videoWidth = resolution.width;
+            configuration.videoHeight = resolution.height;
+            configuration.bitrate = resolution.getBitrate(quality);
         }
 
         public Builder(int width, int height, int bitrate) {
             configuration = new CaptureConfiguration();
-            configuration.mVideoWidth = width;
-            configuration.mVideoHeight = height;
-            configuration.mBitrate = bitrate;
+            configuration.videoWidth = width;
+            configuration.videoHeight = height;
+            configuration.bitrate = bitrate;
         }
 
         public CaptureConfiguration build() {
@@ -252,27 +252,27 @@ public class CaptureConfiguration implements Parcelable {
         }
 
         public Builder maxDuration(int maxDurationSec) {
-            configuration.mMaxDurationMs = maxDurationSec * MSEC_TO_SEC;
+            configuration.maxDurationMs = maxDurationSec * MSEC_TO_SEC;
             return this;
         }
 
         public Builder maxFileSize(int maxFileSize) {
-            configuration.mMaxFilesizeBytes = maxFileSize * MBYTE_TO_BYTE;
+            configuration.maxFilesizeBytes = maxFileSize * MBYTE_TO_BYTE;
             return this;
         }
 
         public Builder frameRate(int frameRate) {
-            configuration.mVideoFPS = frameRate;
+            configuration.videoFramerate = frameRate;
             return this;
         }
 
         public Builder showTimer() {
-            configuration.mShowTimer = true;
+            configuration.showTimer = true;
             return this;
         }
 
         public Builder noCameraToggle() {
-            configuration.mAllowFrontFacingCamera = false;
+            configuration.allowFrontFacingCamera = false;
             return this;
         }
     }
