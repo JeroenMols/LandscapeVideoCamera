@@ -45,7 +45,6 @@ import android.widget.TextView;
 
 import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
@@ -233,30 +232,35 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private CaptureConfiguration createCaptureConfiguration() {
         final CaptureResolution resolution = getResolution(resolutionSp.getSelectedItemPosition());
         final CaptureQuality quality = getQuality(qualitySp.getSelectedItemPosition());
-        int fileDuration = CaptureConfiguration.NO_DURATION_LIMIT;
+
+        CaptureConfiguration.Builder builder = new CaptureConfiguration.Builder(resolution, quality);
+
         try {
-            fileDuration = Integer.valueOf(maxDurationEt.getEditableText().toString());
+            int maxDuration = Integer.valueOf(maxDurationEt.getEditableText().toString());
+            builder.maxDuration(maxDuration);
         } catch (final Exception e) {
             //NOP
         }
-        int filesize = CaptureConfiguration.NO_FILESIZE_LIMIT;
         try {
-            filesize = Integer.valueOf(maxFilesizeEt.getEditableText().toString());
-        } catch (final Exception e2) {
+            int maxFileSize = Integer.valueOf(maxFilesizeEt.getEditableText().toString());
+            builder.maxFileSize(maxFileSize);
+        } catch (final Exception e) {
             //NOP
         }
-        int fps = PredefinedCaptureConfigurations.FPS_30;
         try {
-            fps = Integer.valueOf(fpsEt.getEditableText().toString());
-        } catch (final Exception e2) {
+            int fps = Integer.valueOf(fpsEt.getEditableText().toString());
+            builder.frameRate(fps);
+        } catch (final Exception e) {
             //NOP
         }
-        boolean showTimer = showTimerCb.isChecked();
-        boolean allowFrontCamera = allowFrontCameraCb.isChecked();
-        return new CaptureConfiguration(resolution, quality,
-                fileDuration, filesize, showTimer,
-                allowFrontCamera,
-                fps);
+        if (showTimerCb.isChecked()) {
+            builder.showRecordingTime();
+        }
+        if (!allowFrontCameraCb.isChecked()) {
+            builder.noCameraToggle();
+        }
+        
+        return builder.build();
     }
 
     private CaptureQuality getQuality(int position) {
