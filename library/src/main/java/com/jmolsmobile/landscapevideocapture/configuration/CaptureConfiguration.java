@@ -256,17 +256,17 @@ public class CaptureConfiguration implements Parcelable {
             return this;
         }
 
-        public Builder maxFileSize(int maxFileSize) {
-            configuration.maxFilesizeBytes = maxFileSize * MBYTE_TO_BYTE;
+        public Builder maxFileSize(int maxFileSizeMb) {
+            configuration.maxFilesizeBytes = maxFileSizeMb * MBYTE_TO_BYTE;
             return this;
         }
 
-        public Builder frameRate(int frameRate) {
-            configuration.videoFramerate = frameRate;
+        public Builder frameRate(int framesPerSec) {
+            configuration.videoFramerate = framesPerSec;
             return this;
         }
 
-        public Builder showTimer() {
+        public Builder showRecordingTime() {
             configuration.showTimer = true;
             return this;
         }

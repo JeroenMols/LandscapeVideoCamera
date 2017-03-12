@@ -99,8 +99,8 @@ public class CaptureConfigurationBuilderTest {
     }
 
     @Test
-    public void builtConfigurationShowTimer() throws Exception {
-        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).showTimer().build();
+    public void builtConfigurationShowRecordingTime() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).showRecordingTime().build();
 
         assertThat(configuration.getShowTimer()).isTrue();
     }
