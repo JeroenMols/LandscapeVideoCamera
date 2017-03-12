@@ -32,7 +32,7 @@ public class CaptureConfigurationTest {
 
     @Test
     public void defaultConfiguration() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
 
         checkConfiguration(config, CaptureResolution.RES_720P.width, CaptureResolution.RES_720P.height,
                 CaptureResolution.RES_720P.getBitrate(CaptureQuality.HIGH), CaptureConfiguration.NO_DURATION_LIMIT,

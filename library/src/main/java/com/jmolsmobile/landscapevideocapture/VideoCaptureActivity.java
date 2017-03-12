@@ -204,7 +204,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     protected CaptureConfiguration generateCaptureConfiguration() {
         CaptureConfiguration returnConfiguration = this.getIntent().getParcelableExtra(EXTRA_CAPTURE_CONFIGURATION);
         if (returnConfiguration == null) {
-            returnConfiguration = new CaptureConfiguration();
+            returnConfiguration = CaptureConfiguration.getDefault();
             CLog.d(CLog.ACTIVITY, "No captureconfiguration passed - using default configuration");
         }
         return returnConfiguration;

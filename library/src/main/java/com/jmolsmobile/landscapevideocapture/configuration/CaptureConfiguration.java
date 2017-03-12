@@ -46,6 +46,10 @@ public class CaptureConfiguration implements Parcelable {
     private int VIDEO_SOURCE = MediaRecorder.VideoSource.CAMERA;
     private int VIDEO_ENCODER = MediaRecorder.VideoEncoder.H264;
 
+    public static CaptureConfiguration getDefault() {
+        return new CaptureConfiguration();
+    }
+
     private CaptureConfiguration() {
         // Default configuration
     }
