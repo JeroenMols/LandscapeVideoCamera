@@ -221,4 +221,20 @@ public class CaptureConfiguration implements Parcelable {
     public int getVideoFPS() {
         return mVideoFPS;
     }
+
+    public static class Builder {
+
+        private final CaptureConfiguration configuration;
+
+        public Builder(CaptureResolution resolution, CaptureQuality quality) {
+            configuration = new CaptureConfiguration();
+            configuration.mVideoWidth = resolution.width;
+            configuration.mVideoHeight = resolution.height;
+            configuration.mBitrate = resolution.getBitrate(quality);
+        }
+
+        public CaptureConfiguration build() {
+            return configuration;
+        }
+    }
 }
