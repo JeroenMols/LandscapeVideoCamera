@@ -63,14 +63,21 @@ This library provides a full and reusable custom camera, which:
          <uses-permission android:name="android.permission.CAMERA" />
          <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
-5) Create a CaptureConfiguration - object with the desired parameters. (optional)
+5) Create a CaptureConfiguration using the Builder
 ```java
-         CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality);
-         CaptureConfiguration configuration = CaptureConfiguration(CaptureResolution resolution, CaptureQuality quality, int maxDurationSecs, int maxFilesizeMb, int videoFPS);
-         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate);
-         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb);
-         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb, boolean showTimer, int videoFPS);
-         CaptureConfiguration configuration = CaptureConfiguration(int videoWidth, int videoHeight, int bitrate, int maxDurationSecs, int maxFilesizeMb, boolean showTimer, boolean allowFrontCamera, int videoFPS);
+         // Choose one of both
+         CaptureConfiguration.Builder builder = new CaptureConfiguration.Builder(CaptureResolution resolution, CaptureQuality quality);
+         CaptureConfiguration.Builder builder = new CaptureConfiguration.Builder(int videoWidth, int videoHeight, int bitrate);
+
+         // Optional
+         builder.maxDuration(maxDurationSec);
+         builder.maxFileSize(maxFileSizeMb);
+         builder.frameRate(framesPerSec);
+         builder.showRecordingTime();         // Show the elapsed recording time
+         builder.noCameraToggle();            // Remove button to toggle between front and back camera
+
+         // Get the CaptureConfiguration
+         CaptureConfiguration configuration = builder.build();
 ```
   Note: When no CaptureConfiguration is specified, a default configuration will be used.
 
