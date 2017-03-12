@@ -258,5 +258,15 @@ public class CaptureConfiguration implements Parcelable {
             configuration.mVideoFPS = frameRate;
             return this;
         }
+
+        public Builder showTimer() {
+            configuration.mShowTimer = true;
+            return this;
+        }
+
+        public Builder noCameraToggle() {
+            configuration.mAllowFrontFacingCamera = false;
+            return this;
+        }
     }
 }

@@ -97,4 +97,18 @@ public class CaptureConfigurationBuilderTest {
 
         assertThat(configuration.getVideoFPS()).isEqualTo(MOCK_FPS);
     }
+
+    @Test
+    public void builtConfigurationShowTimer() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).showTimer().build();
+
+        assertThat(configuration.getShowTimer()).isTrue();
+    }
+
+    @Test
+    public void builtConfigurationAllowFrontCamera() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).noCameraToggle().build();
+
+        assertThat(configuration.getAllowFrontFacingCamera()).isFalse();
+    }
 }
