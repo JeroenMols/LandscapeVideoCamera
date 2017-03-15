@@ -48,7 +48,7 @@ This library provides a full and reusable custom camera, which:
 ```
 2) Add a dependency on the library:
 ```groovy
-          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.2.2'
+          compile 'com.github.JeroenMols:LandscapeVideoCamera:1.3.0'
 ```
 3) Specify the VideoCaptureActivity in your manifest:
 ```xml
