@@ -210,7 +210,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void mediaRecorderShouldHaveMediaRecorderOptions() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         CamcorderProfile profile = getEmptyCamcorderProfile();
         final VideoRecorder recorder =
                 new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForPrepare(profile), mock(SurfaceHolder.class), false);
@@ -228,7 +228,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void mediaRecorderShouldHaveConfigurationOptions() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         CamcorderProfile profile = getEmptyCamcorderProfile();
         CameraWrapper mockWrapper = createMockCameraWrapperForPrepare(profile);
         doReturn(new RecordingSize(777, 888)).when(mockWrapper).getSupportedRecordingSize(anyInt(), anyInt());
@@ -247,7 +247,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void mediaRecorderShouldHaveOtherOptions() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
         final Surface mockSurface = mock(Surface.class);
         doReturn(mockSurface).when(mockHolder).getSurface();
@@ -267,7 +267,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void mediaRecorderShouldHaveRotationCorrection() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         final SurfaceHolder mockHolder = mock(SurfaceHolder.class);
         final Surface mockSurface = mock(Surface.class);
         doReturn(mockSurface).when(mockHolder).getSurface();
@@ -286,7 +286,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void continueInitialisationWhenSetMaxFilesizeFails() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         final VideoRecorder spyRecorder =
                 spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(), mock(SurfaceHolder.class), false));
 
@@ -303,7 +303,7 @@ public class VideoRecorderTest extends MockitoTestCase {
 
     @Test
     public void continueInitialisationWhenSetMaxFilesizeFails2() throws Exception {
-        final CaptureConfiguration config = new CaptureConfiguration();
+        final CaptureConfiguration config = CaptureConfiguration.getDefault();
         final VideoRecorder spyRecorder =
                 spy(new VideoRecorder(null, config, mock(VideoFile.class), createMockCameraWrapperForInitialisation(), mock(SurfaceHolder.class), false));
 
