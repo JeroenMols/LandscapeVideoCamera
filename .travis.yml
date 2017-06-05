@@ -15,7 +15,7 @@ android:
     - tools # to get the new `repository-11.xml`
     - tools # to install Android SDK tools 25.1.x (x = 6 right now)
     - platform-tools
-    - build-tools-23.0.0
+    - build-tools-25.0.0
     - android-22
     - android-23
     - extra-android-m2repository
@@ -34,6 +34,6 @@ script:
 
 before_install:
   - pip install --user codecov
-  
+
 after_success:
   - codecov
