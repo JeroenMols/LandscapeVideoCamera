@@ -16,8 +16,7 @@ android:
     - tools # to install Android SDK tools 25.1.x (x = 6 right now)
     - platform-tools
     - build-tools-26.0.2
-    - android-22
-    - android-23
+    - android-26
     - extra-android-m2repository
     - sys-img-armeabi-v7a-android-22
 
