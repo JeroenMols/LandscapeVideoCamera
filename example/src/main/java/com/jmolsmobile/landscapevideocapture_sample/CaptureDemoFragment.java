@@ -22,11 +22,16 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore.Video.Thumbnails;
 import android.support.v4.app.Fragment;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -48,18 +53,21 @@ import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
+import java.io.File;
 import java.util.List;
 
 public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
     private final String KEY_STATUSMESSAGE = "com.jmolsmobile.statusmessage";
     private final String KEY_ADVANCEDSETTINGS = "com.jmolsmobile.advancedsettings";
+    private final String KEY_DIRECTORY_NAME = "com.jmolsmobile.outputdirectoryname";
     private final String KEY_FILENAME = "com.jmolsmobile.outputfilename";
 
     private final String[] RESOLUTION_NAMES = new String[]{"1080p", "720p", "480p"};
     private final String[] QUALITY_NAMES = new String[]{"high", "medium", "low"};
 
     private String statusMessage = null;
+    private String directoryName = null;
     private String filename = null;
 
     private ImageView thumbnailIv;
@@ -68,6 +76,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private Spinner qualitySp;
 
     private RelativeLayout advancedRl;
+    private EditText directoryNameEt;
     private EditText filenameEt;
     private EditText maxDurationEt;
     private EditText maxFilesizeEt;
@@ -86,6 +95,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         thumbnailIv.setOnClickListener(this);
         statusTv = (TextView) rootView.findViewById(R.id.tv_status);
         advancedRl = (RelativeLayout) rootView.findViewById(R.id.rl_advanced);
+        directoryNameEt = (EditText) rootView.findViewById(R.id.et_directoryName);
         filenameEt = (EditText) rootView.findViewById(R.id.et_filename);
         fpsEt = (EditText) rootView.findViewById(R.id.et_fps);
         maxDurationEt = (EditText) rootView.findViewById(R.id.et_duration);
@@ -96,12 +106,32 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
         if (savedInstanceState != null) {
             statusMessage = savedInstanceState.getString(KEY_STATUSMESSAGE);
+            directoryName = savedInstanceState.getString(KEY_DIRECTORY_NAME);
             filename = savedInstanceState.getString(KEY_FILENAME);
             advancedRl.setVisibility(savedInstanceState.getInt(KEY_ADVANCEDSETTINGS));
         }
 
         updateStatusAndThumbnail();
         initializeSpinners(rootView);
+
+        directoryNameEt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!directoryNameEt.getEditableText().toString().equals("")) {
+                    if (!hasFocus){
+                        final SpannableStringBuilder sb = new SpannableStringBuilder(Environment.getExternalStorageDirectory().getPath()
+                                .concat(File.separator)
+                                .concat(directoryNameEt.getEditableText().toString()));
+                        final ForegroundColorSpan fcs = new ForegroundColorSpan(Color.rgb(158, 158, 158));
+                        sb.setSpan(fcs, 0, Environment.getExternalStorageDirectory().getPath().length()+1, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+                        directoryNameEt.setText(sb);
+                    } else {
+                        directoryNameEt.setText(directoryNameEt.getEditableText().toString().substring(Environment.getExternalStorageDirectory().getPath().length()+1, directoryNameEt.getEditableText().toString().length()));
+                    }
+                }
+            }
+        });
+
         return rootView;
     }
 
@@ -122,6 +152,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putString(KEY_STATUSMESSAGE, statusMessage);
+        outState.putString(KEY_DIRECTORY_NAME, directoryName);
         outState.putString(KEY_FILENAME, filename);
         outState.putInt(KEY_ADVANCEDSETTINGS, advancedRl.getVisibility());
         super.onSaveInstanceState(outState);
@@ -130,6 +161,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btn_capturevideo) {
+            directoryNameEt.clearFocus();
             startVideoCaptureActivity();
         } else if (v.getId() == R.id.iv_thumbnail) {
             playVideo();
@@ -183,10 +215,12 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
     private void startVideoCaptureActivity() {
         final CaptureConfiguration config = createCaptureConfiguration();
+        final String directoryName = directoryNameEt.getEditableText().toString();
         final String filename = filenameEt.getEditableText().toString();
 
         final Intent intent = new Intent(getActivity(), VideoCaptureActivity.class);
         intent.putExtra(VideoCaptureActivity.EXTRA_CAPTURE_CONFIGURATION, config);
+        intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_DIRECTORY_NAME, directoryName);
         intent.putExtra(VideoCaptureActivity.EXTRA_OUTPUT_FILENAME, filename);
         startActivityForResult(intent, 101);
     }
