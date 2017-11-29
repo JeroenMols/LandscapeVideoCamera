@@ -30,6 +30,7 @@ public class VideoFile {
 	private static final String	DEFAULT_PREFIX		= "video_";
 	private static final String	DEFAULT_EXTENSION	= ".mp4";
 
+	private String		mDirectoryName;
 	private final String		mFilename;
 	private Date				mDate;
 
@@ -42,6 +43,11 @@ public class VideoFile {
 		this.mDate = date;
 	}
 
+	public VideoFile(String filename, String directoryName){
+		this(filename);
+		this.mDirectoryName = directoryName;
+	}
+
 	public String getFullPath() {
 		return getFile().getAbsolutePath();
 	}
@@ -50,7 +56,12 @@ public class VideoFile {
 		final String filename = generateFilename();
 		if (filename.contains(DIRECTORY_SEPARATOR)) return new File(filename);
 
-		final File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+		final File path;
+		if (mDirectoryName != null && !mDirectoryName.equals("")){
+			path = new File(mDirectoryName);
+		} else {
+			path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+		}
 		path.mkdirs();
 		return new File(path, generateFilename());
 	}

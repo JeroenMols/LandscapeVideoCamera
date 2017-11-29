@@ -126,9 +126,29 @@
                 tools:visibility="visible">
 
                 <ImageView
+                    android:id="@+id/iv_directoryName"
+                    android:layout_width="36dp"
+                    android:layout_height="56dp"
+                    android:layout_marginLeft="16dp"
+                    android:src="@drawable/ic_directory_black" />
+
+                <EditText
+                    android:id="@+id/et_directoryName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:minWidth="175dp"
+                    android:layout_alignBottom="@id/iv_directoryName"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginLeft="72dp"
+                    android:gravity="bottom"
+                    android:hint="@string/directoryName_hint"
+                    android:textSize="14sp" />
+
+                <ImageView
                     android:id="@+id/iv_filename"
                     android:layout_width="36dp"
                     android:layout_height="56dp"
+                    android:layout_below="@id/iv_directoryName"
                     android:layout_marginLeft="16dp"
                     android:src="@drawable/ic_assignment_black_48dp" />
 

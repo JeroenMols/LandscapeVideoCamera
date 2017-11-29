@@ -41,6 +41,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     public static final int RESULT_ERROR = 753245;
     private static final int REQUESTCODE_SWITCHCAMERA = 578465;
 
+    public static final String EXTRA_OUTPUT_DIRECTORY_NAME = "com.jmolsmobile.extraoutputdirectoryname";
     public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
     public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
@@ -220,7 +221,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         if (savedInstanceState != null) {
             returnFile = new VideoFile(savedInstanceState.getString(SAVED_OUTPUT_FILENAME));
         } else {
-            returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME));
+            returnFile = new VideoFile(this.getIntent().getStringExtra(EXTRA_OUTPUT_FILENAME), this.getIntent().getStringExtra(EXTRA_OUTPUT_DIRECTORY_NAME));
         }
         // TODO: add checks to see if outputfile is writeable
         return returnFile;
