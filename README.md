@@ -36,6 +36,7 @@ This library provides a full and reusable custom camera, which:
   * Max video duration
   * audio/video codec
   * switch between front and rear facing camera
+  * flash activation
   * ...
 
 ## How to use
@@ -75,6 +76,7 @@ This library provides a full and reusable custom camera, which:
          builder.frameRate(framesPerSec);
          builder.showRecordingTime();         // Show the elapsed recording time
          builder.noCameraToggle();            // Remove button to toggle between front and back camera
+         builder.noFlashToggle();            // Remove button to toggle flash on/off
 
          // Get the CaptureConfiguration
          CaptureConfiguration configuration = builder.build();

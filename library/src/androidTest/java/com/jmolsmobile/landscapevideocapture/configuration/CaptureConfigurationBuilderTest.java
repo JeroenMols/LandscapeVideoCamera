@@ -1,11 +1,11 @@
 package com.jmolsmobile.landscapevideocapture.configuration;
 
-import android.support.test.runner.AndroidJUnit4;
-
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import android.support.test.runner.AndroidJUnit4;
 
 import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.Builder;
 import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.MBYTE_TO_BYTE;
@@ -110,5 +110,12 @@ public class CaptureConfigurationBuilderTest {
         CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).noCameraToggle().build();
 
         assertThat(configuration.getAllowFrontFacingCamera()).isFalse();
+    }
+
+    @Test
+    public void builtConfigurationAllowFlash() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).noFlashToggle().build();
+
+        assertThat(configuration.getAllowFlash()).isFalse();
     }
 }

@@ -16,11 +16,6 @@
 
 package com.jmolsmobile.landscapevideocapture.recorder;
 
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
-import android.media.MediaRecorder.OnInfoListener;
-import android.view.SurfaceHolder;
-
 import com.jmolsmobile.landscapevideocapture.CLog;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
@@ -30,6 +25,12 @@ import com.jmolsmobile.landscapevideocapture.camera.RecordingSize;
 import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
+
+import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
+import android.media.MediaRecorder.OnInfoListener;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
@@ -212,6 +213,17 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
             recorder.release();
             setMediaRecorder(null);
         }
+    }
+
+    public void setFlash(boolean isFlashOn){
+
+        Camera.Parameters params =  mCameraWrapper.getCamera().getParameters();
+        if (isFlashOn) {
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        }else {
+            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+        }
+        mCameraWrapper.getCamera().setParameters(params);
     }
 
     public void releaseAllResources() {

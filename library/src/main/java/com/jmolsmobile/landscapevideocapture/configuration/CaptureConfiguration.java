@@ -16,12 +16,12 @@
 
 package com.jmolsmobile.landscapevideocapture.configuration;
 
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
+
 import android.media.MediaRecorder;
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
 public class CaptureConfiguration implements Parcelable {
 
@@ -38,6 +38,7 @@ public class CaptureConfiguration implements Parcelable {
     private int maxFilesizeBytes = NO_FILESIZE_LIMIT;
     private boolean showTimer = false;
     private boolean allowFrontFacingCamera = true;
+    private boolean allowFlash = true;
     private int videoFramerate = PredefinedCaptureConfigurations.FPS_30;     //Default FPS is 30.
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
@@ -155,6 +156,15 @@ public class CaptureConfiguration implements Parcelable {
         return allowFrontFacingCamera;
     }
 
+    /**
+     * @return If front flash toggle must be displayed before capturing video
+     */
+    public boolean getAllowFlash() {
+        return allowFlash;
+    }
+
+
+
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
     }
@@ -190,6 +200,7 @@ public class CaptureConfiguration implements Parcelable {
         dest.writeInt(videoFramerate);
         dest.writeByte((byte) (showTimer ? 1 : 0));
         dest.writeByte((byte) (allowFrontFacingCamera ? 1 : 0));
+        dest.writeByte((byte) (allowFlash ? 1 : 0));
 
         dest.writeInt(OUTPUT_FORMAT);
         dest.writeInt(AUDIO_SOURCE);
@@ -221,6 +232,7 @@ public class CaptureConfiguration implements Parcelable {
         videoFramerate = in.readInt();
         showTimer = in.readByte() != 0;
         allowFrontFacingCamera = in.readByte() != 0;
+        allowFlash = in.readByte() != 0;
 
         OUTPUT_FORMAT = in.readInt();
         AUDIO_SOURCE = in.readInt();
@@ -277,6 +289,11 @@ public class CaptureConfiguration implements Parcelable {
 
         public Builder noCameraToggle() {
             configuration.allowFrontFacingCamera = false;
+            return this;
+        }
+
+        public Builder noFlashToggle() {
+            configuration.allowFlash = false;
             return this;
         }
     }

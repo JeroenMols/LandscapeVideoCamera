@@ -16,6 +16,11 @@
 
 package com.jmolsmobile.landscapevideocapture_sample;
 
+import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
+import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -43,11 +48,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
-import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
-
 import java.util.List;
 
 public class CaptureDemoFragment extends Fragment implements OnClickListener {
@@ -74,6 +74,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private EditText fpsEt;
     private CheckBox showTimerCb;
     private CheckBox allowFrontCameraCb;
+    private CheckBox allowFlashCb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,6 +93,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
         showTimerCb = (CheckBox) rootView.findViewById(R.id.cb_showtimer);
         allowFrontCameraCb = (CheckBox) rootView.findViewById(R.id.cb_show_camera_switch);
+        allowFlashCb = (CheckBox) rootView.findViewById(R.id.cb_show_flash_switch);
 
 
         if (savedInstanceState != null) {
@@ -258,6 +260,9 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         }
         if (!allowFrontCameraCb.isChecked()) {
             builder.noCameraToggle();
+        }
+        if (!allowFlashCb.isChecked()) {
+            builder.noFlashToggle();
         }
         
         return builder.build();

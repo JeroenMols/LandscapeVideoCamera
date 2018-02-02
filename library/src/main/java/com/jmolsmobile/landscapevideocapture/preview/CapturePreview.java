@@ -16,11 +16,13 @@
 
 package com.jmolsmobile.landscapevideocapture.preview;
 
-import android.hardware.Camera;
-import android.view.SurfaceHolder;
-
 import com.jmolsmobile.landscapevideocapture.CLog;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+
+import android.content.Context;
+import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 
@@ -124,6 +126,11 @@ public class CapturePreview implements SurfaceHolder.Callback {
 		}
 
 		return false;
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean isFlashAvailable(Context context) {
+		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH);
 	}
 
 

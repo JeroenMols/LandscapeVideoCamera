@@ -16,6 +16,9 @@
 
 package com.jmolsmobile.landscapevideocapture.view;
 
+import com.jmolsmobile.landscapevideocapture.R;
+import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
@@ -30,15 +33,13 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.TextView;
 
-import com.jmolsmobile.landscapevideocapture.R;
-import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
-
 public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     private ImageView mDeclineBtnIv;
     private ImageView mAcceptBtnIv;
     private ImageView mRecordBtnIv;
     private ImageView mChangeCameraIv;
+    private ImageView mFlashBtnIv;
 
     private SurfaceView mSurfaceView;
     private ImageView mThumbnailIv;
@@ -50,6 +51,8 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     private boolean mShowTimer;
     private boolean isFrontCameraEnabled;
     private boolean isCameraSwitchingEnabled;
+    private boolean isFlashOn;
+    private boolean isFlashSwitchingEnabled;
 
     public VideoCaptureView(Context context) {
         super(context);
@@ -73,11 +76,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mAcceptBtnIv = (ImageView) videoCapture.findViewById(R.id.videocapture_acceptbtn_iv);
         mDeclineBtnIv = (ImageView) videoCapture.findViewById(R.id.videocapture_declinebtn_iv);
         mChangeCameraIv = (ImageView) videoCapture.findViewById(R.id.change_camera_iv);
+        mFlashBtnIv = (ImageView) videoCapture.findViewById(R.id.flash_iv);
 
         mRecordBtnIv.setOnClickListener(this);
         mAcceptBtnIv.setOnClickListener(this);
         mDeclineBtnIv.setOnClickListener(this);
         mChangeCameraIv.setOnClickListener(this);
+        mFlashBtnIv.setOnClickListener(this);
 
         mThumbnailIv = (ImageView) videoCapture.findViewById(R.id.videocapture_preview_iv);
         mSurfaceView = (SurfaceView) videoCapture.findViewById(R.id.videocapture_preview_sv);
@@ -92,6 +97,11 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
     public void setCameraSwitchingEnabled(boolean isCameraSwitchingEnabled) {
         this.isCameraSwitchingEnabled = isCameraSwitchingEnabled;
         mChangeCameraIv.setVisibility(isCameraSwitchingEnabled ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    public void setFlashSwitchingEnabled(boolean isFlashSwitchingEnabled, boolean isFrontCameraEnabled) {
+        this.isFlashSwitchingEnabled = isFlashSwitchingEnabled && !isFrontCameraEnabled;
+        mFlashBtnIv.setVisibility(isFlashSwitchingEnabled ? View.VISIBLE : View.INVISIBLE);
     }
 
     public void setCameraFacing(boolean isFrontFacing) {
@@ -111,6 +121,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mChangeCameraIv.setVisibility(allowCameraSwitching() ? VISIBLE : INVISIBLE);
         mRecordBtnIv.setVisibility(View.VISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
+        mFlashBtnIv.setVisibility(allowFlashSwitching()? VISIBLE : INVISIBLE);
         mDeclineBtnIv.setVisibility(View.GONE);
         mThumbnailIv.setVisibility(View.GONE);
         mSurfaceView.setVisibility(View.VISIBLE);
@@ -131,6 +142,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mRecordBtnIv.setSelected(true);
         mRecordBtnIv.setVisibility(View.VISIBLE);
         mChangeCameraIv.setVisibility(View.INVISIBLE);
+        mFlashBtnIv.setVisibility(View.INVISIBLE);
         mAcceptBtnIv.setVisibility(View.GONE);
         mDeclineBtnIv.setVisibility(View.GONE);
         mThumbnailIv.setVisibility(View.GONE);
@@ -147,6 +159,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mRecordBtnIv.setVisibility(View.INVISIBLE);
         mAcceptBtnIv.setVisibility(View.VISIBLE);
         mChangeCameraIv.setVisibility(View.INVISIBLE);
+        mFlashBtnIv.setVisibility(View.INVISIBLE);
         mDeclineBtnIv.setVisibility(View.VISIBLE);
         mThumbnailIv.setVisibility(View.VISIBLE);
         mSurfaceView.setVisibility(View.GONE);
@@ -174,6 +187,11 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
             mChangeCameraIv.setImageResource(isFrontCameraEnabled ?
                     R.drawable.ic_change_camera_front : R.drawable.ic_change_camera_back);
             mRecordingInterface.onSwitchCamera(isFrontCameraEnabled);
+        } else if (v.getId() == mFlashBtnIv.getId()) {
+            isFlashOn = !isFlashOn;
+            mFlashBtnIv.setImageResource(isFlashOn ?
+                    R.drawable.ic_flash_on : R.drawable.ic_flash_off);
+            mRecordingInterface.onFlashButtonClicked(isFlashOn);
         }
 
     }
@@ -188,5 +206,9 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
 
     private boolean allowCameraSwitching() {
         return CapturePreview.isFrontCameraAvailable() && isCameraSwitchingEnabled;
+    }
+
+    private boolean allowFlashSwitching() {
+        return CapturePreview.isFlashAvailable(getContext()) && isFlashSwitchingEnabled;
     }
 }
