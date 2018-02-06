@@ -104,6 +104,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mFlashBtnIv.setVisibility(isFlashSwitchingEnabled ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setFlashStartOption(boolean isFlashStartOn){
+        this.isFlashOn = isFlashStartOn;
+        mFlashBtnIv.setImageResource(isFlashStartOn ?
+                R.drawable.ic_flash_on :
+                R.drawable.ic_flash_off);
+    }
+
     public void setCameraFacing(boolean isFrontFacing) {
         if (!isCameraSwitchingEnabled) return;
         isFrontCameraEnabled = isFrontFacing;
