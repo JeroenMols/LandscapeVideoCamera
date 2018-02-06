@@ -126,16 +126,14 @@
                         android:layout_marginLeft="16dp"
                         android:src="@drawable/ic_flash_black_48dp" />
 
-                <CheckBox
-                        android:id="@+id/cb_show_flash_switch"
-                        android:layout_width="match_parent"
+                <Spinner
+                        android:id="@+id/sp_flash"
+                        android:layout_width="175dp"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/iv_flash"
-                        android:layout_below="@id/iv_front"
-                        android:layout_marginLeft="72dp"
-                        android:checked="true"
-                        android:gravity="center_vertical"
-                        android:text="@string/allow_flash" />
+                        android:layout_alignTop="@id/iv_flash"
+                        android:layout_marginLeft="72dp" />
+
             </RelativeLayout>
 
             <RelativeLayout

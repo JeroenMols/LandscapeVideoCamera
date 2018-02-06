@@ -18,6 +18,7 @@ package com.jmolsmobile.landscapevideocapture.configuration;
 
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.FlashOption;
 
 import android.media.MediaRecorder;
 import android.os.Parcel;
@@ -39,6 +40,7 @@ public class CaptureConfiguration implements Parcelable {
     private boolean showTimer = false;
     private boolean allowFrontFacingCamera = true;
     private boolean allowFlash = true;
+    private boolean flashStartOn = false;
     private int videoFramerate = PredefinedCaptureConfigurations.FPS_30;     //Default FPS is 30.
 
     private int OUTPUT_FORMAT = MediaRecorder.OutputFormat.MPEG_4;
@@ -163,7 +165,16 @@ public class CaptureConfiguration implements Parcelable {
         return allowFlash;
     }
 
+    /**
+     * @return If front flash must be start on
+     */
+    public boolean getIfFlashStartOn() {
+        return flashStartOn;
+    }
 
+    public void setIfFlashStartOn(boolean flashStartOn){
+        this.flashStartOn = flashStartOn;
+    }
 
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
@@ -201,6 +212,7 @@ public class CaptureConfiguration implements Parcelable {
         dest.writeByte((byte) (showTimer ? 1 : 0));
         dest.writeByte((byte) (allowFrontFacingCamera ? 1 : 0));
         dest.writeByte((byte) (allowFlash ? 1 : 0));
+        dest.writeByte((byte) (flashStartOn ? 1 : 0));
 
         dest.writeInt(OUTPUT_FORMAT);
         dest.writeInt(AUDIO_SOURCE);
@@ -233,6 +245,7 @@ public class CaptureConfiguration implements Parcelable {
         showTimer = in.readByte() != 0;
         allowFrontFacingCamera = in.readByte() != 0;
         allowFlash = in.readByte() != 0;
+        flashStartOn = in.readByte() != 0;
 
         OUTPUT_FORMAT = in.readInt();
         AUDIO_SOURCE = in.readInt();
@@ -292,9 +305,29 @@ public class CaptureConfiguration implements Parcelable {
             return this;
         }
 
-        public Builder noFlashToggle() {
-            configuration.allowFlash = false;
+        public Builder setFlashOption(FlashOption flashOption) {
+            configuration.flashStartOn = true;
+
+            switch (flashOption) {
+                case HIDE:
+                    configuration.allowFlash = false;
+                    configuration.flashStartOn = false;
+                    break;
+                case HIDE_ON:
+                    configuration.allowFlash = false;
+                    configuration.flashStartOn = true;
+                    break;
+                case START_OFF:
+                    configuration.allowFlash = true;
+                    configuration.flashStartOn = false;
+                    break;
+                case START_ON:
+                    configuration.allowFlash = true;
+                    configuration.flashStartOn = true;
+                    break;
+            }
             return this;
+
         }
     }
 }

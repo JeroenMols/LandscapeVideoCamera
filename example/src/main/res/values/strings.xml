@@ -36,6 +36,7 @@
     <string name="show_timer">Show Timer</string>
     <string name="allow_frontcamera">Allow front facing camera</string>
     <string name="allow_flash">Allow flash toggle</string>
+    <string name="start_flash">Flash start ON</string>
     <string name="privacy">privacy policy</string>
     <string name="privacy_url">http://jeroenmols.com/apps/landscapevideocamera/privacy_policy.html</string>
     <string name="enter_fps_hint">Enter FPS</string>
