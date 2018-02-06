@@ -103,7 +103,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         mVideoCaptureView.setRecordingButtonInterface(this);
         mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
         mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
-        mVideoCaptureView.setFlashSwitchingEnabled(mCaptureConfiguration.getAllowFlash(), isFrontFacingCameraSelected);
+        mVideoCaptureView.setFlashSwitchingEnabled(mCaptureConfiguration.getAllowFlashToggle(), isFrontFacingCameraSelected);
         mVideoCaptureView.setFlashStartOption(mCaptureConfiguration.getIfFlashStartOn());
 
         if (mVideoRecorded) {
