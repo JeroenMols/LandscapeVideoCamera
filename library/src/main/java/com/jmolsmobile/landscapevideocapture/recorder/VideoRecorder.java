@@ -26,7 +26,6 @@ import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreviewInterface;
 
-import android.hardware.Camera;
 import android.media.CamcorderProfile;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnInfoListener;
@@ -45,6 +44,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
     private MediaRecorder mRecorder;
     private boolean mRecording = false;
     private final VideoRecorderInterface mRecorderInterface;
+    private boolean mUseFrontFacingCamera;
 
     public VideoRecorder(VideoRecorderInterface recorderInterface,
                          CaptureConfiguration captureConfiguration,
@@ -56,13 +56,14 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mRecorderInterface = recorderInterface;
         mVideoFile = videoFile;
         mCameraWrapper = cameraWrapper;
+        mUseFrontFacingCamera = useFrontFacingCamera;
 
-        initializeCameraAndPreview(previewHolder, useFrontFacingCamera);
+        initializeCameraAndPreview(previewHolder);
     }
 
-    protected void initializeCameraAndPreview(SurfaceHolder previewHolder, boolean useFrontFacingCamera) {
+    protected void initializeCameraAndPreview(SurfaceHolder previewHolder) {
         try {
-            mCameraWrapper.openCamera(useFrontFacingCamera);
+            mCameraWrapper.openCamera(mUseFrontFacingCamera);
         } catch (final OpenCameraException e) {
             e.printStackTrace();
             mRecorderInterface.onRecordingFailed(e.getMessage());
@@ -72,7 +73,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mVideoCapturePreview = new CapturePreview(this, mCameraWrapper, previewHolder);
     }
 
-    public void toggleRecording() throws AlreadyUsedException {
+    public void toggleRecording(boolean useFlash) throws AlreadyUsedException {
         if (mCameraWrapper == null) {
             throw new AlreadyUsedException();
         }
@@ -80,11 +81,12 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         if (isRecording()) {
             stopRecording(null);
         } else {
-            startRecording();
+            startRecording(useFlash);
+
         }
     }
 
-    protected void startRecording() {
+    protected void startRecording(boolean useFlash) {
         mRecording = false;
 
         if (!initRecorder()) return;
@@ -94,6 +96,10 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mRecording = true;
         mRecorderInterface.onRecordingStarted();
         CLog.d(CLog.RECORDER, "Successfully started recording - outputfile: " + mVideoFile.getFullPath());
+
+        if(useFlash && !mUseFrontFacingCamera ) {
+            mCameraWrapper.setFlash();
+        }
     }
 
     public void stopRecording(String message) {
@@ -215,16 +221,6 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         }
     }
 
-    public void setFlash(boolean isFlashOn){
-
-        Camera.Parameters params =  mCameraWrapper.getCamera().getParameters();
-        if (isFlashOn) {
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-        }else {
-            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-        }
-        mCameraWrapper.getCamera().setParameters(params);
-    }
 
     public void releaseAllResources() {
         if (mVideoCapturePreview != null) {

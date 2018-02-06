@@ -18,7 +18,7 @@ package com.jmolsmobile.landscapevideocapture.view;
 
 public interface RecordingButtonInterface {
 
-    void onRecordButtonClicked();
+    void onRecordButtonClicked(boolean useFlash);
 
     void onAcceptButtonClicked();
 

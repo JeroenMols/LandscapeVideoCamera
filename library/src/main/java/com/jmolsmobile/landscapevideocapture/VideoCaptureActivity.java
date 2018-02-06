@@ -99,10 +99,12 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
                 new CameraWrapper(new NativeCamera(), display.getRotation()),
                 mVideoCaptureView.getPreviewSurfaceHolder(),
                 isFrontFacingCameraSelected);
+
         mVideoCaptureView.setRecordingButtonInterface(this);
         mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
         mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
         mVideoCaptureView.setFlashSwitchingEnabled(mCaptureConfiguration.getAllowFlash(), isFrontFacingCameraSelected);
+        mVideoCaptureView.setFlashStartOption(mCaptureConfiguration.getIfFlashStartOn());
 
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
@@ -127,9 +129,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     @Override
-    public void onRecordButtonClicked() {
+    public void onRecordButtonClicked(boolean useFlash) {
         try {
-            mVideoRecorder.toggleRecording();
+            mVideoRecorder.toggleRecording(useFlash);
         } catch (AlreadyUsedException e) {
             CLog.d(CLog.ACTIVITY, "Cannot toggle recording after cleaning up all resources");
         }
@@ -161,8 +163,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     @Override
     public void onFlashButtonClicked(boolean isFlashOn) {
-        mVideoRecorder.setFlash(isFlashOn);
-
+        mCaptureConfiguration.setIfFlashStartOn(isFlashOn);
     }
 
     @Override

@@ -127,4 +127,10 @@ public class NativeCamera {
         }
         return false;
     }
+
+    public void setFlash(){
+        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+        camera.setParameters(params);
+    }
+
 }
