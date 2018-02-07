@@ -16,6 +16,14 @@
 
 package com.jmolsmobile.landscapevideocapture.view;
 
+import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
+import com.jmolsmobile.landscapevideocapture.R;
+
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mockito;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
@@ -26,14 +34,6 @@ import android.support.test.rule.UiThreadTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 import android.widget.ImageView;
-
-import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
-import com.jmolsmobile.landscapevideocapture.R;
-
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 
 import static junit.framework.TestCase.assertNotNull;
 import static org.junit.Assert.assertFalse;
@@ -89,7 +89,7 @@ public class VideoCaptureViewTest extends MockitoTestCase {
     public void recordBtnShouldNotifyListener() {
         final RecordingButtonInterface mockBtnInterface = mock(RecordingButtonInterface.class);
         performClickOnButton(R.id.videocapture_recordbtn_iv, mockBtnInterface);
-        Mockito.verify(mockBtnInterface, Mockito.times(1)).onRecordButtonClicked();
+        Mockito.verify(mockBtnInterface, Mockito.times(1)).onRecordButtonClicked(false);
     }
 
     @UiThreadTest
