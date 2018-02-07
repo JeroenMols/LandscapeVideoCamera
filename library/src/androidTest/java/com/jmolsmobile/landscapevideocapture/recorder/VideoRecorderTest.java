@@ -16,13 +16,6 @@
 
 package com.jmolsmobile.landscapevideocapture.recorder;
 
-import android.hardware.Camera;
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
-import android.support.test.runner.AndroidJUnit4;
-import android.view.Surface;
-import android.view.SurfaceHolder;
-
 import com.jmolsmobile.landscapevideocapture.MockitoTestCase;
 import com.jmolsmobile.landscapevideocapture.VideoFile;
 import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
@@ -34,10 +27,19 @@ import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import org.mockito.Mockito;
+
+import android.hardware.Camera;
+import android.media.CamcorderProfile;
+import android.media.MediaRecorder;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.util.Arrays;
+import java.util.Collection;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -53,9 +55,27 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+
 @SuppressWarnings("deprecation")
-@RunWith(AndroidJUnit4.class)
+@RunWith(value = Parameterized.class)
 public class VideoRecorderTest extends MockitoTestCase {
+
+    private boolean FlashStatus;
+
+    // Inject via constructor
+    public VideoRecorderTest(boolean FlashStatus) {
+        this.FlashStatus = FlashStatus;
+    }
+
+    // name attribute is optional, provide an unique name for test
+    // multiple parameters, uses Collection<Object[]>
+    @Parameterized.Parameters()
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+                {true},
+                {false}
+        });
+    }
 
     @Test
     public void openCameraWhenCreated() throws Exception {
@@ -73,15 +93,16 @@ public class VideoRecorderTest extends MockitoTestCase {
         verify(mockInterface, times(1)).onRecordingFailed(anyString());
     }
 
+
     @Test
     public void startRecordingWhenNotStarted() throws Exception {
         final VideoRecorder spyRecorder =
                 spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class), false));
-        doNothing().when(spyRecorder).startRecording();
+        doNothing().when(spyRecorder).startRecording(FlashStatus);
 
-        spyRecorder.toggleRecording();
+        spyRecorder.toggleRecording(FlashStatus);
 
-        verify(spyRecorder, times(1)).startRecording();
+        verify(spyRecorder, times(1)).startRecording(FlashStatus);
     }
 
     @Test
@@ -91,7 +112,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doReturn(true).when(spyRecorder).isRecording();
         doNothing().when(spyRecorder).stopRecording(anyString());
 
-        spyRecorder.toggleRecording();
+        spyRecorder.toggleRecording(FlashStatus);
 
         verify(spyRecorder, times(1)).stopRecording(null);
     }
@@ -102,7 +123,7 @@ public class VideoRecorderTest extends MockitoTestCase {
                 spy(new VideoRecorder(null, mock(CaptureConfiguration.class), null, mock(CameraWrapper.class), mock(SurfaceHolder.class), false));
         spyRecorder.releaseAllResources();
 
-        spyRecorder.toggleRecording();
+        spyRecorder.toggleRecording(FlashStatus);
     }
 
     @Test
@@ -112,7 +133,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         final VideoRecorderInterface mockInterface = mock(VideoRecorderInterface.class);
         final VideoRecorder recorder = new VideoRecorder(mockInterface, mock(CaptureConfiguration.class), null, mockWrapper, mock(SurfaceHolder.class), false);
 
-        recorder.startRecording();
+        recorder.startRecording(FlashStatus);
 
         verify(mockInterface, times(1)).onRecordingFailed("Unable to record video");
     }
@@ -123,7 +144,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
 
         final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-        spyRecorder.startRecording();
+        spyRecorder.startRecording(FlashStatus);
 
         verify(mockInterface, times(1)).onRecordingStarted();
     }
@@ -135,7 +156,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doThrow(new IllegalStateException()).when(mockRecorder).prepare();
 
         final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-        spyRecorder.startRecording();
+        spyRecorder.startRecording(FlashStatus);
 
         verify(mockRecorder, never()).start();
     }
@@ -147,7 +168,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doThrow(new IOException()).when(mockRecorder).prepare();
 
         final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-        spyRecorder.startRecording();
+        spyRecorder.startRecording(FlashStatus);
 
         verify(mockRecorder, never()).start();
     }
@@ -159,7 +180,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doThrow(new IllegalStateException()).when(mockRecorder).start();
 
         final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-        spyRecorder.startRecording();
+        spyRecorder.startRecording(FlashStatus);
 
         verify(mockInterface, never()).onRecordingStarted();
     }
@@ -171,7 +192,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doThrow(new RuntimeException()).when(mockRecorder).start();
 
         final VideoRecorder spyRecorder = createSpyRecorder(mockInterface, mockRecorder);
-        spyRecorder.startRecording();
+        spyRecorder.startRecording(FlashStatus);
 
         verify(mockInterface, times(1)).onRecordingFailed("Unable to record video with given settings");
     }
@@ -253,7 +274,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         doReturn(mockSurface).when(mockHolder).getSurface();
         final VideoFile videoFile = new VideoFile("sdcard/test.avi");
         final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, createMockCameraWrapperForInitialisation(), mockHolder, false));
-        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder, false);
+        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
         final Camera mockCamera = mock(Camera.class);
@@ -275,7 +296,7 @@ public class VideoRecorderTest extends MockitoTestCase {
         CameraWrapper mockWrapper = createMockCameraWrapperForInitialisation();
         doReturn(90).when(mockWrapper).getRotationCorrection();
         final VideoRecorder spyRecorder = spy(new VideoRecorder(null, config, videoFile, mockWrapper, mockHolder, false));
-        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder, false);
+        doNothing().when(spyRecorder).initializeCameraAndPreview(mockHolder);
 
         final MediaRecorder mockRecorder = mock(MediaRecorder.class);
         final Camera mockCamera = mock(Camera.class);
