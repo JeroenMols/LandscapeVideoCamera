@@ -17,6 +17,7 @@
 package com.jmolsmobile.landscapevideocapture.view;
 
 import com.jmolsmobile.landscapevideocapture.R;
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
 import com.jmolsmobile.landscapevideocapture.preview.CapturePreview;
 
 import android.content.Context;
@@ -104,11 +105,13 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         mFlashBtnIv.setVisibility(isFlashSwitchingEnabled ? View.VISIBLE : View.INVISIBLE);
     }
 
-    public void setFlashStartOption(boolean isFlashStartOn){
+    public void setFlashStartOption(CameraWrapper mCameraWrapper, boolean isFlashStartOn){
         this.isFlashOn = isFlashStartOn;
         mFlashBtnIv.setImageResource(isFlashStartOn ?
                 R.drawable.ic_flash_on :
                 R.drawable.ic_flash_off);
+
+        mCameraWrapper.setFlash(isFlashStartOn);
     }
 
     public void setCameraFacing(boolean isFrontFacing) {

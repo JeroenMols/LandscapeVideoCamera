@@ -16,12 +16,15 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import com.jmolsmobile.landscapevideocapture.CLog;
+
 import android.hardware.Camera;
 import android.hardware.Camera.CameraInfo;
 import android.hardware.Camera.Parameters;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Wrapper around the native camera class so all camera access
@@ -128,9 +131,33 @@ public class NativeCamera {
         return false;
     }
 
-    public void setFlash(){
-        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-        camera.setParameters(params);
+    public void setFlash(boolean isFlashOn){
+
+        if(camera != null) {
+            params = camera.getParameters();
+        }
+
+        if(params!=null) {
+            List<String> supportedFlashModes = params.getSupportedFlashModes();
+            if (supportedFlashModes != null) {
+                try {
+                    if (isFlashOn) {
+                        if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                            camera.setParameters(params);
+                        }
+                    } else {
+                        if (supportedFlashModes.contains(Parameters.FLASH_MODE_OFF)) {
+                            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                            camera.setParameters(params);
+                        }
+                    }
+                } catch (RuntimeException RE) {
+                    CLog.e(CLog.CAMERA, "Set Torch param failed : " + RE);
+                }
+            }
+
+        }
     }
 
 }

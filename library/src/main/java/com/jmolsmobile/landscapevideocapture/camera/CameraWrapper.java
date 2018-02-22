@@ -60,8 +60,8 @@ public class CameraWrapper {
             throw new OpenCameraException(OpenType.NOCAMERA);
     }
 
-    public void setFlash(){
-        mNativeCamera.setFlash();
+    public void setFlash(boolean isFlashOn){
+        mNativeCamera.setFlash(isFlashOn);
     }
 
     public void prepareCameraForRecording() throws PrepareCameraException {

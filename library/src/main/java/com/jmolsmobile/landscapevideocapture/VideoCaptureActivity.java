@@ -66,6 +66,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private boolean isFrontFacingCameraSelected;
 
+    private CameraWrapper mCameraWrapper;
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,10 +95,13 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private void initializeRecordingUI() {
         Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+        mCameraWrapper = new CameraWrapper(new NativeCamera(), display.getRotation());
+
         mVideoRecorder = new VideoRecorder(this,
                 mCaptureConfiguration,
                 mVideoFile,
-                new CameraWrapper(new NativeCamera(), display.getRotation()),
+                mCameraWrapper,
                 mVideoCaptureView.getPreviewSurfaceHolder(),
                 isFrontFacingCameraSelected);
 
@@ -104,7 +109,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
         mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
         mVideoCaptureView.setFlashSwitchingEnabled(mCaptureConfiguration.getAllowFlashToggle(), isFrontFacingCameraSelected);
-        mVideoCaptureView.setFlashStartOption(mCaptureConfiguration.getIfFlashStartOn());
+        mVideoCaptureView.setFlashStartOption(mCameraWrapper, mCaptureConfiguration.getIfFlashStartOn());
 
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
@@ -163,7 +168,7 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     @Override
     public void onFlashButtonClicked(boolean isFlashOn) {
-        mCaptureConfiguration.setIfFlashStartOn(isFlashOn);
+        mCameraWrapper.setFlash(isFlashOn);
     }
 
     @Override

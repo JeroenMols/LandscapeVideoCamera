@@ -172,10 +172,6 @@ public class CaptureConfiguration implements Parcelable {
         return flashStartOn;
     }
 
-    public void setIfFlashStartOn(boolean flashStartOn){
-        this.flashStartOn = flashStartOn;
-    }
-
     public int getOutputFormat() {
         return OUTPUT_FORMAT;
     }
@@ -306,8 +302,6 @@ public class CaptureConfiguration implements Parcelable {
         }
 
         public Builder setFlashOption(FlashOption flashOption) {
-            configuration.flashStartOn = true;
-
             switch (flashOption) {
                 case HIDE:
                     configuration.allowFlashToggle = false;
