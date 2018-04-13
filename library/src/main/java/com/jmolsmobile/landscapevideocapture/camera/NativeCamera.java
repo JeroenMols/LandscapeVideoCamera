@@ -133,31 +133,25 @@ public class NativeCamera {
 
     public void setFlash(boolean isFlashOn){
 
-        if(camera != null) {
-            params = camera.getParameters();
-        }
-
-        if(params!=null) {
-            List<String> supportedFlashModes = params.getSupportedFlashModes();
-            if (supportedFlashModes != null) {
-                try {
-                    if (isFlashOn) {
-                        if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-                            camera.setParameters(params);
-                        }
-                    } else {
-                        if (supportedFlashModes.contains(Parameters.FLASH_MODE_OFF)) {
-                            params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
-                            camera.setParameters(params);
-                        }
+        List<String> supportedFlashModes = params.getSupportedFlashModes();
+        if (supportedFlashModes != null) {
+            try {
+                if (isFlashOn) {
+                    if (supportedFlashModes.contains(Camera.Parameters.FLASH_MODE_TORCH)) {
+                        params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                        camera.setParameters(params);
                     }
-                } catch (RuntimeException RE) {
-                    CLog.e(CLog.CAMERA, "Set Torch param failed : " + RE);
+                } else {
+                    if (supportedFlashModes.contains(Parameters.FLASH_MODE_OFF)) {
+                        params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                        camera.setParameters(params);
+                    }
                 }
+            } catch (RuntimeException RE) {
+                CLog.e(CLog.CAMERA, "Set Torch param failed : " + RE);
             }
-
         }
+
     }
 
 }
