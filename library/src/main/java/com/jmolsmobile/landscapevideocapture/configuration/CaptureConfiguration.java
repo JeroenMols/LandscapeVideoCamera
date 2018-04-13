@@ -303,11 +303,11 @@ public class CaptureConfiguration implements Parcelable {
 
         public Builder setFlashOption(FlashOption flashOption) {
             switch (flashOption) {
-                case HIDE:
+                case NO_FLASH:
                     configuration.allowFlashToggle = false;
                     configuration.flashStartOn = false;
                     break;
-                case HIDE_ON:
+                case ALWAYS:
                     configuration.allowFlashToggle = false;
                     configuration.flashStartOn = true;
                     break;

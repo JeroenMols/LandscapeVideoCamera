@@ -288,7 +288,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     }
 
     private FlashOption getFlashOption(int position) {
-        final FlashOption[] resolution = new FlashOption[]{FlashOption.HIDE,FlashOption.HIDE_ON,
+        final FlashOption[] resolution = new FlashOption[]{FlashOption.NO_FLASH,FlashOption.ALWAYS,
                 FlashOption.START_OFF, FlashOption.START_ON};
         return resolution[position];
     }

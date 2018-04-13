@@ -105,7 +105,7 @@ public class PredefinedCaptureConfigurations {
     }
 
     public enum FlashOption {
-        HIDE,HIDE_ON, START_OFF, START_ON;
+        NO_FLASH, ALWAYS, START_OFF, START_ON;
     }
 
 }

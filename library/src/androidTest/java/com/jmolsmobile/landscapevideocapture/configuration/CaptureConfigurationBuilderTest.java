@@ -114,7 +114,7 @@ public class CaptureConfigurationBuilderTest {
 
     @Test
     public void builtConfigurationHideFlashToggleAndFlashStartOFF() throws Exception {
-        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.HIDE).build();
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.NO_FLASH).build();
 
         assertThat(configuration.getAllowFlashToggle()).isFalse();
         assertThat(configuration.getIfFlashStartOn()).isFalse();
@@ -122,7 +122,7 @@ public class CaptureConfigurationBuilderTest {
 
     @Test
     public void builtConfigurationHideFlashToggleAndFlashStartON() throws Exception {
-        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.HIDE_ON).build();
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.ALWAYS).build();
 
         assertThat(configuration.getAllowFlashToggle()).isFalse();
         assertThat(configuration.getIfFlashStartOn()).isTrue();
