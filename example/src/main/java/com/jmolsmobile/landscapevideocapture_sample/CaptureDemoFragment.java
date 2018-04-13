@@ -16,6 +16,12 @@
 
 package com.jmolsmobile.landscapevideocapture_sample;
 
+import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
+import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
+import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.FlashOption;
+
 import android.app.Activity;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
@@ -43,11 +49,6 @@ import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.jmolsmobile.landscapevideocapture.VideoCaptureActivity;
-import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureQuality;
-import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
-
 import java.util.List;
 
 public class CaptureDemoFragment extends Fragment implements OnClickListener {
@@ -58,6 +59,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
 
     private final String[] RESOLUTION_NAMES = new String[]{"1080p", "720p", "480p"};
     private final String[] QUALITY_NAMES = new String[]{"high", "medium", "low"};
+    private final String[] FLASH_OPTIONS = new String[]{"force off","force on", "start off", "start on"};
 
     private String statusMessage = null;
     private String filename = null;
@@ -66,6 +68,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private TextView statusTv;
     private Spinner resolutionSp;
     private Spinner qualitySp;
+    private Spinner flashSp;
 
     private RelativeLayout advancedRl;
     private EditText filenameEt;
@@ -74,6 +77,7 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private EditText fpsEt;
     private CheckBox showTimerCb;
     private CheckBox allowFrontCameraCb;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -92,7 +96,6 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         maxFilesizeEt = (EditText) rootView.findViewById(R.id.et_filesize);
         showTimerCb = (CheckBox) rootView.findViewById(R.id.cb_showtimer);
         allowFrontCameraCb = (CheckBox) rootView.findViewById(R.id.cb_show_camera_switch);
-
 
         if (savedInstanceState != null) {
             statusMessage = savedInstanceState.getString(KEY_STATUSMESSAGE);
@@ -117,6 +120,12 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         qualitySp = (Spinner) rootView.findViewById(R.id.sp_quality);
         qualitySp.setAdapter(adapter2);
+
+        final ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_spinner_item, FLASH_OPTIONS);
+        adapter3.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        flashSp = (Spinner) rootView.findViewById(R.id.sp_flash);
+        flashSp.setAdapter(adapter3);
     }
 
     @Override
@@ -259,6 +268,9 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
         if (!allowFrontCameraCb.isChecked()) {
             builder.noCameraToggle();
         }
+
+        final FlashOption flashOption = getFlashOption(flashSp.getSelectedItemPosition());
+        builder.setFlashOption(flashOption);
         
         return builder.build();
     }
@@ -272,6 +284,12 @@ public class CaptureDemoFragment extends Fragment implements OnClickListener {
     private CaptureResolution getResolution(int position) {
         final CaptureResolution[] resolution = new CaptureResolution[]{CaptureResolution.RES_1080P,
                 CaptureResolution.RES_720P, CaptureResolution.RES_480P};
+        return resolution[position];
+    }
+
+    private FlashOption getFlashOption(int position) {
+        final FlashOption[] resolution = new FlashOption[]{FlashOption.NO_FLASH,FlashOption.ALWAYS,
+                FlashOption.START_OFF, FlashOption.START_ON};
         return resolution[position];
     }
 

@@ -16,6 +16,15 @@
 
 package com.jmolsmobile.landscapevideocapture;
 
+import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
+import com.jmolsmobile.landscapevideocapture.camera.NativeCamera;
+import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
+import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
+import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
+import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
+import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,35 +36,37 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.jmolsmobile.landscapevideocapture.camera.CameraWrapper;
-import com.jmolsmobile.landscapevideocapture.camera.NativeCamera;
-import com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration;
-import com.jmolsmobile.landscapevideocapture.recorder.AlreadyUsedException;
-import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorder;
-import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
-import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
-import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
-
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, VideoRecorderInterface {
 
     public static final int RESULT_ERROR = 753245;
+
     private static final int REQUESTCODE_SWITCHCAMERA = 578465;
 
     public static final String EXTRA_OUTPUT_FILENAME = "com.jmolsmobile.extraoutputfilename";
+
     public static final String EXTRA_CAPTURE_CONFIGURATION = "com.jmolsmobile.extracaptureconfiguration";
+
     public static final String EXTRA_ERROR_MESSAGE = "com.jmolsmobile.extraerrormessage";
 
     private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
+
     private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
+
     protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
 
     private boolean mVideoRecorded = false;
+
     VideoFile mVideoFile = null;
+
     private CaptureConfiguration mCaptureConfiguration;
 
     private VideoCaptureView mVideoCaptureView;
+
     private VideoRecorder mVideoRecorder;
+
     private boolean isFrontFacingCameraSelected;
+
+    private CameraWrapper mCameraWrapper;
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -68,7 +79,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         initializeCaptureConfiguration(savedInstanceState);
 
         mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
-        if (mVideoCaptureView == null) return; // Wrong orientation
+        if (mVideoCaptureView == null) {
+            return; // Wrong orientation
+        }
 
         initializeRecordingUI();
     }
@@ -82,15 +95,21 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
 
     private void initializeRecordingUI() {
         Display display = ((WindowManager) getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+        mCameraWrapper = new CameraWrapper(new NativeCamera(), display.getRotation());
+
         mVideoRecorder = new VideoRecorder(this,
                 mCaptureConfiguration,
                 mVideoFile,
-                new CameraWrapper(new NativeCamera(), display.getRotation()),
+                mCameraWrapper,
                 mVideoCaptureView.getPreviewSurfaceHolder(),
                 isFrontFacingCameraSelected);
+
         mVideoCaptureView.setRecordingButtonInterface(this);
         mVideoCaptureView.setCameraSwitchingEnabled(mCaptureConfiguration.getAllowFrontFacingCamera());
         mVideoCaptureView.setCameraFacing(isFrontFacingCameraSelected);
+        mVideoCaptureView.setFlashSwitchingEnabled(mCaptureConfiguration.getAllowFlashToggle(), isFrontFacingCameraSelected);
+        mVideoCaptureView.setFlashStartOption(mCameraWrapper, mCaptureConfiguration.getIfFlashStartOn());
 
         if (mVideoRecorded) {
             mVideoCaptureView.updateUIRecordingFinished(getVideoThumbnail());
@@ -145,6 +164,11 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         intent.putExtra(EXTRA_FRONTFACINGCAMERASELECTED, isFrontFacingSelected);
         startActivityForResult(intent, REQUESTCODE_SWITCHCAMERA);
         overridePendingTransition(R.anim.from_middle, R.anim.to_middle);
+    }
+
+    @Override
+    public void onFlashButtonClicked(boolean isFlashOn) {
+        mCameraWrapper.setFlash(isFlashOn);
     }
 
     @Override
@@ -211,7 +235,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     private boolean generateVideoRecorded(final Bundle savedInstanceState) {
-        if (savedInstanceState == null) return false;
+        if (savedInstanceState == null) {
+            return false;
+        }
         return savedInstanceState.getBoolean(SAVED_RECORDED_BOOLEAN, false);
     }
 

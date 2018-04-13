@@ -1,11 +1,11 @@
 package com.jmolsmobile.landscapevideocapture.configuration;
 
-import android.support.test.runner.AndroidJUnit4;
-
 import com.jmolsmobile.landscapevideocapture.configuration.PredefinedCaptureConfigurations.CaptureResolution;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+import android.support.test.runner.AndroidJUnit4;
 
 import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.Builder;
 import static com.jmolsmobile.landscapevideocapture.configuration.CaptureConfiguration.MBYTE_TO_BYTE;
@@ -111,4 +111,37 @@ public class CaptureConfigurationBuilderTest {
 
         assertThat(configuration.getAllowFrontFacingCamera()).isFalse();
     }
+
+    @Test
+    public void builtConfigurationHideFlashToggleAndFlashStartOFF() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.NO_FLASH).build();
+
+        assertThat(configuration.getAllowFlashToggle()).isFalse();
+        assertThat(configuration.getIfFlashStartOn()).isFalse();
+    }
+
+    @Test
+    public void builtConfigurationHideFlashToggleAndFlashStartON() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.ALWAYS).build();
+
+        assertThat(configuration.getAllowFlashToggle()).isFalse();
+        assertThat(configuration.getIfFlashStartOn()).isTrue();
+    }
+
+    @Test
+    public void builtConfigurationShowFlashToggleAndFlashStartON() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.START_ON).build();
+
+        assertThat(configuration.getAllowFlashToggle()).isTrue();
+        assertThat(configuration.getIfFlashStartOn()).isTrue();
+    }
+
+    @Test
+    public void builtConfigurationShowFlashToggleAndFlashStartOFF() throws Exception {
+        CaptureConfiguration configuration = new Builder(MOCK_RESOLUTION, MOCK_QUALITY).setFlashOption(PredefinedCaptureConfigurations.FlashOption.START_OFF).build();
+
+        assertThat(configuration.getAllowFlashToggle()).isTrue();
+        assertThat(configuration.getIfFlashStartOn()).isFalse();
+    }
+
 }

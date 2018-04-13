@@ -26,4 +26,6 @@ public interface RecordingButtonInterface {
 
     void onSwitchCamera(boolean isFrontFacingSelected);
 
+    void onFlashButtonClicked(boolean isFlashOn);
+
 }

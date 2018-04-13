@@ -16,6 +16,9 @@
 
 package com.jmolsmobile.landscapevideocapture.camera;
 
+import com.jmolsmobile.landscapevideocapture.CLog;
+import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
+
 import android.annotation.TargetApi;
 import android.graphics.ImageFormat;
 import android.hardware.Camera;
@@ -26,9 +29,6 @@ import android.os.Build;
 import android.os.Build.VERSION;
 import android.os.Build.VERSION_CODES;
 import android.view.SurfaceHolder;
-
-import com.jmolsmobile.landscapevideocapture.CLog;
-import com.jmolsmobile.landscapevideocapture.camera.OpenCameraException.OpenType;
 
 import java.io.IOException;
 import java.util.List;
@@ -58,6 +58,10 @@ public class CameraWrapper {
 
         if (mNativeCamera.getNativeCamera() == null)
             throw new OpenCameraException(OpenType.NOCAMERA);
+    }
+
+    public void setFlash(boolean isFlashOn){
+        mNativeCamera.setFlash(isFlashOn);
     }
 
     public void prepareCameraForRecording() throws PrepareCameraException {

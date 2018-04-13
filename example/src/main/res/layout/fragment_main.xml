@@ -116,6 +116,24 @@
                     android:checked="true"
                     android:gravity="center_vertical"
                     android:text="@string/allow_frontcamera" />
+
+
+                <ImageView
+                        android:id="@+id/iv_flash"
+                        android:layout_width="36dp"
+                        android:layout_height="56dp"
+                        android:layout_below="@id/iv_front"
+                        android:layout_marginLeft="16dp"
+                        android:src="@drawable/ic_flash_black_48dp" />
+
+                <Spinner
+                        android:id="@+id/sp_flash"
+                        android:layout_width="175dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/iv_flash"
+                        android:layout_alignTop="@id/iv_flash"
+                        android:layout_marginLeft="72dp" />
+
             </RelativeLayout>
 
             <RelativeLayout
