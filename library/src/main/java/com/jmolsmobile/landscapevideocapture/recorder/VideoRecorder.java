@@ -73,7 +73,7 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         mVideoCapturePreview = new CapturePreview(this, mCameraWrapper, previewHolder);
     }
 
-    public void toggleRecording(boolean useFlash) throws AlreadyUsedException {
+    public void toggleRecording() throws AlreadyUsedException {
         if (mCameraWrapper == null) {
             throw new AlreadyUsedException();
         }
@@ -81,12 +81,11 @@ public class VideoRecorder implements OnInfoListener, CapturePreviewInterface {
         if (isRecording()) {
             stopRecording(null);
         } else {
-            startRecording(useFlash);
-
+            startRecording();
         }
     }
 
-    protected void startRecording(boolean useFlash) {
+    protected void startRecording() {
         mRecording = false;
 
         if (!initRecorder()) return;

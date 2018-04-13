@@ -187,7 +187,7 @@ public class VideoCaptureView extends FrameLayout implements OnClickListener {
         if (mRecordingInterface == null) return;
 
         if (v.getId() == mRecordBtnIv.getId()) {
-            mRecordingInterface.onRecordButtonClicked(isFlashOn);
+            mRecordingInterface.onRecordButtonClicked();
         } else if (v.getId() == mAcceptBtnIv.getId()) {
             mRecordingInterface.onAcceptButtonClicked();
         } else if (v.getId() == mDeclineBtnIv.getId()) {

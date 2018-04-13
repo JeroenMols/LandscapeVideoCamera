@@ -134,9 +134,9 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     }
 
     @Override
-    public void onRecordButtonClicked(boolean useFlash) {
+    public void onRecordButtonClicked() {
         try {
-            mVideoRecorder.toggleRecording(useFlash);
+            mVideoRecorder.toggleRecording();
         } catch (AlreadyUsedException e) {
             CLog.d(CLog.ACTIVITY, "Cannot toggle recording after cleaning up all resources");
         }
