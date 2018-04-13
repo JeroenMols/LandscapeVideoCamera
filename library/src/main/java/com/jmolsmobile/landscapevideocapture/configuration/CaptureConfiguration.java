@@ -159,14 +159,14 @@ public class CaptureConfiguration implements Parcelable {
     }
 
     /**
-     * @return If front flash toggle must be displayed before capturing video
+     * @return If flash toggle must be displayed before capturing video
      */
     public boolean getAllowFlashToggle() {
         return allowFlashToggle;
     }
 
     /**
-     * @return If front flash must be start on
+     * @return If flash must be start on
      */
     public boolean getIfFlashStartOn() {
         return flashStartOn;
