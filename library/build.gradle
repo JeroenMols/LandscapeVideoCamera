@@ -39,6 +39,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:rules:1.0.1'
     androidTestImplementation 'org.mockito:mockito-android:2.6.3'
     androidTestImplementation 'org.assertj:assertj-core:1.7.1'
+    implementation 'com.android.support:support-compat:26.0.2'
 }
 
 coveralls {
