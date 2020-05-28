@@ -16,12 +16,16 @@
 
 package com.jmolsmobile.landscapevideocapture;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.provider.MediaStore.Video.Thumbnails;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
@@ -36,6 +40,9 @@ import com.jmolsmobile.landscapevideocapture.recorder.VideoRecorderInterface;
 import com.jmolsmobile.landscapevideocapture.view.RecordingButtonInterface;
 import com.jmolsmobile.landscapevideocapture.view.VideoCaptureView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VideoCaptureActivity extends Activity implements RecordingButtonInterface, VideoRecorderInterface {
 
     public static final int RESULT_ERROR = 753245;
@@ -48,6 +55,8 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
     private static final String EXTRA_FRONTFACINGCAMERASELECTED = "com.jmolsmobile.extracamerafacing";
     private static final String SAVED_RECORDED_BOOLEAN = "com.jmolsmobile.savedrecordedboolean";
     protected static final String SAVED_OUTPUT_FILENAME = "com.jmolsmobile.savedoutputfilename";
+
+    public static final int REQUEST_ID_MULTIPLE_PERMISSIONS = 101;
 
     private boolean mVideoRecorded = false;
     VideoFile mVideoFile = null;
@@ -64,12 +73,16 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_videocapture);
-
         initializeCaptureConfiguration(savedInstanceState);
 
+        if(checkAndRequestPermissions(this)){
+            setup();
+        }
+    }
+
+    private void setup(){
         mVideoCaptureView = (VideoCaptureView) findViewById(R.id.videocapture_videocaptureview_vcv);
         if (mVideoCaptureView == null) return; // Wrong orientation
-
         initializeRecordingUI();
     }
 
@@ -239,9 +252,59 @@ public class VideoCaptureActivity extends Activity implements RecordingButtonInt
         return thumbnail;
     }
 
+    public static boolean checkAndRequestPermissions(final Activity context) {
+        int ExtstorePermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.READ_EXTERNAL_STORAGE);
+        int cameraPermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.CAMERA);
+
+        int microphonePermission = ContextCompat.checkSelfPermission(context,
+                Manifest.permission.RECORD_AUDIO);
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        if (cameraPermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded.add(Manifest.permission.CAMERA);
+        }
+        if (ExtstorePermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded
+                    .add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        }
+        if (microphonePermission != PackageManager.PERMISSION_GRANTED) {
+            listPermissionsNeeded
+                    .add(Manifest.permission.RECORD_AUDIO);
+        }
+
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(context, listPermissionsNeeded
+                            .toArray(new String[listPermissionsNeeded.size()]),
+                    REQUEST_ID_MULTIPLE_PERMISSIONS);
+            return false;
+        }
+        return true;
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         this.setResult(resultCode, data);
-        finish();
+        if(requestCode == REQUEST_ID_MULTIPLE_PERMISSIONS){
+                if (ContextCompat.checkSelfPermission(this,
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(),
+                            "FlagUp Requires Access to Camara.", Toast.LENGTH_SHORT)
+                            .show();
+                    finish();
+                } else if (ContextCompat.checkSelfPermission(VideoCaptureActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getApplicationContext(),
+                            "FlagUp Requires Access to Your Storage.",
+                            Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    setup();
+                }
+        }
+        else {
+            finish();
+        }
     }
 }
